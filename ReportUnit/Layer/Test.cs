@@ -1,11 +1,25 @@
 ﻿namespace ReportUnit.Layer
 {
-    using System.Collections.Generic;
+	/// <summary>
+	/// Information for an individual test
+	/// </summary>
+	internal class Test
+	{
+		public string Name { get; set; }
 
-    internal class Test
-    {
-        public string Description { get; set; }
-        public string Type { get; set; }
-        public List<string> Categories { get; set; }
-    }
+		/// <summary>
+		/// Status of the test run (eg Passed, Failed)
+		/// </summary>
+		public Status Status { get; set; }
+
+		/// <summary>
+		/// Error messages, description, etc
+		/// </summary>
+		public string StatusMessage { get; set; }
+
+		/// <summary>
+		/// How long the test took to run (in milliseconds)
+		/// </summary>
+		public double Duration { get; set; }
+	}
 }

@@ -46,19 +46,23 @@
     <Compile Include="HTML\Folder.cs" />
     <Compile Include="Layer\Report.cs" />
     <Compile Include="Layer\RunInfo.cs" />
+    <Compile Include="Layer\Status.cs" />
     <Compile Include="Layer\Test.cs" />
     <Compile Include="Layer\TestSuite.cs" />
     <Compile Include="Parser\Gallio.cs" />
+    <Compile Include="Parser\IParser.cs" />
+    <Compile Include="Parser\MsTest2010.cs" />
     <Compile Include="Parser\NUnit.cs" />
+    <Compile Include="Parser\ParserFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Support\DateTimeHelper.cs" />
+    <Compile Include="Support\ReportHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Support\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
