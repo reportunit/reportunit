@@ -41,17 +41,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Design\Theme.cs" />
+    <Compile Include="HTML\File.cs" />
+    <Compile Include="HTML\Folder.cs" />
     <Compile Include="Layer\Report.cs" />
     <Compile Include="Layer\RunInfo.cs" />
     <Compile Include="Layer\Test.cs" />
     <Compile Include="Layer\TestSuite.cs" />
+    <Compile Include="Parser\Gallio.cs" />
+    <Compile Include="Parser\NUnit.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Support\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
