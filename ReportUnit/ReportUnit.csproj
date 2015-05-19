@@ -9,8 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ReportUnit</RootNamespace>
     <AssemblyName>ReportUnit</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Design\Theme.cs" />
+    <Compile Include="FileBuilder.cs" />
     <Compile Include="HTML\File.cs" />
     <Compile Include="HTML\Folder.cs" />
     <Compile Include="Layer\Report.cs" />
@@ -53,6 +56,7 @@
     <Compile Include="Parser\IParser.cs" />
     <Compile Include="Parser\MsTest2010.cs" />
     <Compile Include="Parser\NUnit.cs" />
+    <Compile Include="Parser\TestRunner.cs" />
     <Compile Include="Parser\ParserFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

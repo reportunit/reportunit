@@ -17,6 +17,9 @@
 
 		public Status Status { get; set; }
 
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+
 		/// <summary>
 		/// How long the test fixture took to run (in milliseconds)
 		/// </summary>

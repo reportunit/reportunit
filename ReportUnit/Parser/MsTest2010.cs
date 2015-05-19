@@ -32,29 +32,13 @@
 		public IParser LoadFile(string testResultFile)
 		{
 			if (_doc == null) _doc = new XmlDocument();
-			if (_doc.DocumentElement == null) return null;
 
-			try
-			{
-				_doc.Load(testResultFile);
-				_testResultFile = testResultFile;
+            _testResultFile = testResultFile;
 
-				_nsmgr = new XmlNamespaceManager(_doc.NameTable);
-				_nsmgr.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010");
+            _doc.Load(testResultFile);
 
-				// check is mstest 2010 xml file 
-				// will need to check the "//TestRun/@xmlns" attribute - value = http://microsoft.com/schemas/VisualStudio/TeamTest/2010
-				var testRunNode = _doc.SelectSingleNode("t:TestRun", _nsmgr);
-				if (testRunNode == null || testRunNode.Attributes["xmlns"] == null) return null;
-
-				string version = testRunNode.Attributes["xmlns"].InnerText;
-				if (!version.Contains("VisualStudio") || !version.Contains("2010")) return null;
-			}
-			catch (Exception)
-			{
-				Console.WriteLine("[ERROR] Skipping " + testResultFile + ". It is not a valid XML file.");
-				return null;
-			}
+            _nsmgr = new XmlNamespaceManager(_doc.NameTable);
+            _nsmgr.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010");
 
 			return this;
 		}
@@ -64,12 +48,14 @@
 			// create a data instance to be passed to the folder level report
 			_report = new Report();
 			_report.FileName = this._testResultFile;
-			_report.RunInfo.TestRunner = "MSTest";
+			_report.RunInfo.TestRunner = TestRunner.MSTest2010;
 
 			Console.WriteLine("[INFO] Processing file '" + _testResultFile + "'..");
 
 			// get total count of tests from the input file
 			_report.Total = _doc.SelectNodes("descendant::t:UnitTestResult", _nsmgr).Count;
+
+            Console.WriteLine("[INFO] Number of tests: " + _report.Total);
 
 			// only proceed if the test count is more than 0
 			if (_report.Total >= 1)
@@ -85,8 +71,6 @@
 				_report.Skipped = _doc.SelectNodes("descendant::t:UnitTestResult[@outcome='NotExecuted']", _nsmgr).Count;
 				_report.Errors = _doc.SelectNodes("descendant::t:UnitTestResult[@outcome='Error' or @outcome='Aborted' or @outcome='timeout']", _nsmgr).Count;
 
-				Console.WriteLine("[INFO] Number of tests: " + _report.Total);
-
 				try
 				{
 					XmlNode times = _doc.SelectSingleNode("descendant::t:Times", _nsmgr);
@@ -98,21 +82,23 @@
 				{
 					// try to parse the TestRun node
 					XmlNode testRun = _doc.SelectSingleNode("descendant::t:TestRun", _nsmgr);
+
 					if (testRun != null)
 					{
-						var info = _report.RunInfo;
+                        _report.RunInfo.Info = new Dictionary<string, string> {
+                            {"TestResult File", _testResultFile},
+                            {"Machine Name", _doc.SelectNodes("descendant::t:UnitTestResult", _nsmgr)[0].Attributes["computerName"].InnerText},
+                            {"TestRunner", _report.RunInfo.TestRunner.ToString()},
+                            {"TestRunner Version", testRun.Attributes["xmlns"].InnerText}
+                        };
 
-						var userInfo = testRun.Attributes["runUser"].InnerText;
-						if (!string.IsNullOrWhiteSpace(userInfo))
-						{
-							info.User = userInfo.Split('\\').Last();
-							info.UserDomain = userInfo.Split('\\').First();
-						}
-						info.MachineName = _doc.SelectNodes("descendant::t:UnitTestResult", _nsmgr)[0].Attributes["computerName"].InnerText;
-						//info.Platform = testRun.Attributes["platform"].InnerText;
-						//info.OsVersion = testRun.Attributes["os-version"].InnerText;
-						//info.ClrVersion = testRun.Attributes["clr-version"].InnerText;
-						info.TestRunnerVersion = testRun.Attributes["xmlns"].InnerText;
+                        var userInfo = testRun.Attributes["runUser"].InnerText;
+
+                        if (!string.IsNullOrWhiteSpace(userInfo))
+                        {
+                            _report.RunInfo.Info.Add("User", userInfo.Split('\\').Last());
+                            _report.RunInfo.Info.Add("User Domain", userInfo.Split('\\').First());
+                        }
 					}
 				}
 				catch (Exception ex)
@@ -226,7 +212,6 @@
 				testFixture.Duration += tc.Duration;
 				testFixture.Status = ReportHelper.GetFixtureStatus(new List<Status> { testFixture.Status, tc.Status });
 				testFixture.Tests.Add(tc);
-
 
 				Console.Write("\r{0} tests processed...", ++testCount);
 			}

@@ -5,6 +5,7 @@ using ReportUnit.Support;
 namespace ReportUnit.Parser
 {
 	using ReportUnit.Layer;
+    using System.Collections.Generic;
 
 	internal class NUnit : IParser
 	{
@@ -26,26 +27,10 @@ namespace ReportUnit.Parser
 		public IParser LoadFile(string testResultFile)
 		{
 			if (_doc == null) _doc = new XmlDocument();
-			if (_doc.DocumentElement == null) return null;
 
-			try
-			{
-				_doc.Load(testResultFile);
-				_testResultFile = testResultFile;
+            _testResultFile = testResultFile;
 
-				// check is nunit xml file
-				// first node should be <test-results>
-				if (_doc.SelectSingleNode("test-results") == null) return null;
-
-				// if have an environment node - then it should have the nunit-version attrubute
-				var envNode = _doc.SelectSingleNode("environment");
-				if (envNode != null && envNode.Attributes["nunit-version"] == null) return null;
-			}
-			catch (Exception)
-			{
-				Console.WriteLine("[ERROR] Skipping " + testResultFile + ". It is not a valid XML file.");
-				return null;
-			}
+            _doc.Load(testResultFile);
 
 			return this;
 		}
@@ -55,7 +40,7 @@ namespace ReportUnit.Parser
 			// create a data instance to be passed to the folder level report
 			_report = new Report();
 			_report.FileName = this._testResultFile;
-			_report.RunInfo.TestRunner = "NUnit";
+			_report.RunInfo.TestRunner = TestRunner.NUnit;
 
 			Console.WriteLine("[INFO] Processing file '" + _testResultFile + "'..");
 
@@ -63,84 +48,79 @@ namespace ReportUnit.Parser
 			_report.Total = _doc.GetElementsByTagName("test-case").Count;
 			_report.AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText;
 
+            Console.WriteLine("[INFO] Number of tests: " + _report.Total);
+
 			// only proceed if the test count is more than 0
-			if (_report.Total >= 1)
-			{
-				Console.WriteLine("[INFO] Processing root and test-suite elements...");
+            if (_report.Total >= 1)
+            {
+                Console.WriteLine("[INFO] Processing root and test-suite elements...");
 
-				// pull values from XML source
-				_report.Passed = _doc.SelectNodes(".//test-case[@result='Success' or @result='Passed']").Count;
-				_report.Failed = _doc.SelectNodes(".//test-case[@result='Failed' or @result='Failure']").Count;
-				_report.Inconclusive = _doc.SelectNodes(".//test-case[@result='Inconclusive' or @result='NotRunnable']").Count;
-				_report.Skipped = _doc.SelectNodes(".//test-case[@result='Skipped' or @result='Ignored']").Count;
-				_report.Errors = _doc.SelectNodes(".//test-case[@result='Error']").Count;
+                // pull values from XML source
+                _report.Passed = _doc.SelectNodes(".//test-case[@result='Success' or @result='Passed']").Count;
+                _report.Failed = _doc.SelectNodes(".//test-case[@result='Failed' or @result='Failure']").Count;
+                _report.Inconclusive = _doc.SelectNodes(".//test-case[@result='Inconclusive' or @result='NotRunnable']").Count;
+                _report.Skipped = _doc.SelectNodes(".//test-case[@result='Skipped' or @result='Ignored']").Count;
+                _report.Errors = _doc.SelectNodes(".//test-case[@result='Error']").Count;
 
-				_report.Status = _doc.SelectNodes("//test-suite")[0].Attributes["result"].InnerText.AsStatus();
+                _report.Status = _doc.SelectNodes("//test-suite")[0].Attributes["result"].InnerText.AsStatus();
 
-				Console.WriteLine("[INFO] Number of tests: " + _report.Total);
+                try
+                {
+                    double duration;
+                    if (double.TryParse(_doc.SelectNodes("//test-suite")[0].Attributes["duration"].InnerText, out duration))
+                    {
+                        _report.Duration = duration;
+                    }
+                }
+                catch
+                {
+                    try
+                    {
+                        double duration;
+                        if (double.TryParse(_doc.SelectNodes("//test-suite")[0].Attributes["time"].InnerText, out duration))
+                        {
+                            _report.Duration = duration;
+                        }
+                    }
+                    catch { }
+                }
 
-				try
-				{
-					double duration;
-					if (double.TryParse(_doc.SelectNodes("//test-suite")[0].Attributes["duration"].InnerText, out duration))
-					{
-						_report.Duration = duration;
-					}
-				}
-				catch
-				{
-					try
-					{
-						double duration;
-						if (double.TryParse(_doc.SelectNodes("//test-suite")[0].Attributes["time"].InnerText, out duration))
-						{
-							_report.Duration = duration;
-						}
-					}
-					catch { }
-				}
+                try
+                {
+                    // try to parse the environment node
+                    // some attributes in the environment node are different for 2.x and 3.x
+                    XmlNode env = _doc.GetElementsByTagName("environment")[0];
 
-				try
-				{
-					// try to parse the environment node
-					// some attributes in the environment node are different for 2.x and 3.x
-					XmlNode env = _doc.GetElementsByTagName("environment")[0];
-					if (env != null)
-					{
-						var info = _report.RunInfo;
-						info.User = env.Attributes["user"].InnerText;
-						info.UserDomain = env.Attributes["user-domain"].InnerText;
-						info.MachineName = env.Attributes["machine-name"].InnerText;
-						info.Platform = env.Attributes["platform"].InnerText;
-						info.OsVersion = env.Attributes["os-version"].InnerText;
-						info.ClrVersion = env.Attributes["clr-version"].InnerText;
-						info.TestRunnerVersion = env.Attributes["nunit-version"].InnerText;
-					}
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
-				}
+                    if (env != null)
+                    {
+                        _report.RunInfo.Info = new Dictionary<string, string> {
+                            {"Input Result File", _testResultFile},
+                            {"User", env.Attributes["user"].InnerText},
+                            {"User Domain", env.Attributes["user-domain"].InnerText},
+                            {"Machine Name", env.Attributes["machine-name"].InnerText},
+                            {"Platform", env.Attributes["platform"].InnerText},
+                            {"Os Version", env.Attributes["os-version"].InnerText},
+                            {"Clr Version", env.Attributes["clr-version"].InnerText},
+                            {"TestRunner", _report.RunInfo.TestRunner.ToString()},
+                            {"TestRunner Version", env.Attributes["nunit-version"].InnerText}
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
+                }
 
-				ProcessFixtureBlocks();
-			}
-			else
-			{
-				Console.Write("There are no tests available in this file.");
+                ProcessFixtureBlocks();
+            }
+            else
+            {
+                Console.Write("There are no tests available in this file.");
 
-				try
-				{
-					_report.Status = Status.Passed;
-					return _report;
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine("Something weird happened: " + ex.Message);
-					return null;
-				}
-			}
+                _report.Status = Status.Passed;
+            }
 
-			return _report;
+            return _report;
 		}
 
 		/// <summary>
@@ -167,6 +147,8 @@ namespace ReportUnit.Parser
 					var startTime = suite.Attributes["start-time"].InnerText.Replace("Z", "");
 					var endTime = suite.Attributes["end-time"].InnerText.Replace("Z", "");
 
+                    testSuite.StartTime = startTime;
+                    testSuite.EndTime = endTime;
 					testSuite.Duration = DateTimeHelper.DifferenceInMilliseconds(startTime, endTime);
 				}
 				else if (suite.Attributes["time"] != null)
@@ -176,6 +158,8 @@ namespace ReportUnit.Parser
 					{
 						testSuite.Duration = duration;
 					}
+
+                    testSuite.StartTime = duration.ToString();
 				}
 				
 				// add each test of the test-fixture
@@ -201,27 +185,25 @@ namespace ReportUnit.Parser
 						catch (Exception) { }
 					}
 
-					if (testcase.SelectNodes(".//message").Count == 1)
+                    XmlNode message = testcase.SelectNodes(".//message")[0];
+
+					if (message != null)
 					{
-						errorMsg = testcase.SelectNodes(".//message").Count == 1 
-							? "<pre>" + testcase.SelectNodes(".//message")[0].InnerText
-							: "";
-						errorMsg += testcase.SelectNodes(".//stack-trace").Count == 1
-							? " -> " + testcase.SelectNodes(".//stack-trace")[0].InnerText.Replace("\r", "").Replace("\n", "")
-							: "";
+						errorMsg = testcase.SelectNodes(".//message").Count == 1 ? "<pre>" + message.InnerText : "";
+						errorMsg += testcase.SelectNodes(".//stack-trace").Count == 1 ? " -> " + testcase.SelectNodes(".//stack-trace")[0].InnerText.Replace("\r", "").Replace("\n", "") : "";
 						errorMsg += "</pre>";
 						errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
 					}
 
-					if (testcase.SelectNodes(".//property[@name='Description']").Count == 1)
+                    XmlNode desc = testcase.SelectNodes(".//property[@name='Description']")[0];
+
+					if (desc != null)
 					{
-						descMsg += testcase.SelectNodes(".//property[@name='Description']").Count == 1
-							? "<p class='description'>Description: " +
-							  testcase.SelectNodes(".//property[@name='Description']")[0].Attributes["value"].InnerText
-							: "";
+						descMsg += testcase.SelectNodes(".//property[@name='Description']").Count == 1 ? "<p class='description'>Description: " + desc.Attributes["value"].InnerText : "";
 						descMsg += "</p>";
 						descMsg = descMsg == "<p class='description'>Description: </p>" ? "" : descMsg;
 					}
+
 					tc.StatusMessage = descMsg + errorMsg;
 					testSuite.Tests.Add(tc);
 
@@ -229,8 +211,11 @@ namespace ReportUnit.Parser
 				}
 
 				testSuite.Status = ReportHelper.GetFixtureStatus(testSuite.Tests);
+
 				_report.TestFixtures.Add(testSuite);
 			}
 		}
+
+        public NUnit() { }
 	}
 }

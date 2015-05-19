@@ -70,7 +70,7 @@
 		/// </summary>
 		/// <param name="status"></param>
 		/// <returns></returns>
-		internal static string AsString(this Status status)
+		internal static string ToString(this Status status)
 		{
 			return status.ToString();
 		}
