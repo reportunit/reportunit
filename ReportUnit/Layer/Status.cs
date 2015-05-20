@@ -44,6 +44,7 @@
 				case "warning":
 				case "bad":
 				case "pending":
+                case "inconclusive":
 				case "notrunnable":
 				case "disconnected":
 				case "passedbutrunaborted":

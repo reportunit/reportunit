@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Design\Theme.cs" />
+    <Compile Include="Design\ThemeName.cs" />
     <Compile Include="FileBuilder.cs" />
     <Compile Include="HTML\File.cs" />
     <Compile Include="HTML\Folder.cs" />

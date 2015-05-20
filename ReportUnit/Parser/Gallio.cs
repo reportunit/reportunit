@@ -50,8 +50,6 @@
             _report.FileName = this._testResultFile;
             _report.RunInfo.TestRunner = TestRunner.Gallio;
 
-            Console.WriteLine("[INFO] Processing file '" + _testResultFile + "'..");
-
             // get total count of tests from the input file
             _report.Total = _doc.SelectNodes("descendant::ns:testStep[@isTestCase='true']", _nsmgr).Count;
             _report.AssemblyName = _doc.SelectSingleNode("//ns:files/ns:file", _nsmgr).InnerText;
@@ -61,8 +59,6 @@
             if (_report.Total >= 1)
             {
                 Console.WriteLine("[INFO] Processing root and test-suite elements...");
-
-                XmlNodeList l = _doc.SelectNodes("//ns:testStepRun//ns:outcome[@status='passed']", _nsmgr);
 
                 // pull values from XML source
                 _report.Passed = Int32.Parse(_doc.SelectSingleNode("//ns:statistics/@passedCount", _nsmgr).InnerText);
@@ -82,14 +78,36 @@
                 {
                     _report.RunInfo.Info = new Dictionary<string, string> {
                         {"TestResult File", _testResultFile},
-                        {"Assembly", _doc.SelectSingleNode("//ns:codeReference/@assembly", _nsmgr).InnerText},
-                        {"Code Location", _doc.SelectSingleNode("//ns:codeLocation/@path", _nsmgr).InnerText},
-                        {"TestKind", _doc.SelectSingleNode("(//ns:entry[@key='TestKind'])[1]/ns:value", _nsmgr).InnerText},
-                        {"File", _doc.SelectSingleNode("(//ns:entry[@key='File'])[1]/ns:value", _nsmgr).InnerText},
-                        {"CodeBase", _doc.SelectSingleNode("(//ns:entry[@key='CodeBase'])[1]/ns:value", _nsmgr).InnerText},
-                        {"Framework", _doc.SelectSingleNode("(//ns:entry[@key='Framework'])[1]/ns:value", _nsmgr).InnerText},
-                        {"Version", _doc.SelectSingleNode("(//ns:entry[@key='Version'])[1]/ns:value", _nsmgr).InnerText}
+                        {"File", _doc.SelectSingleNode("(//ns:file)[1]", _nsmgr).InnerText}
                     };
+
+                    var assembly = _doc.SelectSingleNode("//ns:codeReference/@assembly", _nsmgr);
+                    if (assembly != null)
+                        _report.RunInfo.Info.Add("Assembly", assembly.InnerText);
+    
+                    var codeLocation = _doc.SelectSingleNode("//ns:codeLocation/@path", _nsmgr);
+                    if (codeLocation != null)
+                        _report.RunInfo.Info.Add("CodeLocation", codeLocation.InnerText);
+
+                    var testKind = _doc.SelectSingleNode("(//ns:entry[@key='TestKind'])[1]/ns:value", _nsmgr);
+                    if (testKind != null)
+                        _report.RunInfo.Info.Add("TestKind", testKind.InnerText);
+    
+                    var codeBase = _doc.SelectSingleNode("(//ns:entry[@key='CodeBase'])[1]/ns:value", _nsmgr);
+                    if (codeBase != null)
+                        _report.RunInfo.Info.Add("CodeBase", codeBase.InnerText);
+    
+                    var framework = _doc.SelectSingleNode("(//ns:entry[@key='Framework'])[1]/ns:value", _nsmgr);
+                    if (framework != null)
+                        _report.RunInfo.Info.Add("Framework", framework.InnerText);
+
+                    var version = _doc.SelectSingleNode("(//ns:entry[@key='Version'])[1]/ns:value", _nsmgr);
+                    if (version != null)
+                        _report.RunInfo.Info.Add("Version", version.InnerText);
+
+                    var ignoreReason = _doc.SelectSingleNode("(//ns:entry[@key='IgnoreReason'])[1]/ns:value", _nsmgr);
+                    if (ignoreReason != null)
+                        _report.RunInfo.Info.Add("IgnoreReason", ignoreReason.InnerText);
                 }
                 catch (Exception ex)
                 {
@@ -138,9 +156,25 @@
                     tc.Name = test.Attributes["name"].InnerText;
                     tc.Status = test.SelectSingleNode("./following-sibling::ns:result/ns:outcome/@status", _nsmgr).InnerText.AsStatus();
 
+                    var desc = test.SelectSingleNode("./ns:metadata/ns:entry[@key='Description']/ns:value", _nsmgr);
 
+                    if (desc != null)
+                    {
+                        descMsg += "<p class='description'>Description: " + desc.InnerText.Trim();
+                        descMsg += "</p>";
+                        descMsg = descMsg == "<p class='description'>Description: </p>" ? "" : descMsg;
+                    }
+
+                    var testStepRun = test.ParentNode.SelectSingleNode(".//ns:testLog", _nsmgr);
+
+                    if (testStepRun != null && testStepRun.InnerText.Trim() != "")
+                        errorMsg = "<pre>" + testStepRun.InnerText + "</pre>";
+
+                    tc.StatusMessage = descMsg + errorMsg;
 
                     testSuite.Tests.Add(tc);
+
+                    Console.Write("\r{0} tests processed...", ++testCount);
                 }
 
                 testSuite.Status = ReportHelper.GetFixtureStatus(testSuite.Tests);

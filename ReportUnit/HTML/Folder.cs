@@ -20,34 +20,48 @@
 		                    <link href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet' />
 		                    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
 		                    <style type='text/css'>
-			                    html {overflow-y: scroll;}
-			                    body {font-family: 'Open Sans', Arial;font-size: 14px; line-height: 1.3; margin: 0;}
-			                    table {border-collapse: collapse;width: 100%;}
+			                    html {background: #f5f5f5; overflow-y: scroll;}
+                                body {font-family: 'Open Sans', Arial;font-size: 14px; line-height: 1.3; margin: 0;}
+                                table {border-collapse: collapse;width: 100%;}
                                 a {color: #1366d7;}
-			                    /*---:[ containers ]:---*/
-			                    #reportunit-container {margin: 0;padding: 0;width: 100%;}
-                                #content {padding-bottom: 100px;}
-			                    .header, .dashboard, .content {margin: 0 auto;width: 1053px;}
-			                    /*---:[ header ]:---*/
-			                    .header { font-size: 14px; font-weight: 300; margin-top: -1px; padding-bottom: 15px;}
-			                    #title { margin-top: 30px; }
+                                /*---:[ containers ]:---*/
+                                #reportunit-container {background-color: #f5f5f5; margin: 0;padding: 0;width: 100%;}
+                                #content {padding: 0 0 100px;}
+                                .header, .dashboard, .content {margin: 0 auto;width: 1053px;}
+                                /*---:[ header ]:---*/
+                                .header { font-size: 14px; font-weight: 300; padding-bottom: 15px;}
+                                #title { padding-top: 30px; }
                                 .title-reportunit { color: #2c91ef; font-weight: 600; }
-			                    .header .name {color: #bbb;float: right;font-size: 15px; margin-top: -18px;}
-			                    /*---:[ dashboard ]:---*/
-			                    #dashboard {background: #f9f9f9;border-bottom: 1px solid #ddd;margin: 20px 0 40px;}
-			                    .dashboard {padding: 20px 0 0;text-align: center;}
-			                    .dashboard > div {display: inline-block;}
-			                    /*---:[ content ]:---*/
-			                    .reportunit-table tr {border-bottom: 1px solid #ccc;}
-			                    .totals-row {background-color: #f9f9f9;font-weight: 600;}
-			                    .reportunit-table th {background-color: #444;color: #fff;font-size: 13px;padding: 6px 14px;text-align: left;text-transform: uppercase;}
-			                    .reportunit-table td {padding: 17px 12px;word-break: break-all;word-wrap: break-word;}
-			                    .reportunit-table td:last-child {min-width: 250px;}
-			                    .totals-row td {font-size: 13px;padding: 8px 12px;}
-			                    .progress {margin-bottom: 0;}
-			                    .label {font-size: 12px;font-weight:600;padding: 2px 7px;text-transform:capitalize;}
-			                    .failed > .label, .failure > .label {background-color: #eb4549;}
-			                    .passed > .label, .success > .label {background-color: #32cd32;}
+                                .header .name {color: #999;float: right; font-size: 12px; margin-right: 7px; margin-top: -17px;}
+                                .header .name { display: none; }
+                                /*---:[ dashboard ]:---*/
+                                #dashboard {}
+                                .dashboard {padding: 20px 0 0;}
+                                .dashboard > div {display: inline-block;}
+                                .wrap {background-color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); margin: 10px 10px 10px 0; padding: 20px; width: 49%; }
+                                .dashboard .wrap:nth-child(2) { float: right; margin-right: 2px;}
+                                .content .wrap { padding: 0; width: 100%; }
+                                .wrap > .head { font-size: 13px; font-weight: 600;}
+                                .flot-container {height: 200px; margin: 0 auto; text-align: center; width: 300px; }
+                                .placeholder {width: 100%; height: 100%; font-size: 14px; line-height: 1.2em; background-color: transparent;}
+                                .legend table { border-spacing: 5px; }
+                                /*---:[ content ]:---*/
+                                .reportunit-table tr {border-bottom: 1px solid #edf1f2;}
+                                .reportunit-table tr:nth-child(2n) { background-color: #fafbfc;}
+                                .totals-row {font-weight: 600;}
+                                .reportunit-table th {font-size: 13px;padding: 15px 14px 10px;text-align: left;text-transform: uppercase;}
+                                .reportunit-table td {padding: 17px 12px;word-break: break-all;word-wrap: break-word;}
+                                .reportunit-table td:last-child {min-width: 250px;}
+                                .totals-row td {font-size: 13px;padding: 12px;}
+                                .progress {margin-bottom: 0;}
+                                .label {font-size: 12px;font-weight:600;padding: 2px 7px;text-transform:capitalize;}
+                                .failed > .label, .failure > .label {background-color: #eb4549;}
+                                .passed > .label, .success > .label {background-color: #32cd32;}
+                                .other > .label {background-color: #FFA81C;}
+                                .progress { height: 17px; }
+                                .progress-bar { font-size: 12px; font-weight: 600; line-height: 16px; }
+                                .progress-bar-warning {background-color: #ffa81c;}
+                                /*OPTIONALCSS*/
 		                    </style>
 	                    </head>
 	                    <body>
@@ -65,36 +79,58 @@
 				                    </div>
 				                    <div id='dashboard'>
 					                    <div class='dashboard'>
-						                    <div id='file-summary'></div>
-						                    <div id='test-summary'></div>
+						                    <div class='wrap'>
+                                                <div class='head'>
+                                                    Overall Status
+                                                </div>
+                                                <div class='flot-container'>
+                                                    <div id='file-summary' class='placeholder'></div>
+                                                </div>
+                                                <div class='footer'>
+                                                
+                                                </div>
+                                            </div>
+                                            <div class='wrap'>
+                                                <div class='head'>
+                                                    Test Status
+                                                </div>
+                                                <div class='flot-container'>
+                                                    <div id='test-summary' class='placeholder'></div>
+                                                </div>
+                                                <div class='footer'>
+                                                
+                                                </div>
+                                            </div>
 					                    </div>
 				                    </div>
 				                    <div id='content'>
 					                    <div class='content'>
 						                    <div class='summary'>
-							                    <table class='reportunit-table'>
-								                    <tr>
-									                    <th>File</th>
-									                    <th>Assembly</th>
-									                    <th>Result</th>
-									                    <th>Total</th>
-									                    <th>Passed</th>
-									                    <th>Failed</th>
-									                    <th>Other</th>
-									                    <th>Quick Status</th>
-								                    </tr>
-								                    <!--%INSERTRESULT%-->
-								                    <tr class='totals-row'>
-									                    <td>TOTAL</td>
-									                    <td></td>
-									                    <td></td>
-									                    <td class='totals-all'></td>
-									                    <td class='totals-passed' ></td>
-									                    <td class='totals-failed'></td>
-									                    <td class='totals-others'></td>
-									                    <td></td>
-								                    </tr>
-							                    </table>
+                                                <div class='wrap'>
+							                        <table class='reportunit-table'>
+								                        <tr>
+									                        <th>File</th>
+									                        <th>Assembly</th>
+									                        <th>Result</th>
+									                        <th>Total</th>
+									                        <th>Passed</th>
+									                        <th>Failed</th>
+									                        <th>Other</th>
+									                        <th>Quick Status</th>
+								                        </tr>
+								                        <!--%INSERTRESULT%-->
+								                        <tr class='totals-row'>
+									                        <td>TOTAL</td>
+									                        <td></td>
+									                        <td></td>
+									                        <td class='totals-all'></td>
+									                        <td class='totals-passed' ></td>
+									                        <td class='totals-failed'></td>
+									                        <td class='totals-others'></td>
+									                        <td></td>
+								                        </tr>
+							                        </table>
+                                                </wrap>
 						                    </div>
 					                    </div>
 				                    </div>
@@ -102,66 +138,94 @@
 		                    </div>
 	                    </body>
 	                    <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
-	                    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+	                    <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js'></script>
+                        <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.pie.min.js'></script>
+                        <script src='http://cdn.jsdelivr.net/jquery.flot.tooltip/0.7.1/jquery.flot.tooltip.min.js'></script>
 	                    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
 	                    <script type='text/javascript'>
-		                    google.load('visualization', '1', {packages:['corechart']});
-		                    $(document).ready(function() {
-			                    function testCountByStatus(status) {
-				                    var sum = 0;
-				                    $(status).each(function() {
-					                    sum += Number($(this).text());
-				                    });
-				                    return sum;
-			                    }
-			                    $('.totals-all').text(testCountByStatus('td.total-count'));
-			                    $('.totals-passed').text(testCountByStatus('td.pass-count'));
-			                    $('.totals-failed').text(testCountByStatus('td.fail-count'));
-			                    $('.totals-others').text(testCountByStatus('td.others-count'));
-			                    google.setOnLoadCallback(fileSummary);
-			                    google.setOnLoadCallback(testSummary);
-			                    function fileSummary() {
-				                    var data = google.visualization.arrayToDataTable([
-				                        ['File Status', 'Count'],
-				                        ['Pass', $('td.file-status.pass').length + $('td.file-status.passed').length + $('td.file-status.success').length],
-				                        ['Fail', $('td.file-status.fail').length + $('td.file-status.failure').length + $('td.file-status.failed').length]
-				                    ]);
-				                    var options = {
-				                        backgroundColor: { fill:'transparent' },
-				                        chartArea: {'width': '65%', 'height': '65%'},
-				                        colors: ['#00af00', 'tomato', 'orange', 'red', '#999'],
-				                        fontSize: '11',
-				                        height: 275,
-				                        is3D: true,
-				                        pieSliceText: 'value', 
-				                        title: 'OVERALL SUMMARY', 
-				                        width: 450
-				                    };
-				                    var chart = new google.visualization.PieChart(document.getElementById('file-summary'));
-				                    chart.draw(data, options);
-			                        }
-			                        function testSummary() {
-				                    var data = google.visualization.arrayToDataTable([
-				                        ['File Status', 'Count'],
-				                        ['Pass', testCountByStatus('td.pass-count')],
-				                        ['Fail', testCountByStatus('td.fail-count')],
-				                        ['Other',  testCountByStatus('td.others-count')]
-				                    ]);
-				                    var options = {
-				                        backgroundColor: { fill:'transparent' },
-				                        chartArea: {'width': '65%', 'height': '65%'},
-				                        colors: ['#00af00', 'red', '#aaa'],
-				                        fontSize: '11',
-				                        height: 275,
-				                        is3D: true,
-				                        pieSliceText: 'value', 
-				                        title: 'TEST SUMMARY', 
-				                        width: 450
-				                    };
-				                    var chart = new google.visualization.PieChart(document.getElementById('test-summary'));
-				                    chart.draw(data, options);
-			                        }
-		                    })
+		                   $(document).ready(function() {
+                                function testCountByStatus(status) {
+                                    var sum = 0;
+                                    $(status).each(function() {
+                                        sum += Number($(this).text());
+                                    });
+                                    return sum;
+                                }
+                                var data = [
+                                    { label: 'Pass', data: $('td.file-status.pass').length + $('td.file-status.passed').length + $('td.file-status.success').length }, 
+                                    { label: 'Fail', data: $('td.file-status.fail').length + $('td.file-status.failure').length + $('td.file-status.failed').length }
+                                ];
+                                $('.totals-all').text(testCountByStatus('td.total-count'));
+                                $('.totals-passed').text(testCountByStatus('td.pass-count'));
+                                $('.totals-failed').text(testCountByStatus('td.fail-count'));
+                                $('.totals-others').text(testCountByStatus('td.others-count'));
+                                var plotObj = $.plot($('#file-summary'), data, {
+                                    series: {
+                                        pie: { show: true,
+                                            innerRadius: 0.45,
+                                            label: {
+                                                show: true,
+                                                radius: .9
+                                            },
+                                            stroke: { 
+                                                width: 10
+                                            }
+                                        }
+                                    },
+                                    legend: {
+                                        show: false
+                                    },
+                                    colors: ['#4caf50','#9c27b0'],
+                                    grid: {
+                                        hoverable: true
+                                    },
+                                    tooltip: true,
+                                    tooltipOpts: {
+                                        content: '%p.0%, %s', // show percentages, rounding to 2 decimal places
+                                        shifts: {
+                                            x: 20,
+                                            y: 0
+                                        },
+                                        defaultTheme: true
+                                    }
+                                });
+                                data = [
+                                    { label: 'Pass', data: testCountByStatus('td.pass-count') }, 
+                                    { label: 'Fail', data: testCountByStatus('td.fail-count') },
+                                    { label: 'Other', data: testCountByStatus('td.others-count') },
+                                ];
+                                var plotObj = $.plot($('#test-summary'), data, {
+                                    series: {
+                                        pie: {
+                                            show: true,
+                                            innerRadius: 0.45,
+                                            label: {
+                                                show: true,
+                                                radius: .9
+                                            },
+                                            stroke: { 
+                                                width: 10
+                                            }
+                                        }
+                                    },
+                                    legend: {
+                                        show: false
+                                    },
+                                    colors: ['#4caf50','#9c27b0','#ffc107','#7e57c2'],
+                                    grid: {
+                                        hoverable: true
+                                    },
+                                    tooltip: true,
+                                    tooltipOpts: {
+                                        content: '%p.0%, %s', // show percentages, rounding to 2 decimal places
+                                        shifts: {
+                                            x: 20,
+                                            y: 0
+                                        },
+                                        defaultTheme: true
+                                    }
+                                });
+                            })
 	                    </script>
                     </html>";
             }
@@ -184,9 +248,9 @@
 	                    <td class='others-count'><!--%ALLOTHERTESTS%--></td>
 	                    <td>
 		                    <div class='progress'>
-		                        <div class='progress-bar progress-bar-success' style='width: <!--%PASSEDPERCENTAGE%-->%'><span class='sr-only'><!--%PASSEDPERCENTAGE%-->%</span><!--%TOTALPASSED%--></div>
-                                <div class='progress-bar progress-bar-danger' style='width: <!--%FAILEDPERCENTAGE%-->%'><span class='sr-only'><!--%FAILEDPERCENTAGE%-->%</span><!--%TOTALFAILED%--></div>
-                                <div class='progress-bar progress-bar-warning' style='width: <!--%OTHERSPERCENTAGE%-->%'><span class='sr-only'><!--%OTHERSPERCENTAGE%-->%</span><!--%ALLOTHERTESTS%--></div>
+		                        <div class='progress-bar progress-bar-success progress-bar-striped' style='width: <!--%PASSEDPERCENTAGE%-->%'><span class='sr-only'><!--%PASSEDPERCENTAGE%-->%</span><!--%TOTALPASSED%--></div>
+                                <div class='progress-bar progress-bar-danger progress-bar-striped' style='width: <!--%FAILEDPERCENTAGE%-->%'><span class='sr-only'><!--%FAILEDPERCENTAGE%-->%</span><!--%TOTALFAILED%--></div>
+                                <div class='progress-bar progress-bar-warning progress-bar-striped' style='width: <!--%OTHERSPERCENTAGE%-->%'><span class='sr-only'><!--%OTHERSPERCENTAGE%-->%</span><!--%ALLOTHERTESTS%--></div>
 		                    </div>
 	                    </td>
                     </tr>

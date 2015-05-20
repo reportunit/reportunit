@@ -42,8 +42,6 @@ namespace ReportUnit.Parser
 			_report.FileName = this._testResultFile;
 			_report.RunInfo.TestRunner = TestRunner.NUnit;
 
-			Console.WriteLine("[INFO] Processing file '" + _testResultFile + "'..");
-
 			// get total count of tests from the input file
 			_report.Total = _doc.GetElementsByTagName("test-case").Count;
 			_report.AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText;
@@ -185,21 +183,21 @@ namespace ReportUnit.Parser
 						catch (Exception) { }
 					}
 
-                    XmlNode message = testcase.SelectNodes(".//message")[0];
+                    var message = testcase.SelectSingleNode(".//message");
 
 					if (message != null)
 					{
-						errorMsg = testcase.SelectNodes(".//message").Count == 1 ? "<pre>" + message.InnerText : "";
-						errorMsg += testcase.SelectNodes(".//stack-trace").Count == 1 ? " -> " + testcase.SelectNodes(".//stack-trace")[0].InnerText.Replace("\r", "").Replace("\n", "") : "";
+						errorMsg = "<pre>" + message.InnerText.Trim();
+						errorMsg += testcase.SelectSingleNode(".//stack-trace") != null ? " -> " + testcase.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "").Replace("\n", "") : "";
 						errorMsg += "</pre>";
 						errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
 					}
 
-                    XmlNode desc = testcase.SelectNodes(".//property[@name='Description']")[0];
+                    XmlNode desc = testcase.SelectSingleNode(".//property[@name='Description']");
 
 					if (desc != null)
 					{
-						descMsg += testcase.SelectNodes(".//property[@name='Description']").Count == 1 ? "<p class='description'>Description: " + desc.Attributes["value"].InnerText : "";
+						descMsg += "<p class='description'>Description: " + desc.Attributes["value"].InnerText.Trim();
 						descMsg += "</p>";
 						descMsg = descMsg == "<p class='description'>Description: </p>" ? "" : descMsg;
 					}

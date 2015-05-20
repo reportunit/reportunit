@@ -50,8 +50,6 @@
 			_report.FileName = this._testResultFile;
 			_report.RunInfo.TestRunner = TestRunner.MSTest2010;
 
-			Console.WriteLine("[INFO] Processing file '" + _testResultFile + "'..");
-
 			// get total count of tests from the input file
 			_report.Total = _doc.SelectNodes("descendant::t:UnitTestResult", _nsmgr).Count;
 

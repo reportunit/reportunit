@@ -64,7 +64,7 @@
 			                .dropdown-menu i { font-size: 11px; padding-right: 10px; }
 			                .dropdown-menu div { display: inline-block; width: 24px !important; }
 			                /*content*/
-			                #content { margin: 10px 0 100px; }
+			                #content { padding: 10px 0 100px; }
 			                .fixtures { max-width: 1053px; }
 			                .fixture-container { border: 1px solid #929da1; cursor: pointer; margin-bottom: 10px; width: 518px; }
 							.fixture-head { padding: 20px 15px 60px; word-break: break-all; }
