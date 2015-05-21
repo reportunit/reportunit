@@ -20,13 +20,13 @@
 		                    <link href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet' />
 		                    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
 		                    <style type='text/css'>
-			                    html {background: #f5f5f5; overflow-y: scroll;}
+			                    html {overflow-y: scroll;}
                                 body {font-family: 'Open Sans', Arial;font-size: 14px; line-height: 1.3; margin: 0;}
                                 table {border-collapse: collapse;width: 100%;}
                                 a {color: #1366d7;}
                                 /*---:[ containers ]:---*/
-                                #reportunit-container {background-color: #f5f5f5; margin: 0;padding: 0;width: 100%;}
-                                #content {padding: 0 0 100px;}
+                                #reportunit-container {margin: 0;padding: 0;width: 100%;}
+                                #content {padding: 40px 0 100px;}
                                 .header, .dashboard, .content {margin: 0 auto;width: 1053px;}
                                 /*---:[ header ]:---*/
                                 .header { font-size: 14px; font-weight: 300; padding-bottom: 15px;}
@@ -35,12 +35,13 @@
                                 .header .name {color: #999;float: right; font-size: 12px; margin-right: 7px; margin-top: -17px;}
                                 .header .name { display: none; }
                                 /*---:[ dashboard ]:---*/
-                                #dashboard {}
-                                .dashboard {padding: 20px 0 0;}
+                                #dashboard { border: 1px solid #ddd; }
+                                .dashboard {padding: 20px 0 0; text-align: center;}
                                 .dashboard > div {display: inline-block;}
-                                .wrap {background-color: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); margin: 10px 10px 10px 0; padding: 20px; width: 49%; }
-                                .dashboard .wrap:nth-child(2) { float: right; margin-right: 2px;}
-                                .content .wrap { padding: 0; width: 100%; }
+                                .wrap {background-color: #fff; padding: 20px; width: 420px; }
+								.dashboard .wrap:first-child { margin-left: -20px; }
+                                .dashboard .wrap:nth-child(2) { margin-right: 2px;}
+                                .content .wrap { margin: 0; padding: 0; width: 100%; }
                                 .wrap > .head { font-size: 13px; font-weight: 600;}
                                 .flot-container {height: 200px; margin: 0 auto; text-align: center; width: 300px; }
                                 .placeholder {width: 100%; height: 100%; font-size: 14px; line-height: 1.2em; background-color: transparent;}
@@ -49,8 +50,8 @@
                                 .reportunit-table tr {border-bottom: 1px solid #edf1f2;}
                                 .reportunit-table tr:nth-child(2n) { background-color: #fafbfc;}
                                 .totals-row {font-weight: 600;}
-                                .reportunit-table th {font-size: 13px;padding: 15px 14px 10px;text-align: left;text-transform: uppercase;}
-                                .reportunit-table td {padding: 17px 12px;word-break: break-all;word-wrap: break-word;}
+                                .reportunit-table th {border-bottom: 2px solid #dcdcdc; font-size: 14px;padding: 15px 14px 10px;text-align: left;}
+                                .reportunit-table td {padding: 14px 12px;word-break: break-all;word-wrap: break-word;}
                                 .reportunit-table td:last-child {min-width: 250px;}
                                 .totals-row td {font-size: 13px;padding: 12px;}
                                 .progress {margin-bottom: 0;}
@@ -175,7 +176,7 @@
                                     legend: {
                                         show: false
                                     },
-                                    colors: ['#4caf50','#9c27b0'],
+                                    colors: ['#4caf50','#f8576c'],
                                     grid: {
                                         hoverable: true
                                     },
@@ -211,7 +212,7 @@
                                     legend: {
                                         show: false
                                     },
-                                    colors: ['#4caf50','#9c27b0','#ffc107','#7e57c2'],
+                                    colors: ['#4caf50','#f8576c','#ffc107','#7e57c2'],
                                     grid: {
                                         hoverable: true
                                     },

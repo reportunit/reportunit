@@ -32,7 +32,7 @@
                                 .dropdown-menu .divider { background-color: #999; }
                                 .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) { background-color: #737373; color: #fff; }
                                 .fixture-container { border: 1px solid #929da1; }
-                                .fixture-footer { background-color: #333; }
+                                .fixture-footer { background-color: #404040; }
                                 .is-expanded { border-color: #eee !important; color: #fff; }
                                 .simple-grey tr { border-bottom: 1px solid #595959; }
                                 p.description { border: 1px solid #595959; color: #ddd; }
