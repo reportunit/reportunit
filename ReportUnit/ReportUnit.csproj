@@ -43,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Design\ChartStroke.cs" />
+    <Compile Include="Design\Styles.cs" />
     <Compile Include="Design\Theme.cs" />
-    <Compile Include="Design\ThemeName.cs" />
     <Compile Include="FileBuilder.cs" />
     <Compile Include="HTML\File.cs" />
     <Compile Include="HTML\Folder.cs" />

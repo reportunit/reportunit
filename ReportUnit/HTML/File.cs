@@ -33,18 +33,21 @@
 			                .header, .topbar, .dashboard, .content, .filters { margin: 0 auto; width: 1053px; }
 			                /*header*/
 			                #header { margin-bottom: 35px; }
-                            #topbar {border-bottom: 1px solid #ddd;padding: 7px 0 10px;}						
-                            .back {background-color: #5bc0de;color: #fff;border-radius: 2px;font-family: 'Open Sans';font-size: 13px;font-weight: 600;padding: 3px 10px 4px;}
-                            .back:hover {color: #fff;text-decoration: none;}
+                            #topbar {border-bottom: 1px solid #d5d7da;padding: 7px 0 10px;}						
+                            .back {background-color: #222;border-radius: 2px;color: #fff; font-family: 'Open Sans';font-size: 12px;font-weight: 600;padding: 2px 10px 3px;}
+                            .back > i { line-height: 1px; }
+                            .back:hover {color: #eee; text-decoration: none;}
 			                #title { font-size: 14px; font-weight: 300; margin-top: 30px; }
                             .title-reportunit { color: #2c91ef; font-weight: 600;}
 			                .menu { float: right; margin-right: 5px; margin-top: -28px; }
 			                .menu li { cursor: pointer; display: inline-block; font-size: 13px; list-style: outside none none; margin-right: 5px; padding: 10px 14px 10px 0; text-transform: uppercase;}
                             .selected { color: #2c91ef; }
 			                /*dashboard*/
-			                #dashboard { background-color: #f8f8f8; border-bottom: 1px solid #ddd; padding: 40px 0; }
+			                #dashboard { background-color: #f7f7f7; border-bottom: 1px solid #ddd; padding: 40px 0; }
 			                #tabs-2 { display: none; }
-                            #summary { float: left; margin: 3px 20px 0 20px; }
+                            .flot-container {float: left; height: 220px; margin-right: 50px; width: 300px; }
+                            .placeholder {width: 100%; height: 100%; font-size: 14px; line-height: 1.2em; background-color: transparent;}
+                            #summary { margin: 6px 20px 20px 10px; }
 			                .summary-item {background: none repeat scroll 0 0 #fff;border-left: 1px solid #c2c2c2;display: inline-block;margin: 10px 17px;padding: 25px 15px 15px;width: 184px;}
 			                .summary-item span { display: block; text-align: center; }
 			                .summary-value {color: #222;float: left;font-size: 22px;margin-top: -16px;}
@@ -69,7 +72,7 @@
 			                .fixture-container { border: 1px solid #929da1; cursor: pointer; margin-bottom: 10px; width: 518px; }
 							.fixture-head { padding: 20px 15px 60px; word-break: break-all; }
 			                .fixture-name {float: left; font-size: 19px; font-weight: 600; max-width: 410px; word-break: break-all; }
-							.fixture-footer { background-color: #f8fafa; padding: 10px 0 10px 15px; }
+							.fixture-footer { background-color: #f7fafc; padding: 10px 0 10px 15px; }
 							.fixture-footer div { display: block; }
 			                .fixture-result {border-radius: 0.25em;color: #fff !important;float: right;font-size: 12px !important;font-weight: 600;margin-top: 3px;padding: 2px 7px;}
 							.startedAt, .endedAt { font-family: Verdana; font-size: 11px; }
@@ -100,8 +103,9 @@
 	                        .skipped, .not-run, .notrun, .ignored { color: #1e90ff; }
 			                .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) { background-color: #f1f5f8; border: medium none; border-bottom-right-radius: 0; border-top-right-radius: 0; font-size: 13px;padding: 11px 18px; }
 			                .transparent { color: #ccc !important; }
-                            /*%OPTIONALCSS%*/
                         </style>
+                        <!--%OPTIONALCSS%-->
+                        <!--%THEMESTYLES%-->
 	                </head>
 	                <body>
 		                <div id='reportunit-container'>
@@ -125,7 +129,9 @@
 				                    <div id='tabs'>
 					                    <div id='tabs-1'>
 						                    <div class='graphs'>
-							                    <div id='summary'></div>
+                                                <div class='flot-container'>
+                                                    <div id='summary' class='placeholder'></div>
+                                                </div>
 							                    <div class='summary-items'>
 					                                <div class='summary-item total-tests'>
 						                                <span class='summary-value'><!--%TOTALTESTS%--></span>
@@ -215,7 +221,9 @@
 		                </div>	
 	                </body>
 	                <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
-	                <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+	                <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js'></script>
+                    <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.pie.min.js'></script>
+                    <script src='http://cdn.jsdelivr.net/jquery.flot.tooltip/0.7.1/jquery.flot.tooltip.min.js'></script>
 	                <script src='http://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js' type='text/javascript' charset='utf-8'></script>
 	                <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
 	                <script type='text/javascript'>
@@ -318,26 +326,48 @@
                         function writeLog(log) {
                             $('.filter-message span').text(log);
                         }
-		                google.load('visualization', '1', {packages:['corechart']});
-		                google.setOnLoadCallback(summary);
-		                function summary() {
-			                var data = google.visualization.arrayToDataTable([ 
-				                ['Fixture Status', 'Count'], 
-				                ['Pass', $('td.passed').length + $('td.success').length], 
-				                ['Fail', $('td.failed').length + $('td.failure').length], 
-				                ['Inconclusive/NotRunnable', $('td.inconclusive').length + $('td.notrunnable').length], 
-				                ['Skipped', $('td.skipped').length + $('td.ignored').length + $('td.not-run').length], 
-				                ['Invalid/Error', $('td.invalid').length + $('td.error').length] 
-			                ]);
-			                var chart = new google.visualization.PieChart(document.getElementById('summary'));
-			                chart.draw(data, { chartArea: {left: 10, 'width': '85%', 'height': '85%'}, 
-						                backgroundColor: { fill:'transparent' }, 
-						                colors: ['#00af00', 'red', 'orange', '#1e90ff', 'tomato'], 
-						                is3D: true,
-						                pieSliceText: 'value', 
-						                height: 225, 
-						                width: 350 
-					                });}
+                        var data = [
+                            { label: 'Pass', data: $('td.passed').length + $('td.success').length }, 
+                            { label: 'Fail', data: $('td.failed').length + $('td.failure').length },
+                            { label: 'Inconclusive', data: $('td.inconclusive').length + $('td.notrunnable').length },
+                            { label: 'Skipped', data: $('td.skipped').length + $('td.ignored').length + $('td.not-run').length },
+                            { label: 'Invalid/Error', data: $('td.invalid').length + $('td.error').length }
+                        ];
+                        var plotObj = $.plot($('#summary'), data, {
+                            series: {
+                                pie: { show: true,
+                                    innerRadius: 0.45,
+                                    label: {
+                                        show: true,
+                                        radius: .9
+                                    },
+                                    stroke: {
+                                        /*FLOTSTROKE*/color: '#f7f7f7',/*FLOTSTROKE*/
+                                        width: 6
+                                    },
+                                    combine: {
+                                        color: '#9c27b0',
+                                        threshold: 0.1
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            },
+                            colors: ['#4caf50','#f8576c','#ffc107','#1e90ff','#7e57c2'],
+                            grid: {
+                                hoverable: true
+                            },
+                            tooltip: true,
+                            tooltipOpts: {
+                                content: '%p.0%, %s', // show percentages, rounding to 2 decimal places
+                                shifts: {
+                                    x: 20,
+                                    y: 0
+                                },
+                                defaultTheme: true
+                            }
+                        });
                     </script>
                 </html>";
             }
@@ -353,7 +383,7 @@
             {
                 return @"<div id='topbar'>
 							<div class='topbar'>
-								<a class='back' href='Index.html'><i class='fa fa-chevron-circle-left'></i> &nbsp; Executive Summary</a>
+								<a class='back' href='Index.html'><i class='fa fa-arrow-circle-left'></i> &nbsp; Executive Summary</a>
 							</div>
 						</div>";
             }
@@ -436,9 +466,9 @@
         {
             get
             {
-                return @".menu, #filters, #content, #tabs { display: none; }
+                return @"<style>.menu, #filters, #content, #tabs { display: none; }
                          #dashboard { padding: 40px 0 25px; }
-                         .no-tests-available { margin: 0 auto; width: 99%; }";
+                         .no-tests-available { margin: 0 auto; width: 99%; }</style>";
             }
         }
     }

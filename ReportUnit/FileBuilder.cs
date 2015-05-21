@@ -1,16 +1,19 @@
 ﻿namespace ReportUnit
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
+    using ReportUnit.Design;
     using ReportUnit.Layer;
     using ReportUnit.Parser;
-    using ReportUnit.Support;
-    using System.Collections.Generic;
+    using ReportUnit.Support;    
 
     internal class FileBuilder
     {
+        private Theme theme;
+
         /// <summary>
         /// FileParser for the type of test results to be parsed
         /// </summary>
@@ -139,7 +142,7 @@
                                 .Replace(ReportHelper.MarkupFlag("runInfoValue"), pair.Value);
                     }
 
-                    BuildSuiteBlocks(report, html, outputFile);
+                    html = BuildSuiteBlocks(report, html, outputFile);
                 }
                 catch (Exception ex)
                 {
@@ -151,7 +154,7 @@
             {
                 // replace OPTIONALCSS here with css to hide elements
                 html = html.Replace(ReportHelper.MarkupFlag("insertNoTestsMessage"), HTML.File.NoTestsMessage)
-                            .Replace("/*%OPTIONALCSS%*/", HTML.File.NoTestsCSS)
+                            .Replace(ReportHelper.MarkupFlag("optionalcss"), HTML.File.NoTestsCSS)
                             .Replace(ReportHelper.MarkupFlag("inXml"), Path.GetFileName(resultsFile));
 
                 // add topbar for folder-level report to allow backward navigation to Index.html
@@ -159,15 +162,15 @@
                 {
                     html = html.Replace(ReportHelper.MarkupFlag("topbar"), HTML.File.Topbar);
                 }
-
-                // finally, save the source as the output file
-                File.WriteAllText(outputFile, html);
             }
+
+            // finally, save the source as the output file
+            File.WriteAllText(outputFile, html.Apply(theme));
 
             return report;
         }
 
-        private void BuildSuiteBlocks(Report report, string html, string outputFile)
+        private string BuildSuiteBlocks(Report report, string html, string outputFile)
         {
             // run for each test fixture
             foreach (TestSuite suite in report.TestFixtures)
@@ -224,7 +227,14 @@
             }
 
             // finally, save the source as the output file
-            File.WriteAllText(outputFile, html);
+            //File.WriteAllText(outputFile, html);
+
+            return html;
+        }
+
+        public FileBuilder(Theme theme)
+        {
+            this.theme = theme;
         }
     }
 }

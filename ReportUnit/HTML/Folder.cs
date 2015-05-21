@@ -29,8 +29,7 @@
                                 #content {padding: 40px 0 100px;}
                                 .header, .dashboard, .content {margin: 0 auto;width: 1053px;}
                                 /*---:[ header ]:---*/
-                                .header { font-size: 14px; font-weight: 300; padding-bottom: 15px;}
-                                #title { padding-top: 30px; }
+                                .header { font-size: 14px; font-weight: 300; padding: 25px 0;}
                                 .title-reportunit { color: #2c91ef; font-weight: 600; }
                                 .header .name {color: #999;float: right; font-size: 12px; margin-right: 7px; margin-top: -17px;}
                                 .header .name { display: none; }
@@ -38,7 +37,7 @@
                                 #dashboard { border: 1px solid #ddd; }
                                 .dashboard {padding: 20px 0 0; text-align: center;}
                                 .dashboard > div {display: inline-block;}
-                                .wrap {background-color: #fff; padding: 20px; width: 420px; }
+                                .wrap { padding: 20px; width: 420px; }
 								.dashboard .wrap:first-child { margin-left: -20px; }
                                 .dashboard .wrap:nth-child(2) { margin-right: 2px;}
                                 .content .wrap { margin: 0; padding: 0; width: 100%; }
@@ -47,8 +46,9 @@
                                 .placeholder {width: 100%; height: 100%; font-size: 14px; line-height: 1.2em; background-color: transparent;}
                                 .legend table { border-spacing: 5px; }
                                 /*---:[ content ]:---*/
+                                .reportunit-table { border: 1px solid #ddd; }
                                 .reportunit-table tr {border-bottom: 1px solid #edf1f2;}
-                                .reportunit-table tr:nth-child(2n) { background-color: #fafbfc;}
+                                .reportunit-table tr:nth-child(2n) { background-color: #fbfcfd;}
                                 .totals-row {font-weight: 600;}
                                 .reportunit-table th {border-bottom: 2px solid #dcdcdc; font-size: 14px;padding: 15px 14px 10px;text-align: left;}
                                 .reportunit-table td {padding: 14px 12px;word-break: break-all;word-wrap: break-word;}
@@ -169,7 +169,7 @@
                                                 radius: .9
                                             },
                                             stroke: { 
-                                                width: 10
+                                                width: 6
                                             }
                                         }
                                     },
@@ -205,7 +205,7 @@
                                                 radius: .9
                                             },
                                             stroke: { 
-                                                width: 10
+                                                width: 6
                                             }
                                         }
                                     },
