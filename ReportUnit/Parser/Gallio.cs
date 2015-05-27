@@ -7,7 +7,7 @@
     using ReportUnit.Layer;
     using ReportUnit.Support;
 
-	internal class Gallio : IParser
+    internal class Gallio : IParser
     {
         /// <summary>
         /// XmlDocument instance
@@ -29,8 +29,8 @@
         /// </summary>
         private XmlNamespaceManager _nsmgr;
 
-	    public IParser LoadFile(string testResultFile)
-	    {
+        public IParser LoadFile(string testResultFile)
+        {
             if (_doc == null) _doc = new XmlDocument();
 
             _testResultFile = testResultFile;
@@ -41,10 +41,10 @@
             _nsmgr.AddNamespace("ns", "http://www.gallio.org/");
 
             return this;
-	    }
+        }
 
-	    public Report ProcessFile()
-	    {
+        public Report ProcessFile()
+        {
             // create a data instance to be passed to the folder level report
             _report = new Report();
             _report.FileName = this._testResultFile;
@@ -126,19 +126,19 @@
             }
 
             return _report;
-	    }
+        }
 
         private void ProcessFixtureBlocks()
         {
             Console.WriteLine("[INFO] Building fixture blocks...");
 
-			string errorMsg = null;
-			string descMsg = null;
+            string errorMsg = null;
+            string descMsg = null;
             XmlNodeList suites = _doc.SelectNodes("//ns:testStep[@isTestCase='true']/ancestor::ns:testStepRun[2]", _nsmgr);
-			int testCount = 0;
+            int testCount = 0;
 
-			// run for each test-suite
-			foreach (XmlNode suite in suites)
+            // run for each test-suite
+            foreach (XmlNode suite in suites)
             {
                 var testSuite = new TestSuite();
                 

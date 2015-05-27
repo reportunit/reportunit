@@ -76,11 +76,25 @@
                                         .card-panel {
                                             padding: 15px;
                                         }
-                                        .card-panel > span {
+                                        .card-panel > div {
                                             font-size: 14px;
                                         }
                                         .chart {
+                                            height: 110px;
+                                            margin: 10px auto 25px;
+                                            position: relative;
                                             text-align: center;
+                                            width: 110px;
+                                        }
+                                        .chart canvas {
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                        }
+                                        .percent {
+                                            display: inline-block;
+                                            line-height: 120px;
+                                            z-index: 2;
                                         }
                 
                                         /* ---- [ result table ] ---- */
@@ -264,26 +278,34 @@
                                         <div class='row'>
                                             <div class='col s12 m6 l3'>
                                                 <div class='card-panel'>
-                                                    <span>Total Tests</span>
-                                                    <div class='chart total-tests' data-percent=''><div></div></div>
+                                                    <div>Total Tests</div>
+                                                    <div class='chart total-tests' data-percent=''>
+                                                        <span class='percent'></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m6 l3'>
                                                 <div class='card-panel'>
-                                                    <span>Passed</span>    
-                                                    <div class='chart total-passed' data-percent=''><div></div></div>
+                                                    <div>Passed</div>    
+                                                    <div class='chart total-passed' data-percent=''>
+                                                        <span class='percent'></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m6 l3'>
                                                 <div class='card-panel'>
-                                                    <span>Failed</span>
-                                                    <div class='chart total-failed' data-percent=''><div></div></div>
+                                                    <div>Failed</div>
+                                                    <div class='chart total-failed' data-percent=''>
+                                                        <span class='percent'></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m6 l3'>
                                                 <div class='card-panel'>
-                                                    <span>Other</span>
-                                                    <div class='chart total-other' data-percent=''><div></div></div>
+                                                    <div>Other</div>
+                                                    <div class='chart total-other' data-percent=''>
+                                                        <span class='percent'></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -295,34 +317,34 @@
                                                         &nbsp;&nbsp;File Summary
                                                     </div>
                                                     <table class='bordered responsive-table result-table'>
-									                    <tr>
-										                    <th>File</th>
-										                    <th>Assembly</th>
-										                    <th>Result</th>
-										                    <th>Total</th>
-										                    <th>Passed</th>
-										                    <th>Failed</th>
-										                    <th>Other</th>
-										                    <th>Quick Status</th>
-									                    </tr>
-									                    <!--%INSERTRESULT%-->
-									                    <tr class='totals-row'>
-										                    <td>TOTAL</td>
-										                    <td></td>
-										                    <td></td>
-										                    <td class='totals-all'></td>
-										                    <td class='totals-passed' ></td>
-										                    <td class='totals-failed'></td>
-										                    <td class='totals-others'></td>
-										                    <td></td>
-									                    </tr>
-								                    </table>
-							                    </div>
+                                                        <tr>
+                                                            <th>File</th>
+                                                            <th>Assembly</th>
+                                                            <th>Result</th>
+                                                            <th>Total</th>
+                                                            <th>Passed</th>
+                                                            <th>Failed</th>
+                                                            <th>Other</th>
+                                                            <th>Quick Status</th>
+                                                        </tr>
+                                                        <!--%INSERTRESULT%-->
+                                                        <tr class='totals-row'>
+                                                            <td>TOTAL</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td class='totals-all'></td>
+                                                            <td class='totals-passed' ></td>
+                                                            <td class='totals-failed'></td>
+                                                            <td class='totals-others'></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
                                             </div>
-						                </div>
-					                </div>
-				                </div>
-		                        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
                                 <script src='https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.4/jquery.easypiechart.min.js'></script>
                                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
                                 <script>
@@ -352,13 +374,13 @@
                                             });
                                             return sum;
                                         }
-                                        $('.totals-all, .total-tests > div').text(total);
-                                        $('.totals-passed, .total-passed > div').text(passed);
-                                        $('.totals-failed, .total-failed > div').text(failed);
-                                        $('.totals-others, .total-other > div').text(other);
+                                        $('.totals-all, .total-tests > span').text(total);
+                                        $('.totals-passed, .total-passed > span').text(passed);
+                                        $('.totals-failed, .total-failed > span').text(failed);
+                                        $('.totals-others, .total-other > span').text(other);
                                     });
                                 </script>
-	                        </body>
+                            </body>
                         </html>";
             }
         }
@@ -371,20 +393,20 @@
             get
             {
                 return @"<tr>
-	                    <td><a href='<!--%FULLFILENAME%-->'><!--%FILENAME%--></a></td>
-	                    <td><!--%ASSEMBLY%--></td>
-	                    <td class='file-status <!--%RUNRESULT%-->'><span class='label'><!--%RUNRESULT%--></span></td>
-	                    <td class='total-count'><!--%TOTALTESTS%--></td>
-	                    <td class='pass-count'><!--%TOTALPASSED%--></td>
-	                    <td class='fail-count'><!--%TOTALFAILED%--></td>
-	                    <td class='others-count'><!--%ALLOTHERTESTS%--></td>
-	                    <td>
-		                    <div class='progress'>
-		                        <div class='progress-bar progress-bar-success progress-bar-striped' style='width: <!--%PASSEDPERCENTAGE%-->%'><span class='sr-only'><!--%PASSEDPERCENTAGE%-->%</span><!--%TOTALPASSED%--></div>
-                                <div class='progress-bar progress-bar-danger progress-bar-striped' style='width: <!--%FAILEDPERCENTAGE%-->%'><span class='sr-only'><!--%FAILEDPERCENTAGE%-->%</span><!--%TOTALFAILED%--></div>
-                                <div class='progress-bar progress-bar-warning progress-bar-striped' style='width: <!--%OTHERSPERCENTAGE%-->%'><span class='sr-only'><!--%OTHERSPERCENTAGE%-->%</span><!--%ALLOTHERTESTS%--></div>
-		                    </div>
-	                    </td>
+                        <td><a href='<!--%FULLFILENAME%-->'><!--%FILENAME%--></a></td>
+                        <td><!--%ASSEMBLY%--></td>
+                        <td class='file-status <!--%RUNRESULT%-->'><span class='label'><!--%RUNRESULT%--></span></td>
+                        <td class='total-count'><!--%TOTALTESTS%--></td>
+                        <td class='pass-count'><!--%TOTALPASSED%--></td>
+                        <td class='fail-count'><!--%TOTALFAILED%--></td>
+                        <td class='others-count'><!--%ALLOTHERTESTS%--></td>
+                        <td>
+                            <div class='progress'>
+                                <div class='progress-bar progress-bar-success progress-bar-striped' style='width: <!--%PASSEDPERCENTAGE%-->%'><span class='sr-only'><!--%PASSEDPERCENTAGE%-->%</span></div>
+                                <div class='progress-bar progress-bar-danger progress-bar-striped' style='width: <!--%FAILEDPERCENTAGE%-->%'><span class='sr-only'><!--%FAILEDPERCENTAGE%-->%</span></div>
+                                <div class='progress-bar progress-bar-warning progress-bar-striped' style='width: <!--%OTHERSPERCENTAGE%-->%'><span class='sr-only'><!--%OTHERSPERCENTAGE%-->%</span></div>
+                            </div>
+                        </td>
                     </tr>
                     <!--%INSERTRESULT%-->";
             }

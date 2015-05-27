@@ -114,11 +114,25 @@
                                         .card-panel {
                                             padding: 15px;
                                         }
-                                        .card-panel > span {
+                                        .card-panel > div {
                                             font-size: 14px;
                                         }
                                         .chart {
+                                            height: 100px;
+                                            margin: 10px auto 25px;
+                                            position: relative;
                                             text-align: center;
+                                            width: 100px;
+                                        }
+                                        .chart canvas {
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                        }
+                                        .percent {
+                                            display: inline-block;
+                                            line-height: 100px;
+                                            z-index: 2;
                                         }
                 
                                         /* ---- [ filters ] ---- */
@@ -297,38 +311,38 @@
                                         <div class='row'>
                                             <div class='col s12 m4 l2'>
                                                 <div class='card-panel'>
-                                                    <span>Total Tests</span>
-                                                    <div class='chart total-tests' data-percent=''><div><!--%TOTALTESTS%--></div></div>
+                                                    <div>Total Tests</div>
+                                                    <div class='chart total-tests' data-percent=''><span class='percent'><!--%TOTALTESTS%--></span></div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m4 l2'>
                                                 <div class='card-panel'>
-                                                    <span>Passed</span>    
-                                                    <div class='chart total-passed' data-percent=''><div><!--%PASSED%--></div></div>
+                                                    <div>Passed</div>    
+                                                    <div class='chart total-passed' data-percent=''><span class='percent'><!--%PASSED%--></span></div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m4 l2'>
                                                 <div class='card-panel'>
-                                                    <span>Failed</span>
-                                                    <div class='chart total-failed' data-percent=''><div><!--%FAILED%--></div></div>
+                                                    <div>Failed</div>
+                                                    <div class='chart total-failed' data-percent=''><span class='percent'><!--%FAILED%--></span></div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m4 l2'>
                                                 <div class='card-panel'>
-                                                    <span>Inconclusive</span>
-                                                    <div class='chart total-inconclusive' data-percent=''><div><!--%INCONCLUSIVE%--></div></div>
+                                                    <div>Inconclusive</div>
+                                                    <div class='chart total-inconclusive' data-percent=''><span class='percent'><!--%INCONCLUSIVE%--></span></div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m4 l2'>
                                                 <div class='card-panel'>
-                                                    <span>Errors</span>
-                                                    <div class='chart total-errors' data-percent=''><div><!--%ERRORS%--></div></div>
+                                                    <div>Errors</div>
+                                                    <div class='chart total-errors' data-percent=''><span class='percent'><!--%ERRORS%--></span></div>
                                                 </div>
                                             </div>
                                             <div class='col s12 m4 l2'>
                                                 <div class='card-panel'>
-                                                    <span>Skipped</span>
-                                                    <div class='chart total-skipped' data-percent=''><div><!--%SKIPPED%--></div></div>
+                                                    <div>Skipped</div>
+                                                    <div class='chart total-skipped' data-percent=''><span class='percent'><!--%SKIPPED%--></span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -370,29 +384,29 @@
                                         </div>
                                         <div class='row'>
                                             <div class='fixtures'>
-				                                <!--%INSERTFIXTURE%-->
-			                                </div>
+                                                <!--%INSERTFIXTURE%-->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </body>
-	                        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
-	                        <script src='http://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js' type='text/javascript' charset='utf-8'></script>
+                            <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+                            <script src='http://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js' type='text/javascript' charset='utf-8'></script>
                             <script src='https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.4/jquery.easypiechart.min.js'></script>
-	                        <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
-	                        <script type='text/javascript'>
+                            <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
+                            <script type='text/javascript'>
                                 $(document).ready(function() {
                                     $('.button-collapse').sideNav({
                                         menuWidth: 300
                                     });
                                     $('select').material_select();
                                     resetFilters();
-                                    var total = $('.total-tests > div').text();
-                                    var passed = $('.total-passed > div').text();
-                                    var failed = $('.total-failed > div').text();
-                                    var inconclusive = $('.total-inconclusive > div').text();
-                                    var errors = $('.total-errors > div').text();
-                                    var skipped = $('.total-skipped > div').text();
+                                    var total = $('.total-tests > span').text();
+                                    var passed = $('.total-passed > span').text();
+                                    var failed = $('.total-failed > span').text();
+                                    var inconclusive = $('.total-inconclusive > span').text();
+                                    var errors = $('.total-errors > span').text();
+                                    var skipped = $('.total-skipped > span').text();
                                     $('.total-tests').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                     $('.total-tests').data('easyPieChart').update('100');
                                     $('.total-passed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100 });
@@ -501,25 +515,25 @@
             {
                 return @"<div class='col s4'>
                             <div class='card-panel'>
-					            <div class='fixture-head'>
-						            <span class='fixture-name'><!--%FIXTURENAME%--></span>
-						            <span class='fixture-result <!--%FIXTURERESULT%-->'><!--%FIXTURERESULT%--></span>
-					            </div>
-					            <div class='fixture-content'>
-						            <table class='bordered'>
-							            <tr>
-								            <th>TestName</th>
-								            <th>Status</th>
-							            </tr>
-							            <!--%INSERTTEST%-->
-						            </table>
-					            </div>
+                                <div class='fixture-head'>
+                                    <span class='fixture-name'><!--%FIXTURENAME%--></span>
+                                    <span class='fixture-result <!--%FIXTURERESULT%-->'><!--%FIXTURERESULT%--></span>
+                                </div>
+                                <div class='fixture-content'>
+                                    <table class='bordered'>
+                                        <tr>
+                                            <th>TestName</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        <!--%INSERTTEST%-->
+                                    </table>
+                                </div>
                                 <div <!--%FOOTERDISPLAY%--> class='fixture-footer'>
-						            <span <!--%FIXTURESTARTEDATDISPLAY%--> class='startedAt'><i class='mdi-device-access-time'></i><!--%FIXTURESTARTEDAT%--></span>
-						            <span <!--%FIXTUREENDEDATDISPLAY%--> class='endedAt'><i class='mdi-device-access-time'></i><!--%FIXTUREENDEDAT%--></span>
-					            </div>
+                                    <span <!--%FIXTURESTARTEDATDISPLAY%--> class='startedAt'><i class='mdi-device-access-time'></i><!--%FIXTURESTARTEDAT%--></span>
+                                    <span <!--%FIXTUREENDEDATDISPLAY%--> class='endedAt'><i class='mdi-device-access-time'></i><!--%FIXTUREENDEDAT%--></span>
+                                </div>
                             </div>
-				        </div>
+                        </div>
                         <!--%INSERTFIXTURE%-->";
             }
         }
@@ -533,9 +547,9 @@
             get
             {
                 return @"<tr>
-							<td class='test-name'><!--%TESTNAME%--></td>
-							<td class='<!--%TESTSTATUS%-->'><!--%TESTSTATUS%--><!--%TESTSTATUSMSG%--></td>
-						</tr>
+                            <td class='test-name'><!--%TESTNAME%--></td>
+                            <td class='<!--%TESTSTATUS%-->'><!--%TESTSTATUS%--><!--%TESTSTATUSMSG%--></td>
+                        </tr>
                         <!--%INSERTTEST%-->";
             }
         }
@@ -559,7 +573,7 @@
             {
                 return @"<div class='no-tests-available'>
                             <div role='alert' class='alert alert-danger'>
-	                            <strong>No tests!</strong>  There were no tests found for <!--%INXML%-->.
+                                <strong>No tests!</strong>  There were no tests found for <!--%INXML%-->.
                             </div>
                         </div>";
             }

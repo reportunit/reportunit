@@ -4,51 +4,51 @@ using ReportUnit.Support;
 
 namespace ReportUnit.Parser
 {
-	using ReportUnit.Layer;
+    using ReportUnit.Layer;
     using System.Collections.Generic;
 
-	internal class NUnit : IParser
-	{
-		/// <summary>
-		/// XmlDocument instance
-		/// </summary>
-		private XmlDocument _doc;
+    internal class NUnit : IParser
+    {
+        /// <summary>
+        /// XmlDocument instance
+        /// </summary>
+        private XmlDocument _doc;
 
-		/// <summary>
-		/// The input file from NUnit TestResult.xml
-		/// </summary>
-		private string _testResultFile = "";
+        /// <summary>
+        /// The input file from NUnit TestResult.xml
+        /// </summary>
+        private string _testResultFile = "";
 
-		/// <summary>
-		/// Contains test-suite level data to be passed to the Folder level report to build summary
-		/// </summary>
-		private Report _report;
+        /// <summary>
+        /// Contains test-suite level data to be passed to the Folder level report to build summary
+        /// </summary>
+        private Report _report;
 
-		public IParser LoadFile(string testResultFile)
-		{
-			if (_doc == null) _doc = new XmlDocument();
+        public IParser LoadFile(string testResultFile)
+        {
+            if (_doc == null) _doc = new XmlDocument();
 
             _testResultFile = testResultFile;
 
             _doc.Load(testResultFile);
 
-			return this;
-		}
+            return this;
+        }
 
-		public Report ProcessFile()
-		{
-			// create a data instance to be passed to the folder level report
-			_report = new Report();
-			_report.FileName = this._testResultFile;
-			_report.RunInfo.TestRunner = TestRunner.NUnit;
+        public Report ProcessFile()
+        {
+            // create a data instance to be passed to the folder level report
+            _report = new Report();
+            _report.FileName = this._testResultFile;
+            _report.RunInfo.TestRunner = TestRunner.NUnit;
 
-			// get total count of tests from the input file
-			_report.Total = _doc.GetElementsByTagName("test-case").Count;
-			_report.AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText;
+            // get total count of tests from the input file
+            _report.Total = _doc.GetElementsByTagName("test-case").Count;
+            _report.AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText;
 
             Console.WriteLine("[INFO] Number of tests: " + _report.Total);
 
-			// only proceed if the test count is more than 0
+            // only proceed if the test count is more than 0
             if (_report.Total >= 1)
             {
                 Console.WriteLine("[INFO] Processing root and test-suite elements...");
@@ -119,101 +119,101 @@ namespace ReportUnit.Parser
             }
 
             return _report;
-		}
+        }
 
-		/// <summary>
-		/// Processes the fixture level blocks
-		/// Adds all tests to the output
-		/// </summary>
-		private void ProcessFixtureBlocks()
-		{
-			Console.WriteLine("[INFO] Building fixture blocks...");
+        /// <summary>
+        /// Processes the fixture level blocks
+        /// Adds all tests to the output
+        /// </summary>
+        private void ProcessFixtureBlocks()
+        {
+            Console.WriteLine("[INFO] Building fixture blocks...");
 
-			string errorMsg = null;
-			string descMsg = null;
-			XmlNodeList testSuiteNodes = _doc.SelectNodes("//test-suite[@type='TestFixture']");
-			int testCount = 0;
+            string errorMsg = null;
+            string descMsg = null;
+            XmlNodeList testSuiteNodes = _doc.SelectNodes("//test-suite[@type='TestFixture']");
+            int testCount = 0;
 
-			// run for each test-suite
-			foreach (XmlNode suite in testSuiteNodes)
-			{
-				var testSuite = new TestSuite();
-				testSuite.Name = suite.Attributes["name"].InnerText;
+            // run for each test-suite
+            foreach (XmlNode suite in testSuiteNodes)
+            {
+                var testSuite = new TestSuite();
+                testSuite.Name = suite.Attributes["name"].InnerText;
 
-				if (suite.Attributes["start-time"] != null && suite.Attributes["end-time"] != null)
-				{
-					var startTime = suite.Attributes["start-time"].InnerText.Replace("Z", "");
-					var endTime = suite.Attributes["end-time"].InnerText.Replace("Z", "");
+                if (suite.Attributes["start-time"] != null && suite.Attributes["end-time"] != null)
+                {
+                    var startTime = suite.Attributes["start-time"].InnerText.Replace("Z", "");
+                    var endTime = suite.Attributes["end-time"].InnerText.Replace("Z", "");
 
                     testSuite.StartTime = startTime;
                     testSuite.EndTime = endTime;
-					testSuite.Duration = DateTimeHelper.DifferenceInMilliseconds(startTime, endTime);
-				}
-				else if (suite.Attributes["time"] != null)
-				{
-					double duration;
-					if (double.TryParse(suite.Attributes["time"].InnerText.Replace("Z", ""), out duration))
-					{
-						testSuite.Duration = duration;
-					}
+                    testSuite.Duration = DateTimeHelper.DifferenceInMilliseconds(startTime, endTime);
+                }
+                else if (suite.Attributes["time"] != null)
+                {
+                    double duration;
+                    if (double.TryParse(suite.Attributes["time"].InnerText.Replace("Z", ""), out duration))
+                    {
+                        testSuite.Duration = duration;
+                    }
 
                     testSuite.StartTime = duration.ToString();
-				}
-				
-				// add each test of the test-fixture
-				foreach (XmlNode testcase in suite.SelectNodes(".//test-case"))
-				{
-					errorMsg = descMsg = "";
+                }
+                
+                // add each test of the test-fixture
+                foreach (XmlNode testcase in suite.SelectNodes(".//test-case"))
+                {
+                    errorMsg = descMsg = "";
 
-					var tc = new Test();
-					tc.Name = testcase.Attributes["name"].InnerText.Replace("<", "[").Replace(">", "]");
-					tc.Status = testcase.Attributes["result"].InnerText.AsStatus();
+                    var tc = new Test();
+                    tc.Name = testcase.Attributes["name"].InnerText.Replace("<", "[").Replace(">", "]");
+                    tc.Status = testcase.Attributes["result"].InnerText.AsStatus();
 
-					if (testcase.Attributes["time"] != null)
-					{
-						try
-						{
-							TimeSpan d;
-							var durationTimeSpan = testcase.Attributes["duration"].InnerText;
-							if (TimeSpan.TryParse(durationTimeSpan, out d))
-							{
-								tc.Duration = d.TotalMilliseconds;
-							}
-						}
-						catch (Exception) { }
-					}
+                    if (testcase.Attributes["time"] != null)
+                    {
+                        try
+                        {
+                            TimeSpan d;
+                            var durationTimeSpan = testcase.Attributes["duration"].InnerText;
+                            if (TimeSpan.TryParse(durationTimeSpan, out d))
+                            {
+                                tc.Duration = d.TotalMilliseconds;
+                            }
+                        }
+                        catch (Exception) { }
+                    }
 
                     var message = testcase.SelectSingleNode(".//message");
 
-					if (message != null)
-					{
-						errorMsg = "<pre>" + message.InnerText.Trim();
-						errorMsg += testcase.SelectSingleNode(".//stack-trace") != null ? " -> " + testcase.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "").Replace("\n", "") : "";
-						errorMsg += "</pre>";
-						errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
-					}
+                    if (message != null)
+                    {
+                        errorMsg = "<pre>" + message.InnerText.Trim();
+                        errorMsg += testcase.SelectSingleNode(".//stack-trace") != null ? " -> " + testcase.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "").Replace("\n", "") : "";
+                        errorMsg += "</pre>";
+                        errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
+                    }
 
                     XmlNode desc = testcase.SelectSingleNode(".//property[@name='Description']");
 
-					if (desc != null)
-					{
-						descMsg += "<p class='description'>Description: " + desc.Attributes["value"].InnerText.Trim();
-						descMsg += "</p>";
-						descMsg = descMsg == "<p class='description'>Description: </p>" ? "" : descMsg;
-					}
+                    if (desc != null)
+                    {
+                        descMsg += "<p class='description'>Description: " + desc.Attributes["value"].InnerText.Trim();
+                        descMsg += "</p>";
+                        descMsg = descMsg == "<p class='description'>Description: </p>" ? "" : descMsg;
+                    }
 
-					tc.StatusMessage = descMsg + errorMsg;
-					testSuite.Tests.Add(tc);
+                    tc.StatusMessage = descMsg + errorMsg;
+                    testSuite.Tests.Add(tc);
 
-					Console.Write("\r{0} tests processed...", ++testCount);
-				}
+                    Console.Write("\r{0} tests processed...", ++testCount);
+                }
 
-				testSuite.Status = ReportHelper.GetFixtureStatus(testSuite.Tests);
+                testSuite.Status = ReportHelper.GetFixtureStatus(testSuite.Tests);
 
-				_report.TestFixtures.Add(testSuite);
-			}
-		}
+                _report.TestFixtures.Add(testSuite);
+            }
+        }
 
         public NUnit() { }
-	}
+    }
 }

@@ -34,6 +34,11 @@ namespace ReportUnit
         /// </param>
         static void Main(string[] args)
         {
+            new ReportBuilder(Theme.Standard).FolderReport(@".");
+            //new ReportBuilder(Theme.Standard).FolderReport(@"C:\Users\Anshoo\Documents\Visual Studio 2013\Projects\reportunit\ReportUnit\bin\Debug");
+            //new ReportBuilder(Theme.Standard).FileReport(@"C:\Users\Anshoo\Documents\Visual Studio 2013\Projects\reportunit\ReportUnit\bin\Debug\NUnit-TestResult.xml", @"C:\Users\Anshoo\Documents\Visual Studio 2013\Projects\reportunit\ReportUnit\bin\Debug\NUnit-TestResult.html");
+
+            /*
             if (args.Length == 0 || args.Length > 2)
             {
                 Console.WriteLine("[ERROR] Invalid number of arguments specified.\n" + reportUnitUsage);
@@ -79,6 +84,7 @@ namespace ReportUnit
             }
 
             new ReportBuilder(Theme.Standard).FolderReport(args[0]); 
+             * */
         }
     }
 }
