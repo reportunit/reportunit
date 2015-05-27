@@ -143,8 +143,8 @@
                 var testSuite = new TestSuite();
                 
                 testSuite.Name = suite.SelectSingleNode("./ns:testStep", _nsmgr).Attributes["name"].InnerText;
-                testSuite.StartTime = suite.Attributes["startTime"].InnerText;
-                testSuite.EndTime = suite.Attributes["endTime"].InnerText;
+                testSuite.StartTime = suite.Attributes["startTime"].InnerText.Split('.')[0];
+                testSuite.EndTime = suite.Attributes["endTime"].InnerText.Split('.')[0];
 
                 XmlNodeList tests = suite.SelectNodes("./ns:children/ns:testStepRun/ns:testStep[@isTestCase='true']", _nsmgr);
 

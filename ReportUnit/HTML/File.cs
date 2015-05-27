@@ -12,380 +12,481 @@
             get
             {
                 return @"<!DOCTYPE html>
-                <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'> 
-                <!--
-	                ReportUnit [TestSuite Summary] v1.0 | http://reportunit.github.io/
-                --> 
-	                <head>
-		                <title>ReportUnit</title>
-		                <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css' />
-		                <link href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet' />
-		                <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-		                <style type='text/css'>
-                            html { overflow-y: scroll; }
-			                body { color: #222; font-family: 'Open Sans', Verdana; font-size: 14px; margin: 0; line-height: 1.3; }
-			                a { color: inherit; text-decoration: none; }
-                            select { font-family: 'Open Sans'; margin-top: -4px; padding: 7px 10px; }
-			                pre { background: none repeat scroll 0 0 #f5f6f8; border: 1px solid #ccc; color: #111; font-family: monospace,Consolas; margin-top: 15px; padding: 5px 10px; text-transform: none !important; white-space: pre-wrap; }
-                            p.description {border: 1px solid #ddd;border-radius: 4px;color: #222;font-size: 13px;line-height: 20px;margin-top: 15px;padding: 10px;}
-			                #reportunit-container { margin: 0; width: 100%; }
-			                #header, #dashboard, #filters, #content { width: 100%; }
-			                .header, .topbar, .dashboard, .content, .filters { margin: 0 auto; width: 1053px; }
-			                /*header*/
-			                #header { margin-bottom: 35px; }
-                            #topbar {border-bottom: 1px solid #d5d7da;padding: 7px 0 10px;}						
-                            .back {background-color: #222;border-radius: 2px;color: #fff; font-family: 'Open Sans';font-size: 12px;font-weight: 600;padding: 2px 10px 3px;}
-                            .back > i { line-height: 1px; }
-                            .back:hover {color: #eee; text-decoration: none;}
-			                #title { font-size: 14px; font-weight: 300; margin-top: 30px; }
-                            .title-reportunit { color: #2c91ef; font-weight: 600;}
-			                .menu { float: right; margin-right: 5px; margin-top: -28px; }
-			                .menu li { cursor: pointer; display: inline-block; font-size: 13px; list-style: outside none none; margin-right: 5px; padding: 10px 14px 10px 0; text-transform: uppercase;}
-                            .selected { color: #2c91ef; }
-			                /*dashboard*/
-			                #dashboard { background-color: #f7f7f7; border-bottom: 1px solid #ddd; padding: 40px 0; }
-			                #tabs-2 { display: none; }
-                            .flot-container {float: left; height: 220px; margin-right: 50px; width: 300px; }
-                            .placeholder {width: 100%; height: 100%; font-size: 14px; line-height: 1.2em; background-color: transparent;}
-                            #summary { margin: 6px 20px 20px 10px; }
-			                .summary-item {background: none repeat scroll 0 0 #fff;border-left: 1px solid #c2c2c2;display: inline-block;margin: 10px 17px;padding: 25px 15px 15px;width: 184px;}
-			                .summary-item span { display: block; text-align: center; }
-			                .summary-value {color: #222;float: left;font-size: 22px;margin-top: -16px;}
-                            .summary-param {color: #3a4b60;float: right;font-size: 13px;font-weight: 300;margin-top: 31px;}
-                            #tabs .simple-grey { border: 1px solid #b4bfc3; width: 80%; }
-                            #tabs .simple-grey tr { border-bottom: 1px solid #b4bfc3; }
-                            #tabs .simple-grey th { background-color: #393939; color: #fff !important; }
-                            #tabs .simple-grey td { padding-bottom: 6px; padding-top: 6px; }
-                            #tabs .simple-grey td:first-child { font-weight: 600; }
-                            .last-box { margin-right: 0 !important; }
-			                /*filters*/
-			                .filters { margin-top: 50px; }
-			                .dropdown-menu a { color: inherit !important; font-size: 13px; text-transform: none !important; }
-                            .btn i {font-size: 11px; padding-right: 6px; }
-                            /*controls*/
-                            .controls { float: right; margin-right: 8px; }
-			                .dropdown-menu i { font-size: 11px; padding-right: 10px; }
-			                .dropdown-menu div { display: inline-block; width: 24px !important; }
-			                /*content*/
-			                #content { padding: 10px 0 100px; }
-			                .fixtures { max-width: 1053px; }
-			                .fixture-container { border: 1px solid #929da1; cursor: pointer; margin-bottom: 10px; width: 518px; }
-							.fixture-head { padding: 20px 15px 60px; word-break: break-all; }
-			                .fixture-name {float: left; font-size: 19px; font-weight: 600; max-width: 410px; word-break: break-all; }
-							.fixture-footer { background-color: #f7fafc; padding: 10px 0 10px 15px; }
-							.fixture-footer div { display: block; }
-			                .fixture-result {border-radius: 0.25em;color: #fff !important;float: right;font-size: 12px !important;font-weight: 600;margin-top: 3px;padding: 2px 7px;}
-							.startedAt, .endedAt { font-family: Verdana; font-size: 11px; }
-							.startedAt i, .endedAt i { font-size: 12px; padding-right: 5px; }
-							.startedAt i { color: #5cb85c; }
-							.endedAt i { color: #d9534f; padding-left: 10px;}
-                            .fixture-result.fail, .fixture-result.failed, .fixture-result.failure {background-color: #eb4549;}
-                            .fixture-result.pass, .fixture-result.success, .fixture-result.passed {background-color: #32cd32;}
-			                .fixture-result.error { background-color: tomato; }
-	                        .fixture-result.warning, .fixture-result.bad, .fixture-result.inconclusive { background-color: orange; } 
-	                        .fixture-result.skipped, .fixture-result.not-run, .fixture-result.notrun { background-color: #1e90ff; }
-			                .fixture-content { cursor: auto !important; display: none; padding-bottom: 20px; }
-			                .is-expanded { border: 1px solid #444 !important; border-top: 2px solid #444 !important; color: #000; height: auto; }
-	                        .has-pre { width: 517px; }
-			                .simple-grey { border-collapse: collapse; margin: 0 auto; text-align: left; width: 95%; }
-	                        .simple-grey tr { border-bottom: 1px solid #e5e5e5; }
-                            .simple-grey tr:last-child { border-bottom: none; }
-			                .simple-grey th { font-size: 14px; }
-	                        .simple-grey th, .simple-grey td { padding: 8px; text-align: left; }
-	                        .simple-grey td { word-break: break-all; }
-			                .simple-grey td:first-child { min-width: 150px; max-width: 400px; padding-right: 25px; }
-	                        .simple-grey td:nth-child(2) { min-width: 60px; padding-right: 25px; }
-			                .failed, .failure, .passed, .success, .warning, .bad, .inconclusive, .skipped, .ignored, .invalid, .error, .not-run, .notrun { text-transform: capitalize; }
-	                        .failed, .failure { color: red; }
-			                .error { color: tomato; }
-	                        .passed, .success { color: #5cb85c; } 
-	                        .warning, .bad, .inconclusive, .error { color: #f0ad4e; } 
-	                        .skipped, .not-run, .notrun, .ignored { color: #1e90ff; }
-			                .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) { background-color: #f1f5f8; border: medium none; border-bottom-right-radius: 0; border-top-right-radius: 0; font-size: 13px;padding: 11px 18px; }
-			                .transparent { color: #ccc !important; }
-                        </style>
-                        <!--%OPTIONALCSS%-->
-                        <!--%THEMESTYLES%-->
-	                </head>
-	                <body>
-		                <div id='reportunit-container'>
-			                <div id='header'>
-                                <!--%TOPBAR%-->
-				                <div class='header'>
-					                <div id='title'>
-						                <span><span class='title-reportunit'>ReportUnit.</span></span>
-					                </div>
-					                <div class='menu'>
-						                <ul>
-							                <li><span class='tabs-1 selected'>Summary</span></li>
-							                <li><span class='tabs-2'>Run Info</span></li>
-						                </ul>
-					                </div>
-				                </div>
-			                </div>
-			                <div id='dashboard'>
-                                <div class='dashboard'>
-                                    <!--%INSERTNOTESTSMESSAGE%-->
-				                    <div id='tabs'>
-					                    <div id='tabs-1'>
-						                    <div class='graphs'>
-                                                <div class='flot-container'>
-                                                    <div id='summary' class='placeholder'></div>
-                                                </div>
-							                    <div class='summary-items'>
-					                                <div class='summary-item total-tests'>
-						                                <span class='summary-value'><!--%TOTALTESTS%--></span>
-						                                <span class='summary-param'>Total Tests</span>
-					                                </div>
-					                                <div class='summary-item step-filter passed-tests'>
-						                                <span class='summary-value'><!--%PASSED%--></span>
-						                                <span id='passed-success' class='summary-param'>Passed</span>
-					                                </div>
-					                                <div class='summary-item step-filter last-box failed-tests'>
-						                                <span class='summary-value'><!--%FAILED%--></span>
-						                                <span id='failed-failure' class='summary-param'>Failed</span>
-					                                </div>
-					                                <div class='summary-item step-filter inconclusive-tests'>
-						                                <span class='summary-value'><!--%INCONCLUSIVE%--></span>
-						                                <span id='inconclusive-notrunnable' class='summary-param'>Inconclusive</span>
-					                                </div>
-					                                <div class='summary-item step-filter error-tests'>
-						                                <span class='summary-value'><!--%ERRORS%--></span>
-						                                <span id='error-errors' class='summary-param'>Errors</span>
-					                                </div>
-					                                <div class='summary-item step-filter last-box skipped-tests'>
-						                                <span class='summary-value'><!--%SKIPPED%--></span>
-						                                <span id='skipped-ignored-notrun' class='summary-param'>Skipped</span>
-					                                </div>
-                                                </div>
-						                    </div>
-					                    </div>
-					                    <div id='tabs-2'>
-						                    <table class='simple-grey'>
-							                    <thead>
-								                    <tr><th>Param</th><th>Value</th></tr>
-                                                    <!--%RUNINFO%-->
-							                    </thead>
-						                    </table>
-					                    </div>
-				                    </div> 
-                                </div>
-			                </div>
-			                <div id='filters'>
-				                <div class='filters'>
-                                    <div class='filter-message'>
-                                        <span></span>
-                                    </div>
-					                <div class='btn-group'>
-						                <button type='button' class='btn btn-default fixtures-toggle' data-toggle='dropdown' aria-expanded='false'><i class='fa fa-bars'></i>Filter Fixtures <span class='caret'></span></button>
-						                <ul class='dropdown-menu fixture-filter' role='menu'>
-							                <li><a id='passed-success' href='#'><div><i class='passed transparent fa fa-check-circle-o'></i></div>Passed</a></li>
-							                <li><a id='failed-failure' href='#'><div><i class='failed transparent fa fa-times-circle'></i></div>Failed</a></li>
-							                <li><a id='error-errors' href='#'><div><i class='error transparent fa fa-exclamation-circle'></i></div>Error</a></li>
-							                <li><a id='inconclusive-notrunnable' href='#'><div><i class='inconclusive transparent fa fa-question'></i></div>Inconclusive</a></li>
-							                <li><a id='skipped-ignored-notrun' href='#'><div><i class='skipped transparent fa fa-angle-double-right'></i></div>Skipped</a></li>
-							                <li class='divider'></li>
-							                <li><a class='clear-all' href='#'>Clear filters</a></li>
-						                </ul>
-					                </div>
-					                <div class='btn-group'>
-						                <button type='button' class='btn btn-default tests-toggle' data-toggle='dropdown' aria-expanded='false' title='Use this dropdown to filter all tests in the selected status. Note: this is only a test-level filter, not fixture-level. Filtering all PASSED tests for example may still show you failed fixtures as all the FAILED tests are hidden from view. This filter will not change the Fixture status upon filtering.' alt='Use this dropdown to filter all tests in the selected status. Note: this is only a test-level filter, not fixture-level. Filtering all PASSED tests for example may still show you failed fixtures as all the FAILED tests are hidden from view. This filter will not change the Fixture status upon filtering.'><i class='fa fa-cog'></i>Filter Tests <span class='caret'></span></button>
-						                <ul class='dropdown-menu test-filter' role='menu'>
-							                <li><a id='passed-success' href='#'><div><i class='passed transparent fa fa-check-circle-o'></i></div>Passed</a></li>
-							                <li><a id='failed-failure' href='#'><div><i class='failed transparent fa fa-times-circle'></i></div>Failed</a></li>
-							                <li><a id='error-errors' href='#'><div><i class='error transparent fa fa-exclamation-circle'></i></div>Error</a></li>
-							                <li><a id='inconclusive-notrunnable' href='#'><div><i class='inconclusive transparent fa fa-question'></i></div>Inconclusive</a></li>
-							                <li><a id='skipped-ignored-notrun' href='#'><div><i class='skipped transparent fa fa-angle-double-right'></i></div>Skipped</a></li>
-							                <li class='divider'></li>
-							                <li><a class='clear-all' href='#'>Clear filters</a></li>
-						                </ul>
-					                </div>
-                                    <div class='controls'>
-						                <div class='btn-group'>
-							                <button type='button' class='btn btn-default tests-toggle-type' data-toggle='dropdown' aria-expanded='false' title='Selecting Accordion will allow only one fixture to be expanded at once. Use this open if you would want to view only one fixture at once.' alt='Selecting Accordion will allow only one fixture to be expanded at once. Use this open if you would want to view only one fixture at once.'><i class='fa fa-toggle-on'></i><span class='toggle-type-text'>Accordion</span> <span class='caret'></span></button>
-							                <ul class='dropdown-menu select-toggle-type accordion' role='menu'>
-								                <li><a class='optAccordion' href='#'><div><i class='fa fa-toggle-on'></i></div>Accordion</a></li>
-                                                <li class='optToggle'><a href='#'><div><i class='fa fa-toggle-off'></i></div>Toggle</a></li>
-							                </ul>
-						                </div>
-                                    </div>
-				                </div>
-			                </div>
-			                <div id='content'>
-				                <div class='content'>
-					                <div class='fixtures'>
-				                        <!--%INSERTFIXTURE%-->
-			                        </div>
-                                </div>
-                            </div>
-		                </div>	
-	                </body>
-	                <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
-	                <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js'></script>
-                    <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.pie.min.js'></script>
-                    <script src='http://cdn.jsdelivr.net/jquery.flot.tooltip/0.7.1/jquery.flot.tooltip.min.js'></script>
-	                <script src='http://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js' type='text/javascript' charset='utf-8'></script>
-	                <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-	                <script type='text/javascript'>
-                        $(document).ready(function() {
-                            var $container = $('.fixtures').masonry({
-				                columnWidth: 522,
-				                gutter: 5
-			                });
-			                $container.on( 'click', '.fixture-container', function(evt) {
-				                var cls = evt.target.className;
-                                cls = evt.target.nodeName.toLowerCase();
-				                if (cls.indexOf('div') >= 0 || cls.indexOf('span') >= 0) {
-					                var elm = $(this);
-					                var content = elm.find('.fixture-content');
-					                cls = '';
-					                if (content.is(':visible')) {
-						                elm.removeClass('is-expanded has-pre');
-						                content.hide();
-					                }
-					                else {
-                                        if ($('.select-toggle-type').hasClass('accordion'))
-                                            $('.fixture-container').removeClass('is-expanded has-pre').find('.fixture-content').hide();
-						                if (elm.find('pre').length > 0) cls = 'has-pre';
-						                elm.addClass('is-expanded ' + cls);
-						                content.fadeIn(200);
-					                }
-					                $container.masonry();
-				                }
-			                });
-                            $('.menu li').click(function(evt) {
-				                var elm = $(this).children('span');
-				                if (elm.hasClass('selected'))
-					                return;
-				                $('#' + $('.menu span.selected').removeClass('selected').attr('class')).hide();
-				                $('#' + elm.attr('class')).fadeIn(200); elm.addClass('selected'); 
-			                });
-                            $('.select-toggle-type li').click(function() {
-				                var ul = $('.select-toggle-type');
-				                var elm = $(this);
-				                if (elm.attr('class') == 'optToggle') {
-					                ul.addClass('toggle').removeClass('accordion');
-					                $('.optAccordion').find('i').removeClass('fa-toggle-on').addClass('fa-toggle-off');
-					                elm.find('i').removeClass('fa-toggle-off').addClass('fa-toggle-on');
-                                    $('.toggle-type-text').text('Toggle').parent().children('i').removeClass('fa-toggle-on').addClass('fa-toggle-off');
-				                }
-				                else {
-					                ul.addClass('accordion').removeClass('toggle');
-					                $('.optToggle').find('i').removeClass('fa-toggle-on').addClass('fa-toggle-off');
-					                elm.find('i').removeClass('fa-toggle-off').addClass('fa-toggle-on');
-                                    $('.toggle-type-text').text('Accordion').parent().children('i').removeClass('fa-toggle-off').addClass('fa-toggle-on');
-				                }
-			                });
-			                $('.fixture-filter li').click(function() {
-				                var elm = $(this);
-				                if (elm.find('a').hasClass('clear-all')) { clearFilters(); return; }
-				                var i = elm.find('i');
-				                if (i.hasClass('filter-selected')) { resetCurrent(i); return; }
-				                toggle_i();
-				                i.removeClass('transparent').addClass('filter-selected');
-				                $('.fixture-container').hide();
-				                $('.fixture-result.' + elm.find('a').text().toLowerCase().trim()).closest('.fixture-container').show();
-				                $('.fixtures').masonry();
-			                });
-			                $('.test-filter li').click(function() {
-				                var elm = $(this);
-				                if (elm.find('a').hasClass('clear-all')) { clearFilters(); return; }
-				                var i = elm.find('i');
-				                if (i.hasClass('filter-selected')) { resetCurrent(i); return; }
-				                toggle_i();
-				                i.removeClass('transparent').addClass('filter-selected');
-				                $('tr, .fixture-container').removeClass('filtered').show();
-				                var cls = '.' + elm.find('a').attr('id').replace(/-/g, ',.');
-				                $('td:nth-child(2)').not(cls).closest('.fixture-container tr').addClass('filtered').fadeOut('fast');
-				                $('.fixture-content').filter(function() {
-					                return ($(this).find('tr.filtered').length == $(this).find('tr').length - 1);
-				                }).closest('.fixture-container').hide();
-				                $('.fixtures').masonry();
-			                });
-			                function clearFilters() {
-				                $('tr, .fixture-container').removeClass('filtered').show();
-				                $('.dropdown-menu i').filter(function() {
-					                return $(this).hasClass('filter-selected');
-				                }).removeClass('filter-selected').addClass('transparent');
-				                $('.fixtures').masonry();
-			                }
-			                function resetCurrent(i) {
-				                i.addClass('transparent').removeClass('filter-selected');
-				                $('tr, .fixture-container').removeClass('filtered').show();
-				                $('.fixtures').masonry();
-			                }
-			                function toggle_i() {
-				                $('.dropdown-menu i').filter(function() {
-					                return $(this).hasClass('filter-selected');
-				                }).removeClass('filter-selected').addClass('transparent');
-			                }
-			                $('.select-toggle-type').val('optToggle');
-			                $('.fixture-dropdown').dropdown();
-			                $('.tests-dropdown').dropdown();
-		                });
-                        function writeLog(log) {
-                            $('.filter-message span').text(log);
-                        }
-                        var data = [
-                            { label: 'Pass', data: $('td.passed').length + $('td.success').length }, 
-                            { label: 'Fail', data: $('td.failed').length + $('td.failure').length },
-                            { label: 'Inconclusive', data: $('td.inconclusive').length + $('td.notrunnable').length },
-                            { label: 'Skipped', data: $('td.skipped').length + $('td.ignored').length + $('td.not-run').length },
-                            { label: 'Invalid/Error', data: $('td.invalid').length + $('td.error').length }
-                        ];
-                        var plotObj = $.plot($('#summary'), data, {
-                            series: {
-                                pie: { show: true,
-                                    innerRadius: 0.45,
-                                    label: {
-                                        show: true,
-                                        radius: .9
-                                    },
-                                    stroke: {
-                                        /*FLOTSTROKE*/color: '#f7f7f7',/*FLOTSTROKE*/
-                                        width: 6
-                                    },
-                                    combine: {
-                                        color: '#9c27b0',
-                                        threshold: 0.1
+                        <html lang='en'>
+                            <!--
+                                ReportUnit [TestSuite Summary] v1.0 | http://reportunit.github.io/
+                                Created by Anshoo Arora | Released under the <> license
+                            --> 
+                            <head>
+                                <meta charset='utf-8'>
+                                <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                                <meta name='viewport' content='width=device-width, initial-scale=1'>
+                                <meta name='description' content=''>
+                                <meta name='author' content=''>
+                                <title>ReportUnit TestRunner Report</title>
+                                <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css'>
+                                <style>
+                                    html { 
+                                        background-color: #f6f7fa;  
                                     }
-                                }
-                            },
-                            legend: {
-                                show: false
-                            },
-                            colors: ['#4caf50','#f8576c','#ffc107','#1e90ff','#7e57c2'],
-                            grid: {
-                                hoverable: true
-                            },
-                            tooltip: true,
-                            tooltipOpts: {
-                                content: '%p.0%, %s', // show percentages, rounding to 2 decimal places
-                                shifts: {
-                                    x: 20,
-                                    y: 0
-                                },
-                                defaultTheme: true
-                            }
-                        });
-                    </script>
-                </html>";
-            }
-        }
+                                    pre {
+                                        background-color: #f8f9fa;
+                                        border: 1px solid #ddd;
+                                        border-radius: 4px;
+                                        color: #444;
+                                        font-family: Consolas, monospace;
+                                        font-size: 13px !important;
+                                        padding: 10px;
+                                        white-space: pre-wrap;
+                                        white-space: -moz-pre-wrap;
+                                        white-space: -pre-wrap;    
+                                        white-space: -o-pre-wrap;  
+                                        word-wrap: break-word;     
+                                    }
+                                    th {
+                                        font-weight: 400;
+                                    }
+                                    td:first-child {
+                                        font-weight: 300;
+                                        max-width: 400px;
+                                        min-width: 150px;
+                                        padding-right: 25px;
+                                    }
+                                    td {
+                                        padding: 8px;
+                                        word-break: break-all;
+                                    }
 
-        /// <summary>
-        /// Topbar is written to the source for Folder level summary
-        /// It adds a go-back link to navigate back to the Index page
-        /// </summary>
-        public static string Topbar
-        {
-            get
-            {
-                return @"<div id='topbar'>
-							<div class='topbar'>
-								<a class='back' href='Index.html'><i class='fa fa-arrow-circle-left'></i> &nbsp; Executive Summary</a>
-							</div>
-						</div>";
+                                    /* ---- [ global ] ---- */
+                                    .card-head {
+                                        padding-bottom: 20px;
+                                    }
+                                    .card-panel {
+                                        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+                                    }
+                                    .btn {
+                                        font-size: 12px;
+                                    }
+                                    .btn i {
+                                        font-size: 13px;
+                                    }
+            
+                                    /* ---- [ sidenav ] ---- */
+                                    .side-nav a {
+                                        line-height: 22px;
+                                        height: auto;
+                                    }
+                                    .side-nav.fixed a {
+                                        height: auto;
+                                        padding: 20px 15px;
+                                    }
+                                    .logo {
+                
+                                        border-bottom: 1px solid #ddd;
+                                    }
+                                    .logo, .logo a {
+                                        cursor: default !important;
+                
+                                    }
+                                    .logo:hover, .logo a:hover {
+                                        background-color: transparent !important;
+                                    }
+                                    .logo-single {
+                                        display: none;
+                                    }
+                                    .nav-main {
+                                        padding-left: 325px;
+                                    }
+            
+                                    /* ---- [ main ] ---- */
+                                    .main {
+                                        background-color: #f6f7fa;
+                                        padding-left: 300px;
+                                    }
+                                    .main-wrap {
+                                        padding: 40px 20px 100px;
+                                    }
+                                    .main-wrap > .row {
+                                        margin-bottom: 0;
+                                    }
+            
+                                        /* ---- [ dashboard ] ---- */
+                                        .card-panel {
+                                            padding: 15px;
+                                        }
+                                        .card-panel > span {
+                                            font-size: 14px;
+                                        }
+                                        .chart {
+                                            text-align: center;
+                                        }
+                
+                                        /* ---- [ filters ] ---- */
+                                        .filters {
+                                            padding-left: 10px;
+                                            padding-top: 50px;
+                                        }
+                                        .toggle-type {
+                                            float: right;
+                                            margin-right: 20px;
+                                            margin-top: 35px;
+                                        }
+                                        .btn, .btn-large {
+                                            background-color: #ee6e73;
+                                        }
+                                        .dropdown-content li > a, .dropdown-content li > span {
+                                            font-size: 14px;
+                                            padding: 7px 20px;
+                                        }
+                
+                                        /* ---- [ fixture / suites ] ---- */
+                                        .fixtures .card-panel {
+                                            border: 1px solid #9d9d9d;
+                                            box-shadow: none;
+                                            cursor: pointer;
+                                        }
+                                        .fixture-head { 
+                                            padding-bottom: 60px;
+                                            word-break: break-all;                 
+                                        }
+                                        .fixture-name {
+                                            float: left; 
+                                            font-size: 20px;
+                                            font-weight: 500;
+                                            max-width: 410px; 
+                                            word-break: break-all; 
+                                        }
+                                        .fixture-footer { 
+                                            padding: 10px 0; 
+                                        }
+                                        .fixture-result {
+                                            border-radius: 0.25em;
+                                            color: #fff !important;
+                                            float: right;
+                                            font-size: 11px !important; 
+                                            margin-top: 3px;
+                                            padding: 2px 7px 1px; 
+                                            text-transform: uppercase !important; 
+                                        }
+                                        p.description {
+                                            border: 1px solid #ddd;
+                                            color: #222;
+                                            font-size: 14px;
+                                            font-weight: 300;
+                                            padding: 10px;
+                                        }
+                                        .startedAt, .endedAt { 
+                                            font-size: 13px; 
+                                        }
+                                        .startedAt i, .endedAt i { 
+                                            font-size: 13px; 
+                                            padding-right: 5px; 
+                                        }
+                                        .startedAt i { 
+                                            color: #5cb85c; 
+                                        }
+                                        .endedAt i { 
+                                            color: #d9534f; 
+                                            padding-left: 10px;
+                                        }
+                                        .fixture-result.fail, .fixture-result.failed, .fixture-result.failure {
+                                            background-color: #eb4549;
+                                        }
+                                        .fixture-result.pass, .fixture-result.success, .fixture-result.passed {
+                                            background-color: #32cd32;
+                                        }
+                                        .fixture-result.error { 
+                                            background-color: tomato; 
+                                        }
+                                        .fixture-result.warning, .fixture-result.bad, .fixture-result.inconclusive { 
+                                            background-color: orange; 
+                                        }                    
+                                        .fixture-result.skipped, .fixture-result.not-run, .fixture-result.notrun { 
+                                            background-color: #1e90ff; 
+                                        }
+                                        .fixture-content { 
+                                            cursor: auto !important;
+                                            display: none; 
+                                            padding-bottom: 20px; 
+                                        }
+                                        .is-expanded { 
+                                            color: #000; 
+                                            height: auto; 
+                                        }
+                                        .failed, .failure, .passed, .success, .warning, .bad, .inconclusive, .skipped, .ignored, .invalid, .error, .not-run, .notrun { 
+                                            text-transform: capitalize; 
+                                        }
+                                        .failed, .failure { 
+                                            color: red; 
+                                        }
+                                        .error { 
+                                            color: tomato; 
+                                        }
+                                        .passed, .success { 
+                                            color: #5cb85c; 
+                                        } 
+                                        .warning, .bad, .inconclusive, .error { 
+                                            color: #f0ad4e; 
+                                        } 
+                                        .skipped, .not-run, .notrun, .ignored { 
+                                            color: #1e90ff; 
+                                        }
+
+                                    /* ---- [ single ] ---- */
+                                    .single #slide-out {
+                                        display: none !important;
+                                    }
+                                    .single .main {
+                                        padding-left: 0 !important;
+                                    }
+                                    .single .main-wrap {
+                                        margin: 0 auto;
+                                        width: 85%;
+                                    }
+                                    .single .nav-main {
+                                        margin: 0 auto;
+                                        padding-left: 20px;
+                                    }
+                                    .single .page-title span:first-child {
+                                        display: none !important;
+                                    }
+                                    .single .logo-single {
+                                        display: inline-block !important;
+                                    }
+
+                                    /* ---- [ media queries ] ---- */
+                                    @media (max-width: 992px) {
+                                        .main {
+                                            padding-left: 0;
+                                        }
+                                        .nav-main {
+                                            padding-left: 100px;
+                                        }
+                                        .button-collapse {
+                                            padding-left: 10px;
+                                        }
+                                        .single .nav-main {
+                                            padding-left: 100px;
+                                        }
+                                        .single .main-wrap {
+                                            width: 95%;
+                                        }
+                                    }
+                                </style>
+                                <!--%OPTIONALCSS%-->
+                            </head>
+                            <body>    
+                                <div class='header'>
+                                    <nav>
+                                        <ul id='slide-out' class='side-nav fixed'>
+                                            <li class='logo'><a href='#'><i class='mdi-hardware-desktop-mac'></i>&nbsp;&nbsp;ReportUnit</a></li>
+                                            <!--%NAV%-->
+                                        </ul>
+                                        <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
+                                        <div class='nav-main'>
+                                            <div class='page-title'>
+                                                <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;<!--%FILENAME%--></span>
+                                                <span class='logo-single'><i class='mdi-hardware-desktop-mac'></i>&nbsp;&nbsp;ReportUnit</span>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+                                <div class='main'>
+                                    <div class='main-wrap'>
+                                        <!--%NOTESTSMESSAGE%-->
+                                        <div class='row'>
+                                            <div class='col s12 m4 l2'>
+                                                <div class='card-panel'>
+                                                    <span>Total Tests</span>
+                                                    <div class='chart total-tests' data-percent=''><div><!--%TOTALTESTS%--></div></div>
+                                                </div>
+                                            </div>
+                                            <div class='col s12 m4 l2'>
+                                                <div class='card-panel'>
+                                                    <span>Passed</span>    
+                                                    <div class='chart total-passed' data-percent=''><div><!--%PASSED%--></div></div>
+                                                </div>
+                                            </div>
+                                            <div class='col s12 m4 l2'>
+                                                <div class='card-panel'>
+                                                    <span>Failed</span>
+                                                    <div class='chart total-failed' data-percent=''><div><!--%FAILED%--></div></div>
+                                                </div>
+                                            </div>
+                                            <div class='col s12 m4 l2'>
+                                                <div class='card-panel'>
+                                                    <span>Inconclusive</span>
+                                                    <div class='chart total-inconclusive' data-percent=''><div><!--%INCONCLUSIVE%--></div></div>
+                                                </div>
+                                            </div>
+                                            <div class='col s12 m4 l2'>
+                                                <div class='card-panel'>
+                                                    <span>Errors</span>
+                                                    <div class='chart total-errors' data-percent=''><div><!--%ERRORS%--></div></div>
+                                                </div>
+                                            </div>
+                                            <div class='col s12 m4 l2'>
+                                                <div class='card-panel'>
+                                                    <span>Skipped</span>
+                                                    <div class='chart total-skipped' data-percent=''><div><!--%SKIPPED%--></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='filters'>
+                                                <div class='input-field col s3 suite-toggle'>
+                                                    <select>
+                                                        <option value='0' selected>Choose your option</option>
+                                                        <option value='1'>Passed</option>
+                                                        <option value='2'>Failed</option>
+                                                        <option value='3'>Error</option>
+                                                        <option value='4'>Inconclusive</option>
+                                                        <option value='5'>Skipped</option>
+                                                        <option value='skipped'>Clear Filters</option>
+                                                    </select>
+                                                    <label>Filter Suites</label>
+                                                </div>
+                                                <div class='input-field col s3 tests-toggle'>
+                                                    <select>
+                                                        <option value='0' selected>Choose your option</option>
+                                                        <option value='1'>Passed</option>
+                                                        <option value='2'>Failed</option>
+                                                        <option value='3'>Error</option>
+                                                        <option value='4'>Inconclusive</option>
+                                                        <option value='5'>Skipped</option>
+                                                        <option value='skipped'>Clear Filters</option>
+                                                    </select>
+                                                    <label>Filter Tests</label>
+                                                </div>
+                                                <div class='switch toggle-type'>
+                                                    <label>
+                                                        Accordion
+                                                        <input type='checkbox'>
+                                                        <span class='lever'></span>
+                                                        Toggle
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='fixtures'>
+				                                <!--%INSERTFIXTURE%-->
+			                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </body>
+	                        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+	                        <script src='http://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js' type='text/javascript' charset='utf-8'></script>
+                            <script src='https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.4/jquery.easypiechart.min.js'></script>
+	                        <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
+	                        <script type='text/javascript'>
+                                $(document).ready(function() {
+                                    $('.button-collapse').sideNav({
+                                        menuWidth: 300
+                                    });
+                                    $('select').material_select();
+                                    resetFilters();
+                                    var total = $('.total-tests > div').text();
+                                    var passed = $('.total-passed > div').text();
+                                    var failed = $('.total-failed > div').text();
+                                    var inconclusive = $('.total-inconclusive > div').text();
+                                    var errors = $('.total-errors > div').text();
+                                    var skipped = $('.total-skipped > div').text();
+                                    $('.total-tests').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-tests').data('easyPieChart').update('100');
+                                    $('.total-passed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-passed').data('easyPieChart').update(passed / total * 100);
+                                    $('.total-failed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-failed').data('easyPieChart').update(failed / total * 100);
+                                    $('.total-inconclusive').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-inconclusive').data('easyPieChart').update(inconclusive / total * 100);
+                                    $('.total-errors').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: 'tomato', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-errors').data('easyPieChart').update(errors / total * 100);
+                                    $('.total-skipped').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: 'dodgerblue', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-skipped').data('easyPieChart').update(skipped / total * 100);
+                                    $('.nav.nav-sidebar a').filter(function(){
+                                        return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];
+                                    }).parent().addClass('active');
+                                    var $container = $('.fixtures').masonry({
+                                        percentPosition: true
+                                    });
+                                    $(document).ready(sizing);
+                                    $(window).resize(sizing);
+                                    function sizing() {
+                                        if ($(window).width() > 1650) {
+                                            $('.fixtures .s4').css('width', '33.33%');
+                                        } else if ($(window).width() < 1120) {
+                                            $('.fixtures .s4').css('width', '99%');
+                                        } else {
+                                            $('.fixtures .s4').css('width', '49%');
+                                        }
+                                        $('.fixtures').masonry();
+                                    }
+                                    $container.on( 'click', '.card-panel', function(evt) {
+                                        var cls = evt.target.className;
+                                        cls = evt.target.nodeName.toLowerCase();
+                                        if (cls.indexOf('div') >= 0 || cls.indexOf('span') >= 0) {
+                                            var elm = $(this);
+                                            var content = elm.find('.fixture-content');
+                                            cls = '';
+                                            if (content.is(':visible')) {
+                                                elm.removeClass('is-expanded has-pre');
+                                                content.hide(0);
+                                            }
+                                            else {
+                                                if (!$('.toggle-type input').prop('checked'))
+                                                    $('.fixtures .card-panel').removeClass('is-expanded').find('.fixture-content').hide(0);
+                                                if (elm.find('pre').length > 0) cls = 'has-pre';
+                                                elm.addClass('is-expanded ' + cls);
+                                                content.fadeIn(200);
+                                            }
+                                            $container.masonry();
+                                        }
+                                    });
+                                    $('.menu li').click(function(evt) {
+                                        var elm = $(this).children('span');
+                                        if (elm.hasClass('selected'))
+                                            return;
+                                        $('#' + $('.menu span.selected').removeClass('selected').attr('class')).hide(0);
+                                        $('#' + elm.attr('class')).fadeIn(200); elm.addClass('selected'); 
+                                    });
+                                    $('.suite-toggle li').click(function() {
+                                        var opt = $(this).text().toLowerCase();
+                                        if (opt != 'choose your option') {
+                                            if (opt == 'clear filters') {
+                                                resetFilters();
+                                            } else {
+                                                $('.fixtures .card-panel').hide(0);
+                                                $('.fixture-result.' + opt).closest('.card-panel').show(0);
+                                            }
+                                            $('.fixtures').masonry();
+                                        }                                
+                                    });
+                                    $('.tests-toggle li').click(function() {
+                                        var opt = $(this).text().toLowerCase();
+                                        if (opt != 'choose your option') {
+                                            if (opt == 'clear filters') {
+                                                resetFilters();
+                                            } else {
+                                                if ($('tr.has-filter').length > 0) 
+                                                    resetFilters();
+                                                $('.fixture-content td:nth-child(2)').not('.' + opt).parent().addClass('has-filter').hide(0);
+                                                $('.fixture-content').filter(function() {
+                                                    return ($(this).find('tr.has-filter').length == $(this).find('tr').length - 1);
+                                                }).closest('.card-panel').hide(0);
+                                            }
+                                            $('.fixtures').masonry();
+                                        }
+                                    });
+                                    function resetFilters() {
+                                        $('.fixtures .card-panel').show(0);
+                                        $('tr').removeClass('has-filter').show();
+                                        $('.suite-toggle li:first-child, .tests-toggle li:first-child').click();
+                                    }
+                                });
+                            </script>
+                        </html>";
             }
         }
 
@@ -398,24 +499,26 @@
         {
             get
             {
-                return @"<div class='fixture-container'>
-					        <div class='fixture-head'>
-						        <span class='fixture-name'><!--%FIXTURENAME%--></span>
-						        <span class='fixture-result <!--%FIXTURERESULT%-->'><!--%FIXTURERESULT%--></span>
-					        </div>
-					        <div class='fixture-content'>
-						        <table class='simple-grey'>
-							        <tr>
-								        <th>TestName</th>
-								        <th>Status</th>
-							        </tr>
-							        <!--%INSERTTEST%-->
-						        </table>
-					        </div>
-                            <div <!--%FOOTERDISPLAY%--> class='fixture-footer'>
-						        <span <!--%FIXTURESTARTEDATDISPLAY%--> class='startedAt'><i class='fa fa-clock-o'></i><!--%FIXTURESTARTEDAT%--></span>
-						        <span <!--%FIXTUREENDEDATDISPLAY%--> class='endedAt'><i class='fa fa-clock-o'></i><!--%FIXTUREENDEDAT%--></span>
-					        </div>
+                return @"<div class='col s4'>
+                            <div class='card-panel'>
+					            <div class='fixture-head'>
+						            <span class='fixture-name'><!--%FIXTURENAME%--></span>
+						            <span class='fixture-result <!--%FIXTURERESULT%-->'><!--%FIXTURERESULT%--></span>
+					            </div>
+					            <div class='fixture-content'>
+						            <table class='bordered'>
+							            <tr>
+								            <th>TestName</th>
+								            <th>Status</th>
+							            </tr>
+							            <!--%INSERTTEST%-->
+						            </table>
+					            </div>
+                                <div <!--%FOOTERDISPLAY%--> class='fixture-footer'>
+						            <span <!--%FIXTURESTARTEDATDISPLAY%--> class='startedAt'><i class='mdi-device-access-time'></i><!--%FIXTURESTARTEDAT%--></span>
+						            <span <!--%FIXTUREENDEDATDISPLAY%--> class='endedAt'><i class='mdi-device-access-time'></i><!--%FIXTUREENDEDAT%--></span>
+					            </div>
+                            </div>
 				        </div>
                         <!--%INSERTFIXTURE%-->";
             }
@@ -466,9 +569,7 @@
         {
             get
             {
-                return @"<style>.menu, #filters, #content, #tabs { display: none; }
-                         #dashboard { padding: 40px 0 25px; }
-                         .no-tests-available { margin: 0 auto; width: 99%; }</style>";
+                return @"<style>.row { display: none !important; }</style>";
             }
         }
     }

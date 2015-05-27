@@ -18,7 +18,7 @@
                     return html;
             }
 
-            return html.Replace(ReportHelper.MarkupFlag("themestyles"), css + ReportHelper.MarkupFlag("themestyles")).ApplyStrokeColor(theme);
+            return html.Replace(ReportHelper.MarkupFlag("themestyles"), css + ReportHelper.MarkupFlag("themestyles"));
         }
 
         private static string Dark

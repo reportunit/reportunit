@@ -10,225 +10,356 @@
             get
             {
                 return @"<!DOCTYPE html>
-                    <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'> 
-                    <!--
-	                    ReportUnit [Folder Summary] v1.0 | http://reportunit.github.io/
-                    --> 
-	                    <head>
-		                    <title>ReportUnit Executive Report</title>
-		                    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css' />
-		                    <link href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet' />
-		                    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-		                    <style type='text/css'>
-			                    html {overflow-y: scroll;}
-                                body {font-family: 'Open Sans', Arial;font-size: 14px; line-height: 1.3; margin: 0;}
-                                table {border-collapse: collapse;width: 100%;}
-                                a {color: #1366d7;}
-                                /*---:[ containers ]:---*/
-                                #reportunit-container {margin: 0;padding: 0;width: 100%;}
-                                #content {padding: 40px 0 100px;}
-                                .header, .dashboard, .content {margin: 0 auto;width: 1053px;}
-                                /*---:[ header ]:---*/
-                                .header { font-size: 14px; font-weight: 300; padding: 25px 0;}
-                                .title-reportunit { color: #2c91ef; font-weight: 600; }
-                                .header .name {color: #999;float: right; font-size: 12px; margin-right: 7px; margin-top: -17px;}
-                                .header .name { display: none; }
-                                /*---:[ dashboard ]:---*/
-                                #dashboard { border: 1px solid #ddd; }
-                                .dashboard {padding: 20px 0 0; text-align: center;}
-                                .dashboard > div {display: inline-block;}
-                                .wrap { padding: 20px; width: 420px; }
-								.dashboard .wrap:first-child { margin-left: -20px; }
-                                .dashboard .wrap:nth-child(2) { margin-right: 2px;}
-                                .content .wrap { margin: 0; padding: 0; width: 100%; }
-                                .wrap > .head { font-size: 13px; font-weight: 600;}
-                                .flot-container {height: 200px; margin: 0 auto; text-align: center; width: 300px; }
-                                .placeholder {width: 100%; height: 100%; font-size: 14px; line-height: 1.2em; background-color: transparent;}
-                                .legend table { border-spacing: 5px; }
-                                /*---:[ content ]:---*/
-                                .reportunit-table { border: 1px solid #ddd; }
-                                .reportunit-table tr {border-bottom: 1px solid #edf1f2;}
-                                .reportunit-table tr:nth-child(2n) { background-color: #fbfcfd;}
-                                .totals-row {font-weight: 600;}
-                                .reportunit-table th {border-bottom: 2px solid #dcdcdc; font-size: 14px;padding: 15px 14px 10px;text-align: left;}
-                                .reportunit-table td {padding: 14px 12px;word-break: break-all;word-wrap: break-word;}
-                                .reportunit-table td:last-child {min-width: 250px;}
-                                .totals-row td {font-size: 13px;padding: 12px;}
-                                .progress {margin-bottom: 0;}
-                                .label {font-size: 12px;font-weight:600;padding: 2px 7px;text-transform:capitalize;}
-                                .failed > .label, .failure > .label {background-color: #eb4549;}
-                                .passed > .label, .success > .label {background-color: #32cd32;}
-                                .other > .label {background-color: #FFA81C;}
-                                .progress { height: 17px; }
-                                .progress-bar { font-size: 12px; font-weight: 600; line-height: 16px; }
-                                .progress-bar-warning {background-color: #ffa81c;}
-                                /*OPTIONALCSS*/
-		                    </style>
-	                    </head>
-	                    <body>
-		                    <div id='reportunit-container'>
-			                    <div class='reportunit-container'>
-				                    <div id='header'>
-					                    <div class='header'>
-						                    <div id='title'>
-							                    <span><span class='title-reportunit'>ReportUnit.</span></span>
-						                    </div>
-						                    <div class='name'>
-							                    Folder Summary
-						                    </div>
-					                    </div>
-				                    </div>
-				                    <div id='dashboard'>
-					                    <div class='dashboard'>
-						                    <div class='wrap'>
-                                                <div class='head'>
-                                                    Overall Status
-                                                </div>
-                                                <div class='flot-container'>
-                                                    <div id='file-summary' class='placeholder'></div>
-                                                </div>
-                                                <div class='footer'>
-                                                
+                        <html lang='en'>
+                            <!--
+                                ReportUnit [Folder Summary] v1.0 | http://reportunit.github.io/
+                                Created by Anshoo Arora | Released under the <> license
+                            --> 
+                            <head>
+                                <meta charset='utf-8'>
+                                <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                                <meta name='viewport' content='width=device-width, initial-scale=1'>
+                                <meta name='description' content=''>
+                                <meta name='author' content=''>
+                                <title>ReportUnit Executive Report</title>
+                                <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css'>
+                                <style>
+                                    html {
+                                        background-color: #f6f7fa;
+                                    }
+
+                                    /* ---- [ global ] ---- */
+                                    .card-head {
+                                        padding-bottom: 20px;
+                                    }
+                                    .card-panel {
+                                        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+                                    }
+            
+                                    /* ---- [ sidenav ] ---- */
+                                    .side-nav a {
+                                        line-height: 22px;
+                                        height: auto;
+                                    }
+                                    .side-nav.fixed a {
+                                        height: auto;
+                                        padding: 20px 15px;
+                                    }
+                                    .logo {
+                
+                                        border-bottom: 1px solid #ddd;
+                                    }
+                                    .logo, .logo a {
+                                        cursor: default !important;
+                
+                                    }
+                                    .logo:hover, .logo a:hover {
+                                        background-color: transparent !important;
+                                    }
+                                    .nav-main {
+                                        padding-left: 325px;
+                                    }
+            
+                                    /* ---- [ main ] ---- */
+                                    .main {
+                                        background-color: #f6f7fa;
+                                        padding-left: 300px;
+                                    }
+                                    .main-wrap {
+                                        padding: 40px 20px 100px;
+                                    }
+                                    .main-wrap > .row {
+                                        margin-bottom: 0;
+                                    }
+            
+                                        /* ---- [ dashboard ] ---- */
+                                        .card-panel {
+                                            padding: 15px;
+                                        }
+                                        .card-panel > span {
+                                            font-size: 14px;
+                                        }
+                                        .chart {
+                                            text-align: center;
+                                        }
+                
+                                        /* ---- [ result table ] ---- */
+                                        .result-table td:last-child {
+                                            min-width: 20%;
+                                        }
+                                        table.responsive-table.bordered tbody tr:last-child {
+                                            border-right: none;
+                                        }
+                                        .totals-row {
+                                            border-bottom: medium none !important;
+                                        }
+                                        .label {
+                                            border-radius: 2px; color: #fff; font-size: 10px;font-weight:400 !important;padding: 2px 7px;text-transform:uppercase;
+                                        }
+                                        .failed > .label, .failure > .label {
+                                            background-color: #eb4549;
+                                        }
+                                        .passed > .label, .success > .label {
+                                            background-color: #32cd32;
+                                        }
+                                        .other > .label {
+                                            background-color: #FFA81C;
+                                        }
+                
+                                        /* ---- [ bootstrap ] ---- */
+                                        /*!
+                                        * Bootstrap v3.3.4 (http://getbootstrap.com)
+                                        * Copyright 2011-2015 Twitter, Inc.
+                                        * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+                                        */
+                                        @-webkit-keyframes progress-bar-stripes {
+                                            from {
+                                                background-position: 40px 0;
+                                            }
+                                            to {
+                                                background-position: 0 0;
+                                            }
+                                        }
+                                        @-o-keyframes progress-bar-stripes {
+                                            from {
+                                                background-position: 40px 0;
+                                            }
+                                            to {
+                                                background-position: 0 0;
+                                            }
+                                        }
+                                        @keyframes progress-bar-stripes {
+                                            from {
+                                                background-position: 40px 0;
+                                            }
+                                            to {
+                                                background-position: 0 0;
+                                            }
+                                        }
+                                        .progress {
+                                            overflow: hidden;
+                                            height: 20px;
+                                            margin-bottom: 20px;
+                                            background-color: #f5f5f5;
+                                            border-radius: 4px;
+                                            -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+                                            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+                                        }
+                                        .progress-bar {
+                                            float: left;
+                                            width: 0%;
+                                            height: 100%;
+                                            font-size: 12px;
+                                            line-height: 20px;
+                                            color: #ffffff;
+                                            text-align: center;
+                                            background-color: #337ab7;
+                                            -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+                                            box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+                                            -webkit-transition: width 0.6s ease;
+                                            -o-transition: width 0.6s ease;
+                                            transition: width 0.6s ease;
+                                        }
+                                        .progress-striped .progress-bar, .progress-bar-striped {
+                                            background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            -webkit-background-size: 40px 40px;
+                                            background-size: 40px 40px;
+                                        }
+                                        .progress.active .progress-bar, .progress-bar.active {
+                                            -webkit-animation: progress-bar-stripes 2s linear infinite;
+                                            -o-animation: progress-bar-stripes 2s linear infinite;
+                                            animation: progress-bar-stripes 2s linear infinite;
+                                        }
+                                        .progress-bar-success {
+                                            background-color: #5cb85c;
+                                        }
+                                        .progress-striped .progress-bar-success {
+                                            background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                        }
+                                        .progress-bar-info {
+                                            background-color: #5bc0de;
+                                        }
+                                        .progress-striped .progress-bar-info {
+                                            background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                        }
+                                        .progress-bar-warning {
+                                            background-color: #f0ad4e;
+                                        }
+                                        .progress-striped .progress-bar-warning {
+                                            background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                        }
+                                        .progress-bar-danger {
+                                            background-color: #d9534f;
+                                        }
+                                        .progress-striped .progress-bar-danger {
+                                            background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                        }
+                                        .clearfix:before, .clearfix:after {
+                                            content: ' ';
+                                            display: table;
+                                        }
+                                        .clearfix:after {
+                                            clear: both;
+                                        }
+                                        .center-block {
+                                            display: block;
+                                            margin-left: auto;
+                                            margin-right: auto;
+                                        }
+                
+                                            /* ---- [ bootstrap overrides ] ---- */
+                                            .progress { 
+                                                height: 17px; margin: 5px 0;
+                                            }
+                                            .progress-bar { 
+                                                font-size: 11px; 
+                                                font-weight: 600; 
+                                                line-height: 16px; 
+                                            }
+                                            .progress-bar-warning {
+                                                background-color: #ffa81c;
+                                            }
+
+                                    /* ---- [ media queries ] ---- */
+                                        @media (max-width: 992px) {
+                                            .main {
+                                                padding-left: 0;
+                                            }
+                                            .nav-main {
+                                                padding-left: 100px;
+                                            }
+                                            .button-collapse {
+                                                padding-left: 10px;
+                                            }
+                                        }
+                                </style>
+                            </head>
+                            <body>    
+                                <div class='header'>
+                                    <nav>
+                                        <ul id='slide-out' class='side-nav fixed'>
+                                            <li class='logo'><a href='#'><i class='mdi-hardware-desktop-mac'></i>&nbsp;&nbsp;ReportUnit</a></li>
+                                            <!--%NAV%-->
+                                        </ul>
+                                        <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
+                                        <div class='nav-main'>
+                                            <div class='page-title'>
+                                                <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;Executive Summary</span>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+                                <div class='main'>
+                                    <div class='main-wrap'>
+                                        <div class='row'>
+                                            <div class='col s12 m6 l3'>
+                                                <div class='card-panel'>
+                                                    <span>Total Tests</span>
+                                                    <div class='chart total-tests' data-percent=''><div></div></div>
                                                 </div>
                                             </div>
-                                            <div class='wrap'>
-                                                <div class='head'>
-                                                    Test Status
-                                                </div>
-                                                <div class='flot-container'>
-                                                    <div id='test-summary' class='placeholder'></div>
-                                                </div>
-                                                <div class='footer'>
-                                                
+                                            <div class='col s12 m6 l3'>
+                                                <div class='card-panel'>
+                                                    <span>Passed</span>    
+                                                    <div class='chart total-passed' data-percent=''><div></div></div>
                                                 </div>
                                             </div>
-					                    </div>
-				                    </div>
-				                    <div id='content'>
-					                    <div class='content'>
-						                    <div class='summary'>
-                                                <div class='wrap'>
-							                        <table class='reportunit-table'>
-								                        <tr>
-									                        <th>File</th>
-									                        <th>Assembly</th>
-									                        <th>Result</th>
-									                        <th>Total</th>
-									                        <th>Passed</th>
-									                        <th>Failed</th>
-									                        <th>Other</th>
-									                        <th>Quick Status</th>
-								                        </tr>
-								                        <!--%INSERTRESULT%-->
-								                        <tr class='totals-row'>
-									                        <td>TOTAL</td>
-									                        <td></td>
-									                        <td></td>
-									                        <td class='totals-all'></td>
-									                        <td class='totals-passed' ></td>
-									                        <td class='totals-failed'></td>
-									                        <td class='totals-others'></td>
-									                        <td></td>
-								                        </tr>
-							                        </table>
-                                                </wrap>
-						                    </div>
-					                    </div>
-				                    </div>
-			                    </div>
-		                    </div>
-	                    </body>
-	                    <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
-	                    <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js'></script>
-                        <script src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.pie.min.js'></script>
-                        <script src='http://cdn.jsdelivr.net/jquery.flot.tooltip/0.7.1/jquery.flot.tooltip.min.js'></script>
-	                    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-	                    <script type='text/javascript'>
-		                   $(document).ready(function() {
-                                function testCountByStatus(status) {
-                                    var sum = 0;
-                                    $(status).each(function() {
-                                        sum += Number($(this).text());
+                                            <div class='col s12 m6 l3'>
+                                                <div class='card-panel'>
+                                                    <span>Failed</span>
+                                                    <div class='chart total-failed' data-percent=''><div></div></div>
+                                                </div>
+                                            </div>
+                                            <div class='col s12 m6 l3'>
+                                                <div class='card-panel'>
+                                                    <span>Other</span>
+                                                    <div class='chart total-other' data-percent=''><div></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='col s12'>
+                                                <div class='card-panel'>
+                                                    <div class='card-head'>
+                                                        <i class='mdi-editor-insert-drive-file'></i>
+                                                        &nbsp;&nbsp;File Summary
+                                                    </div>
+                                                    <table class='bordered responsive-table result-table'>
+									                    <tr>
+										                    <th>File</th>
+										                    <th>Assembly</th>
+										                    <th>Result</th>
+										                    <th>Total</th>
+										                    <th>Passed</th>
+										                    <th>Failed</th>
+										                    <th>Other</th>
+										                    <th>Quick Status</th>
+									                    </tr>
+									                    <!--%INSERTRESULT%-->
+									                    <tr class='totals-row'>
+										                    <td>TOTAL</td>
+										                    <td></td>
+										                    <td></td>
+										                    <td class='totals-all'></td>
+										                    <td class='totals-passed' ></td>
+										                    <td class='totals-failed'></td>
+										                    <td class='totals-others'></td>
+										                    <td></td>
+									                    </tr>
+								                    </table>
+							                    </div>
+                                            </div>
+						                </div>
+					                </div>
+				                </div>
+		                        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+                                <script src='https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.4/jquery.easypiechart.min.js'></script>
+                                <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
+                                <script>
+                                    $(function() {
+                                        $('.button-collapse').sideNav({
+                                            menuWidth: 300
+                                        });
+                                        var total = testCountByStatus('td.total-count');
+                                        var passed = testCountByStatus('td.pass-count');
+                                        var failed = testCountByStatus('td.fail-count');
+                                        var other = testCountByStatus('td.others-count');
+                                        $('.total-tests').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                        $('.total-tests').data('easyPieChart').update(total);
+                                        $('.total-passed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                        $('.total-passed').data('easyPieChart').update(passed / total * 100);
+                                        $('.total-failed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                        $('.total-failed').data('easyPieChart').update(failed / total * 100);
+                                        $('.total-other').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                        $('.total-other').data('easyPieChart').update(other / total * 100);
+                                        $('.nav.nav-sidebar a').filter(function(){
+                                            return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];
+                                        }).parent().addClass('active');
+                                        function testCountByStatus(status) {
+                                            var sum = 0;
+                                            $(status).each(function() {
+                                                sum += Number($(this).text());
+                                            });
+                                            return sum;
+                                        }
+                                        $('.totals-all, .total-tests > div').text(total);
+                                        $('.totals-passed, .total-passed > div').text(passed);
+                                        $('.totals-failed, .total-failed > div').text(failed);
+                                        $('.totals-others, .total-other > div').text(other);
                                     });
-                                    return sum;
-                                }
-                                var data = [
-                                    { label: 'Pass', data: $('td.file-status.pass').length + $('td.file-status.passed').length + $('td.file-status.success').length }, 
-                                    { label: 'Fail', data: $('td.file-status.fail').length + $('td.file-status.failure').length + $('td.file-status.failed').length }
-                                ];
-                                $('.totals-all').text(testCountByStatus('td.total-count'));
-                                $('.totals-passed').text(testCountByStatus('td.pass-count'));
-                                $('.totals-failed').text(testCountByStatus('td.fail-count'));
-                                $('.totals-others').text(testCountByStatus('td.others-count'));
-                                var plotObj = $.plot($('#file-summary'), data, {
-                                    series: {
-                                        pie: { show: true,
-                                            innerRadius: 0.45,
-                                            label: {
-                                                show: true,
-                                                radius: .9
-                                            },
-                                            stroke: { 
-                                                width: 6
-                                            }
-                                        }
-                                    },
-                                    legend: {
-                                        show: false
-                                    },
-                                    colors: ['#4caf50','#f8576c'],
-                                    grid: {
-                                        hoverable: true
-                                    },
-                                    tooltip: true,
-                                    tooltipOpts: {
-                                        content: '%p.0%, %s', // show percentages, rounding to 2 decimal places
-                                        shifts: {
-                                            x: 20,
-                                            y: 0
-                                        },
-                                        defaultTheme: true
-                                    }
-                                });
-                                data = [
-                                    { label: 'Pass', data: testCountByStatus('td.pass-count') }, 
-                                    { label: 'Fail', data: testCountByStatus('td.fail-count') },
-                                    { label: 'Other', data: testCountByStatus('td.others-count') },
-                                ];
-                                var plotObj = $.plot($('#test-summary'), data, {
-                                    series: {
-                                        pie: {
-                                            show: true,
-                                            innerRadius: 0.45,
-                                            label: {
-                                                show: true,
-                                                radius: .9
-                                            },
-                                            stroke: { 
-                                                width: 6
-                                            }
-                                        }
-                                    },
-                                    legend: {
-                                        show: false
-                                    },
-                                    colors: ['#4caf50','#f8576c','#ffc107','#7e57c2'],
-                                    grid: {
-                                        hoverable: true
-                                    },
-                                    tooltip: true,
-                                    tooltipOpts: {
-                                        content: '%p.0%, %s', // show percentages, rounding to 2 decimal places
-                                        shifts: {
-                                            x: 20,
-                                            y: 0
-                                        },
-                                        defaultTheme: true
-                                    }
-                                });
-                            })
-	                    </script>
-                    </html>";
+                                </script>
+	                        </body>
+                        </html>";
             }
         }
 
@@ -256,6 +387,14 @@
 	                    </td>
                     </tr>
                     <!--%INSERTRESULT%-->";
+            }
+        }
+
+        public static string NavLink
+        {
+            get
+            {
+                return @"<li><a class='waves-effect' href='<!--%LINKSRC%-->'><!--%LINKNAME%--></a></li>";
             }
         }
     }

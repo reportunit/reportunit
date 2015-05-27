@@ -10,9 +10,10 @@
     using ReportUnit.Parser;
     using ReportUnit.Support;    
 
-    internal class FileBuilder
+    internal class ReportBuilder
     {
         private Theme theme;
+        private Source source;
 
         /// <summary>
         /// FileParser for the type of test results to be parsed
@@ -20,18 +21,23 @@
         private IParser testFileParser;
 
         /// <summary>
-        /// Flag for folder-level report to add a DIV to navigate back to the Folder/Executive Summary report
-        /// This is switched off by default for a test-suite report created standalone
-        /// reportunit "path-to-folder"
-        ///     BEHAVIOR: This flag will be TRUE
-        /// reportunit "input" "output"
-        ///     BEHAVIOR: This flag will be FALSE
+        /// Flag for file-level (single) report to add a class for BODY to disable sidenav
+        /// This is switched off by default for a folder-level report
+        /// For a test-suite report created standalone, this needs to be switched on
+        /// Examples:
+        ///     reportunit "path-to-folder"
+        ///     reportunit "path-to-folder" "output-folder"
+        ///         BEHAVIOR: This flag will be FALSE
+        ///     reportunit "input.xml" "output.html"
+        ///         BEHAVIOR: This flag will be TRUE
         /// </summary>
-        private bool addTopbar = false;
+        private bool isSingle = false;
 
-        public void CreateFolderReport(string resultsDirectory, string outputDirectory)
+        public void FolderReport(string resultsDirectory, string outputDirectory)
         {
             List<string> allFiles = Directory.GetFiles(resultsDirectory, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            var links = new List<string>();
+            string outputFile;
 
             // if no files, end process
             if (allFiles.Count == 0)
@@ -40,17 +46,23 @@
                 return;
             }
 
-            addTopbar = true;
             string html = HTML.Folder.Base;
+            source = new Source();
+
+            links.Add(Path.Combine(outputDirectory, "Index.html"));
+            //outputDirectory = Path.GetFullPath(outputDirectory);
 
             foreach (string file in allFiles) 
             {
                 Console.WriteLine("\n" + new string('-', 9));
 
-                Report reportData = BuildReport(file, Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(file) + ".html"));
+                outputFile = Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(file) + ".html");
+                Report reportData = BuildReport(file, outputFile);
 
                 if (reportData != null)
                 {
+                    links.Add(outputFile);
+
                     int passed = reportData.Passed;
                     int failed = reportData.Failed + reportData.Errors;
                     int other = reportData.Inconclusive + reportData.Skipped;
@@ -76,7 +88,6 @@
                                 .Replace(ReportHelper.MarkupFlag("totalFailed"), failed.ToString())
                                 .Replace(ReportHelper.MarkupFlag("allOtherTests"), other.ToString());
 
-
                     if (reportData.Total > 0)
                     {
                         html = html.Replace(ReportHelper.MarkupFlag("passedPercentage"), (Convert.ToInt32(passed) * 100 / Convert.ToInt32(reportData.Total)).ToString())
@@ -92,16 +103,38 @@
                 }
             }
 
-            File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), html);
+            string li = "";
+            foreach (string link in links)
+            {
+                string path = "file:///" + link;
+
+                if ((new string[] { ".", "/" }).Contains(link.First().ToString()))
+                    path = link;
+
+                path = path.Replace("\\", "/");
+
+                li += HTML.Folder.NavLink
+                        .Replace(ReportHelper.MarkupFlag("linkSrc"), path)
+                        .Replace(ReportHelper.MarkupFlag("linkName"), Path.GetFileNameWithoutExtension(link));
+            }
+
+            foreach (KeyValuePair<string, string> pair in source.SourceFiles)
+                File.WriteAllText(Path.Combine(outputDirectory, pair.Key), pair.Value
+                        .Replace(ReportHelper.MarkupFlag("nav"), li)
+                        .Replace(ReportHelper.MarkupFlag("filename"), Path.GetFileNameWithoutExtension(pair.Key)));
+
+            File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), html.Replace(ReportHelper.MarkupFlag("nav"), li));
         }
 
-        public void CreateFolderReport(string resultsDirectory)
+        public void FolderReport(string resultsDirectory)
         {
-            CreateFolderReport(resultsDirectory, resultsDirectory);
+            FolderReport(resultsDirectory, resultsDirectory);
         }
 
-        public void CreateFileReport(string resultsFile, string outputFile)
+        public void FileReport(string resultsFile, string outputFile)
         {
+            isSingle = true;
+
             BuildReport(resultsFile, outputFile);
         }
 
@@ -153,19 +186,16 @@
             else
             {
                 // replace OPTIONALCSS here with css to hide elements
-                html = html.Replace(ReportHelper.MarkupFlag("insertNoTestsMessage"), HTML.File.NoTestsMessage)
-                            .Replace(ReportHelper.MarkupFlag("optionalcss"), HTML.File.NoTestsCSS)
+                html = html.Replace(ReportHelper.MarkupFlag("noTestsMessage"), HTML.File.NoTestsMessage)
+                            .Replace(ReportHelper.MarkupFlag("optionalCss"), HTML.File.NoTestsCSS + ReportHelper.MarkupFlag("optionalCss"))
                             .Replace(ReportHelper.MarkupFlag("inXml"), Path.GetFileName(resultsFile));
-
-                // add topbar for folder-level report to allow backward navigation to Index.html
-                if (addTopbar)
-                {
-                    html = html.Replace(ReportHelper.MarkupFlag("topbar"), HTML.File.Topbar);
-                }
             }
 
             // finally, save the source as the output file
-            File.WriteAllText(outputFile, html.Apply(theme));
+            if (source == null)
+                File.WriteAllText(outputFile, html.Apply(theme));
+            else
+                source.SourceFiles.Add(outputFile, html.Apply(theme));
 
             return report;
         }
@@ -221,18 +251,15 @@
             }
 
             // add topbar for folder-level report to allow backward navigation to Index.html
-            if (addTopbar)
+            if (isSingle)
             {
-                html = html.Replace(ReportHelper.MarkupFlag("topbar"), HTML.File.Topbar);
+                html = html.Replace("<body>", "<body class='single'>");
             }
-
-            // finally, save the source as the output file
-            //File.WriteAllText(outputFile, html);
 
             return html;
         }
 
-        public FileBuilder(Theme theme)
+        public ReportBuilder(Theme theme)
         {
             this.theme = theme;
         }

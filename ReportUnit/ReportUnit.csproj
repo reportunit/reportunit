@@ -43,10 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Design\ChartStroke.cs" />
     <Compile Include="Design\Styles.cs" />
     <Compile Include="Design\Theme.cs" />
-    <Compile Include="FileBuilder.cs" />
+    <Compile Include="Layer\Source.cs" />
+    <Compile Include="ReportBuilder.cs" />
     <Compile Include="HTML\File.cs" />
     <Compile Include="HTML\Folder.cs" />
     <Compile Include="Layer\Report.cs" />
@@ -68,7 +68,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="license.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
