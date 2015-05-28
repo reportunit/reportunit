@@ -50,7 +50,6 @@
             source = new Source();
 
             links.Add(Path.Combine(outputDirectory, "Index.html"));
-            //outputDirectory = Path.GetFullPath(outputDirectory);
 
             foreach (string file in allFiles) 
             {
@@ -119,8 +118,13 @@
             }
 
             foreach (KeyValuePair<string, string> pair in source.SourceFiles)
-                File.WriteAllText(Path.Combine(outputDirectory, pair.Key), pair.Value
-                        .Replace(ReportHelper.MarkupFlag("nav"), li)
+            {
+                string BIGSTRING = Path.Combine(outputDirectory, pair.Key);
+            }
+
+            foreach (KeyValuePair<string, string> pair in source.SourceFiles)
+                File.WriteAllText(pair.Key, 
+                        pair.Value.Replace(ReportHelper.MarkupFlag("nav"), li)
                         .Replace(ReportHelper.MarkupFlag("filename"), Path.GetFileNameWithoutExtension(pair.Key)));
 
             File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), html.Replace(ReportHelper.MarkupFlag("nav"), li));

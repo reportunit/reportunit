@@ -64,11 +64,10 @@
                 if (doc.DocumentElement == null)
                     return TestRunner.Unknown;
 
-
                 string fileExtension = Path.GetExtension(filePath).ToLower();
+
                 if (fileExtension.EndsWith("trx"))
                 {
-                    // -------------------------------------------------------------------------------------------------------
                     // MSTest2010
                     nsmgr = new XmlNamespaceManager(doc.NameTable);
                     nsmgr.AddNamespace("ns", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010");
@@ -84,7 +83,6 @@
 
                 if (fileExtension.EndsWith("xml"))
                 {
-                    // -------------------------------------------------------------------------------------------------------
                     // Gallio
                     nsmgr = new XmlNamespaceManager(doc.NameTable);
                     nsmgr.AddNamespace("ns", "http://www.gallio.org/");
@@ -92,8 +90,6 @@
                     XmlNode model = doc.SelectSingleNode("//ns:testModel", nsmgr);
                     if (model != null) return TestRunner.Gallio;
 
-
-                    // -------------------------------------------------------------------------------------------------------
                     // NUnit
                     // NOTE: not all nunit test files (ie when have nunit output format from other test runners) will contain the environment node
                     //            but if it does exist - then it should have the nunit-version attribute

@@ -48,8 +48,14 @@
 
         public int Errors { get; set; }
 
+        /// <summary>
+        /// Execution info such as username, machine-name, domain etc.
+        /// </summary>
         public RunInfo RunInfo { get; private set; }
 
+        /// <summary>
+        /// Overall list of test-suites
+        /// </summary>
         public List<TestSuite> TestFixtures { get; private set; }
     }
 }
