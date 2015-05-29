@@ -118,11 +118,6 @@
             }
 
             foreach (KeyValuePair<string, string> pair in source.SourceFiles)
-            {
-                string BIGSTRING = Path.Combine(outputDirectory, pair.Key);
-            }
-
-            foreach (KeyValuePair<string, string> pair in source.SourceFiles)
                 File.WriteAllText(pair.Key, 
                         pair.Value.Replace(ReportHelper.MarkupFlag("nav"), li)
                         .Replace(ReportHelper.MarkupFlag("filename"), Path.GetFileNameWithoutExtension(pair.Key)));

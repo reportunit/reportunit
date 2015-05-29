@@ -71,7 +71,7 @@
                                         font-size: 13px;
                                     }
             
-                                    /* ---- [ sidenav ] ---- */
+                                    /* ---- [ nav / sidenav ] ---- */
                                     .side-nav a {
                                         line-height: 22px;
                                         height: auto;
@@ -86,7 +86,6 @@
                                     }
                                     .logo, .logo a {
                                         cursor: default !important;
-                
                                     }
                                     .logo:hover, .logo a:hover {
                                         background-color: transparent !important;
@@ -96,6 +95,11 @@
                                     }
                                     .nav-main {
                                         padding-left: 325px;
+                                    }
+                                    .run-info-icon {
+                                        float: right;
+                                        font-size: 20px;
+                                        padding-right: 50px;
                                     }
             
                                     /* ---- [ main ] ---- */
@@ -300,6 +304,7 @@
                                         <div class='nav-main'>
                                             <div class='page-title'>
                                                 <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;<!--%FILENAME%--></span>
+                                                <a class='modal-trigger waves-effect waves-light run-info-icon tooltipped' data-position='left' data-tooltip='Run Info' href='#modal1'><i class='mdi-action-info-outline'></i></a>
                                                 <span class='logo-single'><i class='mdi-hardware-desktop-mac'></i>&nbsp;&nbsp;ReportUnit</span>
                                             </div>
                                         </div>
@@ -389,6 +394,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div id='modal1' class='modal'>
+                                    <div class='modal-content'>
+                                        <h4><!--%FILENAME%--> RunInfo</h4>
+                                        <table class='responsive-table bordered'>
+                                            <tr><th>Param</th><th>Value</th></tr>
+                                            <!--%RUNINFO%-->
+                                        </table>
+                                    </div>
+                                    <div class='modal-footer'>
+                                        <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
+                                    </div>
+                                </div>
                             </body>
                             <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
                             <script src='http://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js' type='text/javascript' charset='utf-8'></script>
@@ -400,6 +417,8 @@
                                         menuWidth: 300
                                     });
                                     $('select').material_select();
+                                    $('.modal-trigger').leanModal();
+                                    $('.tooltipped').tooltip({delay: 20});
                                     resetFilters();
                                     var total = $('.total-tests > span').text();
                                     var passed = $('.total-passed > span').text();
