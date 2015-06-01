@@ -44,7 +44,7 @@
                     fileParser = new MsTest2010().LoadFile(resultsFile);
                     break;
                 default:
-                    Console.WriteLine("[ERROR] Skipping " + resultsFile + ". It is not of a known test runner type.");
+                    Console.Write("[INFO] Skipping " + resultsFile + ". It is not of a known test runner type.");
                     break;
             }
 

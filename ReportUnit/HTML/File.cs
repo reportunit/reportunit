@@ -29,6 +29,9 @@
                                     html { 
                                         background-color: #f6f7fa;  
                                     }
+                                    body {
+                                        font-size: 14px;
+                                    }
                                     pre {
                                         background-color: #f8f9fa;
                                         border: 1px solid #ddd;
@@ -289,6 +292,18 @@
                                         .single .main-wrap {
                                             width: 95%;
                                         }
+                                        .filters .toggle-type {
+                                            display: none;
+                                        }
+                                        .filters .col.s3 {
+                                            width: 40%;
+                                        }
+                                    }
+                                    @media (min-width: 992px) and (max-width: 1300px) {
+                                        /* fix for pie charts going out of bounds */
+                                        .main-wrap .row:first-child .col.s12 {
+                                            width: 33.33% !important;
+                                        }
                                     }
                                 </style>
                                 <!--%OPTIONALCSS%-->
@@ -426,17 +441,17 @@
                                     var inconclusive = $('.total-inconclusive > span').text();
                                     var errors = $('.total-errors > span').text();
                                     var skipped = $('.total-skipped > span').text();
-                                    $('.total-tests').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-tests').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                     $('.total-tests').data('easyPieChart').update('100');
-                                    $('.total-passed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-passed').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                     $('.total-passed').data('easyPieChart').update(passed / total * 100);
-                                    $('.total-failed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-failed').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                     $('.total-failed').data('easyPieChart').update(failed / total * 100);
-                                    $('.total-inconclusive').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-inconclusive').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                     $('.total-inconclusive').data('easyPieChart').update(inconclusive / total * 100);
-                                    $('.total-errors').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: 'tomato', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-errors').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: 'tomato', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                     $('.total-errors').data('easyPieChart').update(errors / total * 100);
-                                    $('.total-skipped').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: 'dodgerblue', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                    $('.total-skipped').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: 'dodgerblue', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                     $('.total-skipped').data('easyPieChart').update(skipped / total * 100);
                                     $('.nav.nav-sidebar a').filter(function(){
                                         return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];

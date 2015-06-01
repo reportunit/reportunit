@@ -36,6 +36,8 @@ namespace ReportUnit
         /// </param>
         static void Main(string[] args)
         {
+            CopyrightMessage();
+
             if (args.Length == 0 || args.Length > 2)
             {
                 Console.WriteLine("[ERROR] Invalid number of arguments specified.\n" + reportUnitUsage);
@@ -96,5 +98,13 @@ namespace ReportUnit
 
             new ReportBuilder(Theme.Standard).FolderReport(args[0]); 
         }
+
+        private static void CopyrightMessage()
+        {
+            Console.WriteLine("ReportUnit v1.0. Report generator for the test-runner family.");
+            Console.WriteLine("http://reportunit.github.io");
+            Console.WriteLine("Copyright (c) 2015 Anshoo Arora (Relevant Codes)");
+        }
+
     }
 }

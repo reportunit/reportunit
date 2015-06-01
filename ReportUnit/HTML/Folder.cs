@@ -27,6 +27,9 @@
                                     html {
                                         background-color: #f6f7fa;
                                     }
+                                    body {
+                                        font-size: 14px;
+                                    }
 
                                     /* ---- [ global ] ---- */
                                     .card-head {
