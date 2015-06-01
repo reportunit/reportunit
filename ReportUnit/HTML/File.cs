@@ -15,7 +15,7 @@
                         <html lang='en'>
                             <!--
                                 ReportUnit [TestSuite Summary] v1.0 | http://reportunit.github.io/
-                                Created by Anshoo Arora | Released under the <> license
+                                Created by Anshoo Arora (Relevant Codes) | Released under the MIT license
                             --> 
                             <head>
                                 <meta charset='utf-8'>
