@@ -1,4 +1,4 @@
-# ReportUnit - The Ultimate HTML Report Generator
+# ReportUnit
 
 ReportUnit is a report generator for the test-runner family. It uses stock reports from NUnit, MSTest and Gallio and converts them into attractive HTML reports with dashboards.
 
