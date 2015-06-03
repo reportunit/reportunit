@@ -554,6 +554,7 @@
                                     <span class='fixture-result <!--%FIXTURERESULT%-->'><!--%FIXTURERESULT%--></span>
                                 </div>
                                 <div class='fixture-content'>
+                                    <!--%FIXTURESTATUSMSG%-->
                                     <table class='bordered'>
                                         <tr>
                                             <th>TestName</th>

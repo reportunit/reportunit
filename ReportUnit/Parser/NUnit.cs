@@ -160,6 +160,24 @@ namespace ReportUnit.Parser
                     testSuite.StartTime = duration.ToString();
                 }
                 
+				// check if the testSuite has any errors (ie error in the TestFixtureSetUp)
+	            var testSuiteFailureNode = suite.SelectSingleNode("failure");
+				if (testSuiteFailureNode != null && testSuiteFailureNode.HasChildNodes)
+				{
+					errorMsg = descMsg = "";
+					var message = testSuiteFailureNode.SelectSingleNode(".//message");
+
+					if (message != null)
+					{
+						errorMsg = "<pre>" + message.InnerText.Trim();
+						errorMsg += testSuiteFailureNode.SelectSingleNode(".//stack-trace") != null ? " -> " + testSuiteFailureNode.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "").Replace("\n", "") : "";
+						errorMsg += "</pre>";
+						errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
+					}
+					testSuite.StatusMessage = errorMsg;
+				}
+
+
                 // add each test of the test-fixture
                 foreach (XmlNode testcase in suite.SelectNodes(".//test-case"))
                 {

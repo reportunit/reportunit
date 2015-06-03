@@ -209,6 +209,11 @@
                         .Replace(ReportHelper.MarkupFlag("fixturename"), suite.Name)
                         .Replace(ReportHelper.MarkupFlag("fixtureresult"), suite.Status.ToString().ToLower());
 
+	            if (!string.IsNullOrWhiteSpace(suite.StatusMessage))
+	            {
+		            html = html.Replace(ReportHelper.MarkupFlag("fixturestatusmsg"), suite.StatusMessage);
+	            }
+
                 if (!string.IsNullOrWhiteSpace(suite.StartTime) && !string.IsNullOrWhiteSpace(suite.EndTime))
                 {
                     html = html.Replace(ReportHelper.MarkupFlag("fixtureStartedAt"), suite.StartTime)
