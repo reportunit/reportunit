@@ -99,7 +99,7 @@
 			try
 			{
 				DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
-				_report.RunInfo.Info.Add("Last Run", string.Format("{0} {1}", lastModified.ToString("d MMM yyyy HH:mm")));
+				_report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
 			}
 			catch (Exception) { }
 
