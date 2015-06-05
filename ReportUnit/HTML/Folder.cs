@@ -53,9 +53,6 @@
                                     border-bottom: 1px solid #ddd;
                                     margin-left: -4px;
                                 }
-                                .logo, .logo a {
-                                    cursor: default !important;
-                                }
                                 .logo span {
                                     border: 1px solid #222;
                                     font-size: 15px;
@@ -270,7 +267,7 @@
                             <div class='header'>
                                 <nav>
                                     <ul id='slide-out' class='side-nav fixed'>
-                                        <li class='logo'><a href='#'><span>ReportUnit</span></a></li>
+                                        <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
                                     <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
