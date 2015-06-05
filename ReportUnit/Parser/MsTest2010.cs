@@ -83,8 +83,6 @@
             }
             else
             {
-                Console.Write("There are no tests available in this file.");
-
                 try
                 {
                     _report.Status = Status.Passed;

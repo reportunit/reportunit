@@ -87,8 +87,6 @@ namespace ReportUnit.Parser
             }
             else
             {
-                Console.Write("There are no tests available in this file.");
-
                 _report.Status = Status.Passed;
             }
 

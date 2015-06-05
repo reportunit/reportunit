@@ -101,7 +101,7 @@ namespace ReportUnit
 
         private static void CopyrightMessage()
         {
-            Console.WriteLine("\n--\nReportUnit v1.0. Report generator for the test-runner family.");
+            Console.WriteLine("\n--\nReportUnit v1.1. Report generator for the test-runner family.");
             Console.WriteLine("http://reportunit.github.io");
             Console.WriteLine("Copyright (c) 2015 Anshoo Arora (Relevant Codes)\n--\n");
         }

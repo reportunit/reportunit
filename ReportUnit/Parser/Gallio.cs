@@ -81,8 +81,6 @@
             }
             else
             {
-                Console.Write("There are no tests available in this file.");
-
                 _report.Status = Status.Passed;
             }
 
@@ -164,6 +162,13 @@
                     var tc = new Test();
                     tc.Name = test.Attributes["name"].InnerText;
                     tc.Status = test.SelectSingleNode("./following-sibling::ns:result/ns:outcome/@status", _nsmgr).InnerText.AsStatus();
+
+                    var category = test.SelectSingleNode("./ns:metadata/ns:entry[@key='Category']/ns:value", _nsmgr);
+                    
+                    if (category != null)
+                    {
+                        tc.Categories.Add(category.InnerText);
+                    }
 
                     var desc = test.SelectSingleNode("./ns:metadata/ns:entry[@key='Description']/ns:value", _nsmgr);
 
