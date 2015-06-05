@@ -80,10 +80,10 @@ namespace ReportUnit.Parser
                         }
                     }
                     catch { }
-				}
+                }
 
-				ProcessRunInfo();
-	            ProcessFixtureBlocks();
+                ProcessRunInfo();
+                ProcessFixtureBlocks();
             }
             else
             {
@@ -95,53 +95,53 @@ namespace ReportUnit.Parser
             return _report;
         }
 
-		/// <summary>
-		/// Find meta information about the whole test run
-		/// </summary>
-	    private void ProcessRunInfo()
-	    {
-			_report.RunInfo.Info.Add("TestResult File", _testResultFile);
+        /// <summary>
+        /// Find meta information about the whole test run
+        /// </summary>
+        private void ProcessRunInfo()
+        {
+            _report.RunInfo.Info.Add("TestResult File", _testResultFile);
 
-			try
-			{
-				DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
-				_report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
-			}
-			catch (Exception) { }
+            try
+            {
+                DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
+                _report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
+            }
+            catch (Exception) { }
 
-			if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
+            if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
 
 
-			try
-			{
-				// try to parse the environment node
-				// some attributes in the environment node are different for 2.x and 3.x
-				XmlNode env = _doc.GetElementsByTagName("environment")[0];
-				if (env != null)
-				{
-					_report.RunInfo.Info.Add("User", env.Attributes["user"].InnerText);
-					_report.RunInfo.Info.Add("User Domain", env.Attributes["user-domain"].InnerText);
-					_report.RunInfo.Info.Add("Machine Name", env.Attributes["machine-name"].InnerText);
-					_report.RunInfo.Info.Add("Platform", env.Attributes["platform"].InnerText);
-					_report.RunInfo.Info.Add("Os Version", env.Attributes["os-version"].InnerText);
-					_report.RunInfo.Info.Add("Clr Version", env.Attributes["clr-version"].InnerText);
-					_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-					_report.RunInfo.Info.Add("TestRunner Version", env.Attributes["nunit-version"].InnerText);
-				}
-				else
-				{
-					_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-				}
-			}
-			catch (Exception ex)
-			{
-				_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-				Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
-			}
+            try
+            {
+                // try to parse the environment node
+                // some attributes in the environment node are different for 2.x and 3.x
+                XmlNode env = _doc.GetElementsByTagName("environment")[0];
+                if (env != null)
+                {
+                    _report.RunInfo.Info.Add("User", env.Attributes["user"].InnerText);
+                    _report.RunInfo.Info.Add("User Domain", env.Attributes["user-domain"].InnerText);
+                    _report.RunInfo.Info.Add("Machine Name", env.Attributes["machine-name"].InnerText);
+                    _report.RunInfo.Info.Add("Platform", env.Attributes["platform"].InnerText);
+                    _report.RunInfo.Info.Add("Os Version", env.Attributes["os-version"].InnerText);
+                    _report.RunInfo.Info.Add("Clr Version", env.Attributes["clr-version"].InnerText);
+                    _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+                    _report.RunInfo.Info.Add("TestRunner Version", env.Attributes["nunit-version"].InnerText);
+                }
+                else
+                {
+                    _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+                Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
+            }
 
-	    }
-		
-		/// <summary>
+        }
+        
+        /// <summary>
         /// Processes the fixture level blocks
         /// Adds all tests to the output
         /// </summary>
@@ -180,22 +180,20 @@ namespace ReportUnit.Parser
                     testSuite.StartTime = duration.ToString();
                 }
                 
-				// check if the testSuite has any errors (ie error in the TestFixtureSetUp)
-	            var testSuiteFailureNode = suite.SelectSingleNode("failure");
-				if (testSuiteFailureNode != null && testSuiteFailureNode.HasChildNodes)
-				{
-					errorMsg = descMsg = "";
-					var message = testSuiteFailureNode.SelectSingleNode(".//message");
+                // check if the testSuite has any errors (ie error in the TestFixtureSetUp)
+                var testSuiteFailureNode = suite.SelectSingleNode("failure");
+                if (testSuiteFailureNode != null && testSuiteFailureNode.HasChildNodes)
+                {
+                    errorMsg = descMsg = "";
+                    var message = testSuiteFailureNode.SelectSingleNode(".//message");
 
-					if (message != null)
-					{
-						errorMsg = "<pre>" + message.InnerText.Trim();
-						errorMsg += testSuiteFailureNode.SelectSingleNode(".//stack-trace") != null ? " -> " + testSuiteFailureNode.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "").Replace("\n", "") : "";
-						errorMsg += "</pre>";
-						errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
-					}
-					testSuite.StatusMessage = errorMsg;
-				}
+                    if (message != null)
+                    {
+                        errorMsg = message.InnerText.Trim();
+                        errorMsg += testSuiteFailureNode.SelectSingleNode(".//stack-trace") != null ? " -> " + testSuiteFailureNode.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "").Replace("\n", "") : "";
+                    }
+                    testSuite.StatusMessage = errorMsg;
+                }
 
 
                 // add each test of the test-fixture
@@ -219,6 +217,13 @@ namespace ReportUnit.Parser
                             }
                         }
                         catch (Exception) { }
+                    }
+
+                    var categories = testcase.SelectNodes(".//property[@name='Category']");
+
+                    foreach (XmlNode category in categories)
+                    {
+                        tc.Categories.Add(category.Attributes["value"].InnerText);
                     }
 
                     var message = testcase.SelectSingleNode(".//message");

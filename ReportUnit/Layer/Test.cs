@@ -1,5 +1,7 @@
 ﻿namespace ReportUnit.Layer
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Information for an individual test
     /// </summary>
@@ -21,5 +23,15 @@
         /// How long the test took to run (in milliseconds)
         /// </summary>
         public double Duration { get; set; }
+
+        /// <summary>
+        /// Categories & features associated with the test
+        /// </summary>
+        public List<string> Categories;
+
+        public Test()
+        {
+            Categories = new List<string>();
+        }
     }
 }

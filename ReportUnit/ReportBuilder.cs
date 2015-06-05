@@ -201,6 +201,8 @@
 
         private string BuildSuiteBlocks(Report report, string html, string outputFile)
         {
+            var categories = new List<string>();
+
             // run for each test fixture
             foreach (TestSuite suite in report.TestFixtures)
             {
@@ -209,10 +211,10 @@
                         .Replace(ReportHelper.MarkupFlag("fixturename"), suite.Name)
                         .Replace(ReportHelper.MarkupFlag("fixtureresult"), suite.Status.ToString().ToLower());
 
-	            if (!string.IsNullOrWhiteSpace(suite.StatusMessage))
-	            {
-		            html = html.Replace(ReportHelper.MarkupFlag("fixturestatusmsg"), suite.StatusMessage);
-	            }
+                if (!string.IsNullOrWhiteSpace(suite.StatusMessage))
+                {
+                    html = html.Replace(ReportHelper.MarkupFlag("fixturestatusmsg"), suite.StatusMessage);
+                }
 
                 if (!string.IsNullOrWhiteSpace(suite.StartTime) && !string.IsNullOrWhiteSpace(suite.EndTime))
                 {
@@ -251,6 +253,32 @@
                         .Replace(ReportHelper.MarkupFlag("testname"), test.Name)
                         .Replace(ReportHelper.MarkupFlag("teststatus"), test.Status.ToString().ToLower())
                         .Replace(ReportHelper.MarkupFlag("teststatusmsg"), test.StatusMessage);
+
+                    foreach (string category in test.Categories)
+                    {
+                        html = html.Replace(ReportHelper.MarkupFlag("testFeature"), category + " " + ReportHelper.MarkupFlag("testFeature"));
+
+                        // add all categories to create filters
+                        if (!categories.Contains(category))
+                        {
+                            categories.Add(category);
+                        }
+                    }
+
+                    html = html.Replace(ReportHelper.MarkupFlag("testFeature"), "");
+                }
+            }
+
+            if (categories.Count == 0)
+            {
+                html = html.Replace(ReportHelper.MarkupFlag("optionalCss"), "<style>.feature-toggle { display: none; }</style>");
+            }
+            else
+            {
+                foreach (string category in categories)
+                {
+                    html = html.Replace(ReportHelper.MarkupFlag("categoryList"), HTML.File.CategoryLi + ReportHelper.MarkupFlag("categoryList"))
+                                .Replace(ReportHelper.MarkupFlag("categoryName"), category);
                 }
             }
 

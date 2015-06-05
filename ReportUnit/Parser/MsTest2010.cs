@@ -102,52 +102,52 @@
         }
 
 
-		/// <summary>
-		/// Find meta information about the whole test run
-	    /// </summary>
-	    private void ProcessRunInfo()
-		{
-			_report.RunInfo.Info.Add("TestResult File", _testResultFile);
+        /// <summary>
+        /// Find meta information about the whole test run
+        /// </summary>
+        private void ProcessRunInfo()
+        {
+            _report.RunInfo.Info.Add("TestResult File", _testResultFile);
 
-			try
-			{
-				DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
-				_report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
-			}
-			catch (Exception) { }
+            try
+            {
+                DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
+                _report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
+            }
+            catch (Exception) { }
 
-			if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
+            if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
 
-			try
-			{
-				// try to parse the TestRun node
-				XmlNode testRun = _doc.SelectSingleNode("descendant::t:TestRun", _nsmgr);
+            try
+            {
+                // try to parse the TestRun node
+                XmlNode testRun = _doc.SelectSingleNode("descendant::t:TestRun", _nsmgr);
 
-				if (testRun != null)
-				{
-					_report.RunInfo.Info.Add("Machine Name", _doc.SelectNodes("descendant::t:UnitTestResult", _nsmgr)[0].Attributes["computerName"].InnerText);
-					_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-					_report.RunInfo.Info.Add("TestRunner Version", testRun.Attributes["xmlns"].InnerText);
+                if (testRun != null)
+                {
+                    _report.RunInfo.Info.Add("Machine Name", _doc.SelectNodes("descendant::t:UnitTestResult", _nsmgr)[0].Attributes["computerName"].InnerText);
+                    _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+                    _report.RunInfo.Info.Add("TestRunner Version", testRun.Attributes["xmlns"].InnerText);
 
 
-					var userInfo = testRun.Attributes["runUser"].InnerText;
-					if (!string.IsNullOrWhiteSpace(userInfo))
-					{
-						_report.RunInfo.Info.Add("User", userInfo.Split('\\').Last());
-						_report.RunInfo.Info.Add("User Domain", userInfo.Split('\\').First());
-					}
-				}
-				else
-				{
-					_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-				}
-			}
-			catch (Exception ex)
-			{
-				_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-				Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
-			}
-	    }
+                    var userInfo = testRun.Attributes["runUser"].InnerText;
+                    if (!string.IsNullOrWhiteSpace(userInfo))
+                    {
+                        _report.RunInfo.Info.Add("User", userInfo.Split('\\').Last());
+                        _report.RunInfo.Info.Add("User Domain", userInfo.Split('\\').First());
+                    }
+                }
+                else
+                {
+                    _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+                Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
+            }
+        }
 
 
         /// <summary>

@@ -15,12 +15,12 @@
 
         public string Name { get; set; }
 
-		public Status Status { get; set; }
+        public Status Status { get; set; }
 
-		/// <summary>
-		/// Error messages, description, etc
-		/// </summary>
-		public string StatusMessage { get; set; }
+        /// <summary>
+        /// Error messages, description, etc
+        /// </summary>
+        public string StatusMessage { get; set; }
 
         public string StartTime { get; set; }
 

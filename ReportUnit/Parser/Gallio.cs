@@ -89,55 +89,55 @@
             return _report;
         }
 
-	    /// <summary>
-	    /// Find meta information about the whole test run
-	    /// </summary>
-	    private void ProcessRunInfo()
-		{
-			_report.RunInfo.Info.Add("TestResult File", _testResultFile);
+        /// <summary>
+        /// Find meta information about the whole test run
+        /// </summary>
+        private void ProcessRunInfo()
+        {
+            _report.RunInfo.Info.Add("TestResult File", _testResultFile);
 
-			try
-			{
-				DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
-				_report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
-			}
-			catch (Exception) { }
+            try
+            {
+                DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
+                _report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
+            }
+            catch (Exception) { }
 
-			if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
-			_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+            if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
+            _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
 
-			try
-			{
-				_report.RunInfo.Info.Add("File", _doc.SelectSingleNode("(//ns:file)[1]", _nsmgr).InnerText);
+            try
+            {
+                _report.RunInfo.Info.Add("File", _doc.SelectSingleNode("(//ns:file)[1]", _nsmgr).InnerText);
 
-				var assembly = _doc.SelectSingleNode("//ns:codeReference/@assembly", _nsmgr);
-				if (assembly != null) _report.RunInfo.Info.Add("Assembly", assembly.InnerText);
+                var assembly = _doc.SelectSingleNode("//ns:codeReference/@assembly", _nsmgr);
+                if (assembly != null) _report.RunInfo.Info.Add("Assembly", assembly.InnerText);
 
-				var codeLocation = _doc.SelectSingleNode("//ns:codeLocation/@path", _nsmgr);
-				if (codeLocation != null) _report.RunInfo.Info.Add("CodeLocation", codeLocation.InnerText);
+                var codeLocation = _doc.SelectSingleNode("//ns:codeLocation/@path", _nsmgr);
+                if (codeLocation != null) _report.RunInfo.Info.Add("CodeLocation", codeLocation.InnerText);
 
-				var testKind = _doc.SelectSingleNode("(//ns:entry[@key='TestKind'])[1]/ns:value", _nsmgr);
-				if (testKind != null) _report.RunInfo.Info.Add("TestKind", testKind.InnerText);
+                var testKind = _doc.SelectSingleNode("(//ns:entry[@key='TestKind'])[1]/ns:value", _nsmgr);
+                if (testKind != null) _report.RunInfo.Info.Add("TestKind", testKind.InnerText);
 
-				var codeBase = _doc.SelectSingleNode("(//ns:entry[@key='CodeBase'])[1]/ns:value", _nsmgr);
-				if (codeBase != null) _report.RunInfo.Info.Add("CodeBase", codeBase.InnerText);
+                var codeBase = _doc.SelectSingleNode("(//ns:entry[@key='CodeBase'])[1]/ns:value", _nsmgr);
+                if (codeBase != null) _report.RunInfo.Info.Add("CodeBase", codeBase.InnerText);
 
-				var framework = _doc.SelectSingleNode("(//ns:entry[@key='Framework'])[1]/ns:value", _nsmgr);
-				if (framework != null) _report.RunInfo.Info.Add("Framework", framework.InnerText);
+                var framework = _doc.SelectSingleNode("(//ns:entry[@key='Framework'])[1]/ns:value", _nsmgr);
+                if (framework != null) _report.RunInfo.Info.Add("Framework", framework.InnerText);
 
-				var version = _doc.SelectSingleNode("(//ns:entry[@key='Version'])[1]/ns:value", _nsmgr);
-				if (version != null) _report.RunInfo.Info.Add("Version", version.InnerText);
+                var version = _doc.SelectSingleNode("(//ns:entry[@key='Version'])[1]/ns:value", _nsmgr);
+                if (version != null) _report.RunInfo.Info.Add("Version", version.InnerText);
 
-				var ignoreReason = _doc.SelectSingleNode("(//ns:entry[@key='IgnoreReason'])[1]/ns:value", _nsmgr);
-				if (ignoreReason != null) _report.RunInfo.Info.Add("IgnoreReason", ignoreReason.InnerText);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("[ERROR] There was an error processing RunInfo: " + ex.Message);
-			}
-	    }
+                var ignoreReason = _doc.SelectSingleNode("(//ns:entry[@key='IgnoreReason'])[1]/ns:value", _nsmgr);
+                if (ignoreReason != null) _report.RunInfo.Info.Add("IgnoreReason", ignoreReason.InnerText);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ERROR] There was an error processing RunInfo: " + ex.Message);
+            }
+        }
 
-	    private void ProcessFixtureBlocks()
+        private void ProcessFixtureBlocks()
         {
             Console.WriteLine("[INFO] Building fixture blocks...");
 

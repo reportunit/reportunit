@@ -7,10 +7,10 @@
     /// </summary>
     internal class RunInfo
     {
-	    public RunInfo()
-	    {
-		    Info = new Dictionary<string, string>();
-	    }
+        public RunInfo()
+        {
+            Info = new Dictionary<string, string>();
+        }
 
         /// <summary>
         /// Execution info such as username, machine-name, domain etc.
