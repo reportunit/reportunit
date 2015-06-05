@@ -15,8 +15,10 @@
                     @"<!DOCTYPE html>
                     <html lang='en'>
                         <!--
-                            ReportUnit [TestSuite Summary] v1.0 | http://reportunit.github.io/
+                            ReportUnit [TestSuite Summary] v1.1 | http://reportunit.github.io/
                             Created by Anshoo Arora (Relevant Codes) | Released under the MIT license
+                            Contributor: Sandra Greenhalgh
+                            Contributor: Andrey Bushman
                         --> 
                         <head>
                             <meta charset='utf-8'>
@@ -90,9 +92,6 @@
                                 .logo {
                                     border-bottom: 1px solid #ddd;
                                     margin-left: -4px;
-                                }
-                                .logo, .logo a {
-                                    cursor: default !important;
                                 }
                                 .logo:hover, .logo a:hover {
                                     background-color: transparent !important;
@@ -333,7 +332,7 @@
                             <div class='header'>
                                 <nav>
                                     <ul id='slide-out' class='side-nav fixed'>
-                                        <li class='logo'><a href='#'><span>ReportUnit</span></a></li>
+                                        <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
                                     <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
