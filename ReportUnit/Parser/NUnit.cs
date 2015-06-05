@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Xml;
 using ReportUnit.Support;
+using ReportUnit.Layer;
 
 namespace ReportUnit.Parser
 {
-    using ReportUnit.Layer;
-    using System.Collections.Generic;
 
     internal class NUnit : IParser
     {
@@ -81,35 +80,10 @@ namespace ReportUnit.Parser
                         }
                     }
                     catch { }
-                }
+				}
 
-                try
-                {
-                    // try to parse the environment node
-                    // some attributes in the environment node are different for 2.x and 3.x
-                    XmlNode env = _doc.GetElementsByTagName("environment")[0];
-
-                    if (env != null)
-                    {
-                        _report.RunInfo.Info = new Dictionary<string, string> {
-                            {"Input Result File", _testResultFile},
-                            {"User", env.Attributes["user"].InnerText},
-                            {"User Domain", env.Attributes["user-domain"].InnerText},
-                            {"Machine Name", env.Attributes["machine-name"].InnerText},
-                            {"Platform", env.Attributes["platform"].InnerText},
-                            {"Os Version", env.Attributes["os-version"].InnerText},
-                            {"Clr Version", env.Attributes["clr-version"].InnerText},
-                            {"TestRunner", _report.RunInfo.TestRunner.ToString()},
-                            {"TestRunner Version", env.Attributes["nunit-version"].InnerText}
-                        };
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
-                }
-
-                ProcessFixtureBlocks();
+				ProcessRunInfo();
+	            ProcessFixtureBlocks();
             }
             else
             {
@@ -121,7 +95,53 @@ namespace ReportUnit.Parser
             return _report;
         }
 
-        /// <summary>
+		/// <summary>
+		/// Find meta information about the whole test run
+		/// </summary>
+	    private void ProcessRunInfo()
+	    {
+			_report.RunInfo.Info.Add("TestResult File", _testResultFile);
+
+			try
+			{
+				DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
+				_report.RunInfo.Info.Add("Last Run", string.Format("{0} {1}", lastModified.ToString("d MMM yyyy HH:mm")));
+			}
+			catch (Exception) {}
+
+			if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
+
+
+			try
+			{
+				// try to parse the environment node
+				// some attributes in the environment node are different for 2.x and 3.x
+				XmlNode env = _doc.GetElementsByTagName("environment")[0];
+				if (env != null)
+				{
+					_report.RunInfo.Info.Add("User", env.Attributes["user"].InnerText);
+					_report.RunInfo.Info.Add("User Domain", env.Attributes["user-domain"].InnerText);
+					_report.RunInfo.Info.Add("Machine Name", env.Attributes["machine-name"].InnerText);
+					_report.RunInfo.Info.Add("Platform", env.Attributes["platform"].InnerText);
+					_report.RunInfo.Info.Add("Os Version", env.Attributes["os-version"].InnerText);
+					_report.RunInfo.Info.Add("Clr Version", env.Attributes["clr-version"].InnerText);
+					_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+					_report.RunInfo.Info.Add("TestRunner Version", env.Attributes["nunit-version"].InnerText);
+				}
+				else
+				{
+					_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+				}
+			}
+			catch (Exception ex)
+			{
+				_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
+				Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
+			}
+
+	    }
+		
+		/// <summary>
         /// Processes the fixture level blocks
         /// Adds all tests to the output
         /// </summary>

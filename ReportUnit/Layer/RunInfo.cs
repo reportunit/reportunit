@@ -7,10 +7,15 @@
     /// </summary>
     internal class RunInfo
     {
+	    public RunInfo()
+	    {
+		    Info = new Dictionary<string, string>();
+	    }
+
         /// <summary>
         /// Execution info such as username, machine-name, domain etc.
         /// </summary>
-        public Dictionary<string, string> Info { get; set; }
+        public Dictionary<string, string> Info { get; private set; }
 
         /// <summary>
         /// The type of test runner that generated the data (eg NUnit, mstest)
