@@ -49,7 +49,8 @@
             string html = HTML.Folder.Base;
             source = new Source();
 
-            links.Add(Path.Combine(outputDirectory, "Index.html"));
+            // force link to always point to the existing folder
+            links.Add("./Index.html");
 
             foreach (string file in allFiles) 
             {
@@ -60,7 +61,8 @@
 
                 if (reportData != null)
                 {
-                    links.Add(outputFile);
+                    // force link to always point to the existing folder
+                    links.Add("./" + Path.GetFileNameWithoutExtension(file) + ".html");
 
                     int passed = reportData.Passed;
                     int failed = reportData.Failed + reportData.Errors;
@@ -102,27 +104,22 @@
                 }
             }
 
-            string li = "";
+            string navLinks = "";
             foreach (string link in links)
             {
-                string path = "file:///" + link;
-
-                if ((new string[] { ".", "/" }).Contains(link.First().ToString()))
-                    path = link;
-
-                path = path.Replace("\\", "/");
-
-                li += HTML.Folder.NavLink
-                        .Replace(ReportHelper.MarkupFlag("linkSrc"), path)
+                navLinks += HTML.Folder.NavLink
+                        .Replace(ReportHelper.MarkupFlag("linkSrc"), link)
                         .Replace(ReportHelper.MarkupFlag("linkName"), Path.GetFileNameWithoutExtension(link));
             }
 
             foreach (KeyValuePair<string, string> pair in source.SourceFiles)
-                File.WriteAllText(pair.Key, 
-                        pair.Value.Replace(ReportHelper.MarkupFlag("nav"), li)
+            {
+                File.WriteAllText(pair.Key,
+                        pair.Value.Replace(ReportHelper.MarkupFlag("nav"), navLinks)
                         .Replace(ReportHelper.MarkupFlag("filename"), Path.GetFileNameWithoutExtension(pair.Key)));
+            }
 
-            File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), html.Replace(ReportHelper.MarkupFlag("nav"), li));
+            File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), html.Replace(ReportHelper.MarkupFlag("nav"), navLinks));
         }
 
         public void FolderReport(string resultsDirectory)
