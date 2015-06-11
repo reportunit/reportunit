@@ -51,7 +51,6 @@
                                     font-weight: 400;
                                 }
                                 td:first-child {
-                                    font-weight: 300;
                                     max-width: 400px;
                                     min-width: 150px;
                                     padding-right: 25px;
@@ -69,7 +68,7 @@
                                     padding-bottom: 20px;
                                 }
                                 .card-panel {
-                                    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+                                    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 1px 4px 0 rgba(0, 0, 0, 0.12);
                                 }
                                 .btn {
                                     font-size: 12px;
@@ -77,15 +76,31 @@
                                 .btn i {
                                     font-size: 13px;
                                 }
+                                .input-field label {
+                                    color: #db7093;
+                                }
             
                                 /* ---- [ nav / sidenav ] ---- */
                                 .side-nav a {
                                     line-height: 22px;
                                     height: auto;
                                 }
-                                .side-nav.fixed a {
+                                .side-nav a {
                                     height: auto;
                                     padding: 20px 15px;
+                                }
+                                nav a.button-collapse {
+                                    display: inline-block;
+                                }
+                                .reportunit-logo-main {
+                                    float: right;
+                                    font-size: 13px;
+                                    margin-right: 45px;
+                                    padding: 0 10px;
+                                }
+                                .reportunit-logo-main > span {
+                                    border: 1px solid #fff;
+                                    padding: 2px 6px;
                                 }
                                 .logo {
                                     border-bottom: 1px solid #ddd;
@@ -103,21 +118,22 @@
                                     display: none;
                                 }
                                 .nav-main {
-                                    padding-left: 325px;
+                                    /*padding-left: 325px; */
+                                    padding-left: 60px;
                                 }
                                 .run-info-icon {
                                     float: right;
                                     font-size: 20px;
-                                    padding-right: 50px;
+                                    padding-right: 10px;
                                 }
             
                                 /* ---- [ main ] ---- */
                                 .main {
                                     background-color: #f3f6fa;
-                                    padding-left: 300px;
+                                    /*padding-left: 300px;*/
                                 }
                                 .main-wrap {
-                                    padding: 40px 20px 100px;
+                                    padding: 40px 40px 100px;
                                 }
                                 .main-wrap > .row {
                                     margin-bottom: 0;
@@ -176,6 +192,9 @@
                                     padding-bottom: 60px;
                                     word-break: break-all;                 
                                 }
+                                .fixture-status-message {
+                                    background-color: #f7f8fa;
+                                }
                                 .fixture-name {
                                     float: left; 
                                     font-size: 20px;
@@ -197,9 +216,8 @@
                                 }
                                 p.description {
                                     border: 1px solid #ddd;
-                                    color: #222;
+                                    color: #444;
                                     font-size: 14px;
-                                    font-weight: 300;
                                     padding: 10px;
                                 }
                                 .startedAt, .endedAt { 
@@ -269,7 +287,7 @@
                                 }
 
                                 /* ---- [ single ] ---- */
-                                .single #slide-out {
+                                .single #slide-out, .single .button-collapse, .single .mdi-file-folder-open {
                                     display: none !important;
                                 }
                                 .single .main {
@@ -277,17 +295,20 @@
                                 }
                                 .single .main-wrap {
                                     margin: 0 auto;
-                                    width: 85%;
+                                    padding-left: 40px;
+                                    padding-right: 40px;
                                 }
                                 .single .nav-main {
                                     margin: 0 auto;
-                                    padding-left: 20px;
-                                }
-                                .single .page-title span:first-child {
-                                    display: none !important;
+                                    padding-left: 52px;
                                 }
                                 .single .logo-single {
                                     display: inline-block !important;
+                                }
+                                .single .reportunit-logo-main {
+                                    float: left;
+                                    margin-right: 0;
+                                    padding: 0;
                                 }
 
                                 /* ---- [ media queries ] ---- */
@@ -295,14 +316,8 @@
                                     .main {
                                         padding-left: 0;
                                     }
-                                    .nav-main {
-                                        padding-left: 100px;
-                                    }
                                     .button-collapse {
                                         padding-left: 10px;
-                                    }
-                                    .single .nav-main {
-                                        padding-left: 100px;
                                     }
                                     .single .main-wrap {
                                         width: 95%;
@@ -329,7 +344,7 @@
                         <body>    
                             <div class='header'>
                                 <nav>
-                                    <ul id='slide-out' class='side-nav fixed'>
+                                    <ul id='slide-out' class='side-nav'>
                                         <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
@@ -337,8 +352,8 @@
                                     <div class='nav-main'>
                                         <div class='page-title'>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;<!--%FILENAME%--></span>
+                                            <div class='reportunit-logo-main'><span>ReportUnit</span></div>
                                             <a class='modal-trigger waves-effect waves-light run-info-icon tooltipped' data-position='left' data-tooltip='Run Info' href='#modal1'><i class='mdi-action-info-outline'></i></a>
-                                            <span class='logo-single'><i class='mdi-hardware-desktop-mac'></i>&nbsp;&nbsp;ReportUnit</span>
                                         </div>
                                     </div>
                                 </nav>
@@ -472,17 +487,17 @@
                                 var inconclusive = $('.total-inconclusive > span').text();
                                 var errors = $('.total-errors > span').text();
                                 var skipped = $('.total-skipped > span').text();
-                                $('.total-tests').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                $('.total-tests').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                 $('.total-tests').data('easyPieChart').update('100');
-                                $('.total-passed').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                $('.total-passed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                 $('.total-passed').data('easyPieChart').update(passed / total * 100);
-                                $('.total-failed').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                $('.total-failed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                 $('.total-failed').data('easyPieChart').update(failed / total * 100);
-                                $('.total-inconclusive').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                $('.total-inconclusive').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                 $('.total-inconclusive').data('easyPieChart').update(inconclusive / total * 100);
-                                $('.total-errors').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: 'tomato', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                $('.total-errors').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: 'tomato', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                 $('.total-errors').data('easyPieChart').update(errors / total * 100);
-                                $('.total-skipped').easyPieChart({ lineWidth: 8,  trackColor: '#f1f2f3', barColor: 'dodgerblue', lineCap: 'butt', scaleColor: '#fff', size: 100 });
+                                $('.total-skipped').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: 'dodgerblue', lineCap: 'butt', scaleColor: '#fff', size: 100 });
                                 $('.total-skipped').data('easyPieChart').update(skipped / total * 100);
                                 $('.nav.nav-sidebar a').filter(function(){
                                     return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];
@@ -611,8 +626,8 @@
                                     <span class='fixture-result <!--%FIXTURERESULT%-->'><!--%FIXTURERESULT%--></span>
                                 </div>
                                 <div class='fixture-content'>
-                                    <div class='card deep-orange lighten-0'>
-                                        <div class='card-content white-text'>
+                                    <div class='card fixture-status-message'>
+                                        <div class='card-content'>
                                             <!--%FIXTURESTATUSMSG%-->
                                         </div>
                                     </div>

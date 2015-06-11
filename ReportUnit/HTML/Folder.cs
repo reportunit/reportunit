@@ -9,7 +9,7 @@
         {
             get
             {
-                return 
+                return
                     @"<!DOCTYPE html>
                     <html lang='en'>
                         <!--
@@ -37,15 +37,31 @@
                                     padding-bottom: 20px;
                                 }
                                 .card-panel {
-                                    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+                                    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 1px 4px 0 rgba(0, 0, 0, 0.12);
                                 }
-            
+                                .input-field label {
+                                    color: #db7093;
+                                }
+
                                 /* ---- [ sidenav ] ---- */
                                 .side-nav a {
                                     line-height: 22px;
                                     height: auto;
                                 }
-                                .side-nav.fixed a {
+                                nav a.button-collapse {
+                                    display: inline-block;
+                                }
+                                .reportunit-logo-main {
+                                    float: right;
+                                    font-size: 13px;
+                                    margin-right: 45px;
+                                    padding: 0 10px;
+                                }
+                                .reportunit-logo-main > span {
+                                    border: 1px solid #fff;
+                                    padding: 2px 6px;
+                                }
+                                .side-nav a {
                                     height: auto;
                                     padding: 20px 15px;
                                 }
@@ -62,16 +78,17 @@
                                     background-color: transparent !important;
                                 }
                                 .nav-main {
-                                    padding-left: 325px;
+                                    /* padding-left: 325px; */
+                                    padding-left: 55px;
                                 }
             
                                 /* ---- [ main ] ---- */
                                 .main {
                                     background-color: #f3f6fa;
-                                    padding-left: 300px;
+                                    /* padding-left: 300px; */
                                 }
                                 .main-wrap {
-                                    padding: 40px 20px 100px;
+                                    padding: 40px 40px 100px;
                                 }
                                 .main-wrap > .row {
                                     margin-bottom: 0;
@@ -85,11 +102,11 @@
                                     font-size: 14px;
                                 }
                                 .chart {
-                                    height: 110px;
+                                    height: 100px;
                                     margin: 10px auto 25px;
                                     position: relative;
                                     text-align: center;
-                                    width: 110px;
+                                    width: 100px;
                                 }
                                 .chart canvas {
                                     position: absolute;
@@ -98,7 +115,7 @@
                                 }
                                 .percent {
                                     display: inline-block;
-                                    line-height: 120px;
+                                    line-height: 100px;
                                     z-index: 2;
                                 }
                 
@@ -255,7 +272,7 @@
                                         padding-left: 0;
                                     }
                                     .nav-main {
-                                        padding-left: 100px;
+                                        
                                     }
                                     .button-collapse {
                                         padding-left: 10px;
@@ -266,13 +283,14 @@
                         <body>    
                             <div class='header'>
                                 <nav>
-                                    <ul id='slide-out' class='side-nav fixed'>
+                                    <ul id='slide-out' class='side-nav'>
                                         <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
                                     <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
                                     <div class='nav-main'>
                                         <div class='page-title'>
+                                            <div class='reportunit-logo-main'><span>ReportUnit</span></div>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;Executive Summary</span>
                                         </div>
                                     </div>
@@ -361,13 +379,13 @@
                                     var passed = testCountByStatus('td.pass-count');
                                     var failed = testCountByStatus('td.fail-count');
                                     var other = testCountByStatus('td.others-count');
-                                    $('.total-tests').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                    $('.total-tests').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100, });
                                     $('.total-tests').data('easyPieChart').update(total);
-                                    $('.total-passed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                    $('.total-passed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100, });
                                     $('.total-passed').data('easyPieChart').update(passed / total * 100);
-                                    $('.total-failed').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                    $('.total-failed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100, });
                                     $('.total-failed').data('easyPieChart').update(failed / total * 100);
-                                    $('.total-other').easyPieChart({ lineWidth: 12,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 120, });
+                                    $('.total-other').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100, });
                                     $('.total-other').data('easyPieChart').update(other / total * 100);
                                     $('.nav.nav-sidebar a').filter(function(){
                                         return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];
