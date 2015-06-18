@@ -90,6 +90,12 @@ namespace ReportUnit
                 return;
             }
 
+            if (Path.GetExtension(args[0]).ToLower().Contains("xml"))
+            {
+                new ReportBuilder(Theme.Standard).FileReport(args[0], Path.ChangeExtension(args[0], "html"));
+                return;
+            }
+
             if (!Directory.Exists(args[0]))
             {
                 Console.WriteLine("{ERROR] The path of directory you have specified does not exist.\n" + reportUnitUsage);

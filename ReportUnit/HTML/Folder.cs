@@ -24,11 +24,13 @@
                             <meta name='author' content=''>
                             <title>ReportUnit Executive Report</title>
                             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css'>
+                            <link href='http://fonts.googleapis.com/css?family=Nunito:300|Open+Sans:400,600' rel='stylesheet' type='text/css'>
                             <style>
                                 html {
                                     background-color: #f3f6fa;
                                 }
                                 body {
+                                    font-family: 'Open Sans';
                                     font-size: 14px;
                                 }
 
@@ -40,13 +42,21 @@
                                     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 1px 4px 0 rgba(0, 0, 0, 0.12);
                                 }
                                 .input-field label {
-                                    color: #db7093;
+                                    color: #cf6487;
                                 }
 
                                 /* ---- [ sidenav ] ---- */
+                                .side-nav.fixed {
+									width: 300px;
+								}
                                 .side-nav a {
                                     line-height: 22px;
                                     height: auto;
+                                }
+                                .side-nav.fixed a {
+                                    font-size: 14px;
+                                    height: auto;
+                                    padding: 20px 15px;
                                 }
                                 nav a.button-collapse {
                                     display: inline-block;
@@ -71,15 +81,14 @@
                                 }
                                 .logo span {
                                     border: 1px solid #222;
-                                    font-size: 15px;
-                                    padding: 3px 7px;
+                                    font-size: 14px;
+                                    padding: 2px 7px;
                                 }
                                 .logo:hover, .logo a:hover {
                                     background-color: transparent !important;
                                 }
                                 .nav-main {
-                                    /* padding-left: 325px; */
-                                    padding-left: 55px;
+                                    padding-left: 335px;
                                 }
             
                                 /* ---- [ main ] ---- */
@@ -88,7 +97,7 @@
                                     /* padding-left: 300px; */
                                 }
                                 .main-wrap {
-                                    padding: 40px 40px 100px;
+                                    padding: 40px 40px 100px 325px;
                                 }
                                 .main-wrap > .row {
                                     margin-bottom: 0;
@@ -99,7 +108,8 @@
                                     padding: 15px;
                                 }
                                 .card-panel > div {
-                                    font-size: 14px;
+                                    font-family: Nunito;
+                                    font-size: 13px;
                                 }
                                 .chart {
                                     height: 100px;
@@ -271,9 +281,6 @@
                                     .main {
                                         padding-left: 0;
                                     }
-                                    .nav-main {
-                                        
-                                    }
                                     .button-collapse {
                                         padding-left: 10px;
                                     }
@@ -283,14 +290,13 @@
                         <body>    
                             <div class='header'>
                                 <nav>
-                                    <ul id='slide-out' class='side-nav'>
+                                    <ul id='slide-out' class='side-nav fixed'>
                                         <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
                                     <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
                                     <div class='nav-main'>
                                         <div class='page-title'>
-                                            <div class='reportunit-logo-main'><span>ReportUnit</span></div>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;Executive Summary</span>
                                         </div>
                                     </div>
@@ -372,9 +378,7 @@
                             <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
                             <script>
                                 $(function() {
-                                    $('.button-collapse').sideNav({
-                                        menuWidth: 300
-                                    });
+                                    $('.button-collapse').sideNav();
                                     var total = testCountByStatus('td.total-count');
                                     var passed = testCountByStatus('td.pass-count');
                                     var failed = testCountByStatus('td.fail-count');

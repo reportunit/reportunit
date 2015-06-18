@@ -26,11 +26,13 @@
                             <meta name='author' content=''>
                             <title>ReportUnit TestRunner Report</title>
                             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css'>
+                            <link href='http://fonts.googleapis.com/css?family=Nunito:300|Open+Sans:400,600' rel='stylesheet' type='text/css'>
                             <style>
                                 html { 
                                     background-color: #f3f6fa;  
                                 }
                                 body {
+                                    font-family: 'Open Sans';
                                     font-size: 14px;
                                 }
                                 pre {
@@ -79,11 +81,25 @@
                                 .input-field label {
                                     color: #db7093;
                                 }
-            
+                                .hidden {
+                                    display: none;
+                                }
+                                .select-wrapper input.select-dropdown {
+	                                font-size: 14px;
+                                }
+
                                 /* ---- [ nav / sidenav ] ---- */
+                                .side-nav.fixed {
+									width: 300px;
+								}
                                 .side-nav a {
                                     line-height: 22px;
                                     height: auto;
+                                }
+                                .side-nav.fixed a {
+                                    font-size: 14px;
+                                    height: auto;
+                                    padding: 20px 15px;
                                 }
                                 .side-nav a {
                                     height: auto;
@@ -91,16 +107,6 @@
                                 }
                                 nav a.button-collapse {
                                     display: inline-block;
-                                }
-                                .reportunit-logo-main {
-                                    float: right;
-                                    font-size: 13px;
-                                    margin-right: 45px;
-                                    padding: 0 10px;
-                                }
-                                .reportunit-logo-main > span {
-                                    border: 1px solid #fff;
-                                    padding: 2px 6px;
                                 }
                                 .logo {
                                     border-bottom: 1px solid #ddd;
@@ -111,20 +117,22 @@
                                 }
                                 .logo span {
                                     border: 1px solid #222;
-                                    font-size: 15px;
-                                    padding: 3px 7px;
+                                    font-size: 14px;
+                                    padding: 2px 7px;
                                 }
                                 .logo-single {
                                     display: none;
                                 }
                                 .nav-main {
-                                    /*padding-left: 325px; */
-                                    padding-left: 60px;
+                                    padding-left: 335px;
+                                }
+                                .page-title .logo {
+                                    display: none;
                                 }
                                 .run-info-icon {
                                     float: right;
                                     font-size: 20px;
-                                    padding-right: 10px;
+                                    padding-right: 55px
                                 }
             
                                 /* ---- [ main ] ---- */
@@ -133,7 +141,7 @@
                                     /*padding-left: 300px;*/
                                 }
                                 .main-wrap {
-                                    padding: 40px 40px 100px;
+                                    padding: 40px 40px 100px 325px;
                                 }
                                 .main-wrap > .row {
                                     margin-bottom: 0;
@@ -146,22 +154,24 @@
                                 .card-panel > div {
                                     font-size: 14px;
                                 }
-                                .chart {
-                                    height: 100px;
-                                    margin: 10px auto 25px;
-                                    position: relative;
+                                .dashboard .card-panel {
+	                                height: 235px;
+                                }
+                                .dashboard .card-panel > div {
+	                                font-family: Nunito;
+	                                font-size: 13px;
+	                                font-weight: 300;
+                                }
+                                .chart-o {
                                     text-align: center;
-                                    width: 100px;
                                 }
-                                .chart canvas {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                }
-                                .percent {
+                                .chart-o > div {
                                     display: inline-block;
-                                    line-height: 100px;
-                                    z-index: 2;
+                                }
+                                .panel-lead {
+                                    font-size: 28px !important;
+                                    padding: 50px 0 60px;
+                                    text-align: center;
                                 }
                 
                                 /* ---- [ filters ] ---- */
@@ -287,6 +297,12 @@
                                 }
 
                                 /* ---- [ single ] ---- */
+                                .single .page-title .logo {
+                                    display: inline-block;
+                                }
+                                .single .page-title span {
+									border-color: #fff;
+								}
                                 .single #slide-out, .single .button-collapse, .single .mdi-file-folder-open {
                                     display: none !important;
                                 }
@@ -312,9 +328,23 @@
                                 }
 
                                 /* ---- [ media queries ] ---- */
+                                @media (max-width: 1600px) {
+                                    .main-wrap .col.s4 {
+                                        padding-right: 0;
+                                    }
+                                }
                                 @media (max-width: 992px) {
                                     .main {
                                         padding-left: 0;
+                                    }
+                                    .nav-main {
+	                                    padding-left: 100px;
+                                    }
+                                    .single .nav-main {
+	                                    padding-left: 100px;
+                                    }
+                                    .main-wrap {
+	                                    padding-left: 40px;
                                     }
                                     .button-collapse {
                                         padding-left: 10px;
@@ -344,15 +374,15 @@
                         <body>    
                             <div class='header'>
                                 <nav>
-                                    <ul id='slide-out' class='side-nav'>
+                                    <ul id='slide-out' class='side-nav fixed'>
                                         <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
                                     <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
                                     <div class='nav-main'>
                                         <div class='page-title'>
+                                           <div class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></div>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;<!--%FILENAME%--></span>
-                                            <div class='reportunit-logo-main'><span>ReportUnit</span></div>
                                             <a class='modal-trigger waves-effect waves-light run-info-icon tooltipped' data-position='left' data-tooltip='Run Info' href='#modal1'><i class='mdi-action-info-outline'></i></a>
                                         </div>
                                     </div>
@@ -361,41 +391,26 @@
                             <div class='main'>
                                 <div class='main-wrap'>
                                     <!--%NOTESTSMESSAGE%-->
-                                    <div class='row'>
-                                        <div class='col s12 m4 l2'>
+                                    <div class='row dashboard'>
+                                        <div class='col s12 m6 l4'>
                                             <div class='card-panel'>
-                                                <div>Total Tests</div>
-                                                <div class='chart total-tests' data-percent=''><span class='percent'><!--%TOTALTESTS%--></span></div>
+                                                <div alt='Count of all passed tests' title='Count of all passed tests'>Fixture Summary</div>    
+                                                <div class='chart-o' id='suites-dashboard'></div>
                                             </div>
                                         </div>
-                                        <div class='col s12 m4 l2'>
+                                        <div class='col s12 m6 l4'>
                                             <div class='card-panel'>
-                                                <div>Passed</div>    
-                                                <div class='chart total-passed' data-percent=''><span class='percent'><!--%PASSED%--></span></div>
+                                                <div alt='Count of all failed tests' title='Count of all failed tests'>Tests Summary</div>
+                                                <div class='chart-o' id='tests-dashboard'></div>
                                             </div>
                                         </div>
-                                        <div class='col s12 m4 l2'>
+                                        <div class='col s12 m12 l4'>
                                             <div class='card-panel'>
-                                                <div>Failed</div>
-                                                <div class='chart total-failed' data-percent=''><span class='percent'><!--%FAILED%--></span></div>
-                                            </div>
-                                        </div>
-                                        <div class='col s12 m4 l2'>
-                                            <div class='card-panel'>
-                                                <div>Inconclusive</div>
-                                                <div class='chart total-inconclusive' data-percent=''><span class='percent'><!--%INCONCLUSIVE%--></span></div>
-                                            </div>
-                                        </div>
-                                        <div class='col s12 m4 l2'>
-                                            <div class='card-panel'>
-                                                <div>Errors</div>
-                                                <div class='chart total-errors' data-percent=''><span class='percent'><!--%ERRORS%--></span></div>
-                                            </div>
-                                        </div>
-                                        <div class='col s12 m4 l2'>
-                                            <div class='card-panel'>
-                                                <div>Skipped</div>
-                                                <div class='chart total-skipped' data-percent=''><span class='percent'><!--%SKIPPED%--></span></div>
+                                                <div alt='Count of all inconclusive tests' title='Count of all inconclusive tests'>Pass Percentage</div>
+												<div class='panel-lead pass-percentage'></div>
+                                                <div class='progress'>
+													 <div class='determinate'></div>
+												 </div>
                                             </div>
                                         </div>
                                     </div>
@@ -453,7 +468,7 @@
                             <div id='modal1' class='modal'>
                                 <div class='modal-content'>
                                     <h4><!--%FILENAME%--> RunInfo</h4>
-                                    <table class='responsive-table bordered'>
+                                    <table class='bordered'>
                                         <tr><th>Param</th><th>Value</th></tr>
                                         <!--%RUNINFO%-->
                                     </table>
@@ -461,17 +476,22 @@
                                 <div class='modal-footer'>
                                     <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
                                 </div>
+                                <div class='hidden total-tests'><!--%TOTALTESTS%--></div>
+                                <div class='hidden total-passed'><!--%PASSED%--></div>
+                                <div class='hidden total-failed'><!--%FAILED%--></div>
+                                <div class='hidden total-inconclusive'><!--%INCONCLUSIVE%--></div>
+                                <div class='hidden total-errors'><!--%ERRORS%--></div>
+                                <div class='hidden total-skipped'><!--%SKIPPED%--></div>
                             </div>
                         </body>
                         <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
                         <script src='http://cdnjs.cloudflare.com/ajax/libs/masonry/3.2.2/masonry.pkgd.min.js' type='text/javascript' charset='utf-8'></script>
-                        <script src='https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.4/jquery.easypiechart.min.js'></script>
+                        <script type='text/javascript' src='https://www.google.com/jsapi'></script>
                         <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
                         <script type='text/javascript'>
+                            google.load('visualization', '1', {packages:['corechart']});
                             $(document).ready(function() {
-                                $('.button-collapse').sideNav({
-                                    menuWidth: 300
-                                });
+                                $('.button-collapse').sideNav();
                                 $('select').material_select();
                                 $('.modal-trigger').leanModal();
                                 $('.tooltipped').tooltip({delay: 20});
@@ -481,24 +501,12 @@
                                     }
                                 });
                                 resetFilters();
-                                var total = $('.total-tests > span').text();
-                                var passed = $('.total-passed > span').text();
-                                var failed = $('.total-failed > span').text();
-                                var inconclusive = $('.total-inconclusive > span').text();
-                                var errors = $('.total-errors > span').text();
-                                var skipped = $('.total-skipped > span').text();
-                                $('.total-tests').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100 });
-                                $('.total-tests').data('easyPieChart').update('100');
-                                $('.total-passed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100 });
-                                $('.total-passed').data('easyPieChart').update(passed / total * 100);
-                                $('.total-failed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100 });
-                                $('.total-failed').data('easyPieChart').update(failed / total * 100);
-                                $('.total-inconclusive').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100 });
-                                $('.total-inconclusive').data('easyPieChart').update(inconclusive / total * 100);
-                                $('.total-errors').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: 'tomato', lineCap: 'butt', scaleColor: '#fff', size: 100 });
-                                $('.total-errors').data('easyPieChart').update(errors / total * 100);
-                                $('.total-skipped').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: 'dodgerblue', lineCap: 'butt', scaleColor: '#fff', size: 100 });
-                                $('.total-skipped').data('easyPieChart').update(skipped / total * 100);
+                                var total = parseInt($('.total-tests').text());
+                                var passed = parseInt($('.total-passed').text());
+                                var failed = parseInt($('.total-failed').text());
+                                var inconclusive = parseInt($('.total-inconclusive').text());
+                                var errors = parseInt($('.total-errors').text());
+                                var skipped = parseInt($('.total-skipped').text());
                                 $('.nav.nav-sidebar a').filter(function(){
                                     return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];
                                 }).parent().addClass('active');
@@ -508,14 +516,14 @@
                                 $(document).ready(sizing);
                                 $(window).resize(sizing);
                                 function sizing() {
-                                    if ($(window).width() > 1650) {
-                                        $('.fixtures .s4').css('width', '33.33%');
-                                    } else if ($(window).width() < 1120) {
-                                        $('.fixtures .s4').css('width', '99%');
-                                    } else {
-                                        $('.fixtures .s4').css('width', '49%');
-                                    }
-                                    $('.fixtures').masonry();
+	                                if ($(window).width() > 1650) {
+		                                $('.fixtures .s4').css('width', '33.33%');
+	                                } else if ($(window).width() < 1120) {
+		                                $('.fixtures .s4').css('width', '99%');
+	                                } else {
+		                                $('.fixtures .s4').css('width', '49%');
+	                                }
+	                                $('.fixtures').masonry();
                                 }
                                 $container.on( 'click', '.card-panel', function(evt) {
                                     var cls = evt.target.className;
@@ -604,6 +612,59 @@
                                     $('tr').removeClass('has-filter').show();
                                     $('.suite-toggle li:first-child, .tests-toggle li:first-child, .feature-toggle li:first-child').click();
                                 }
+                                var passedPercentage = Math.round(((passed / total) * 100)) + '%';
+								$('.pass-percentage').text(passedPercentage);
+								$('.dashboard .determinate').attr('style', 'width:' + passedPercentage);
+                                google.setOnLoadCallback(suitesChart);
+								google.setOnLoadCallback(testsChart);
+								function suitesChart() {
+									var data = google.visualization.arrayToDataTable([
+									  ['Test Status', 'Count'],
+									  ['Pass', $('.fixture-result.passed').length],
+									  ['Fail', $('.fixture-result.failed').length],
+									  ['Inconclusive', $('.fixture-result.inconclusive').length],
+									  ['Error', $('.fixture-result.error').length],
+									  ['Skipped', $('.fixture-result.skipped').length]
+									]);
+									var options = {
+									  backgroundColor: { fill:'transparent' },
+									  chartArea: {'width': '92%', 'height': '100%'},
+									  colors: ['#00af00', 'red', 'orange', 'tomato', 'dodgerblue'],
+									  fontName: 'Open Sans',
+									  fontSize: '11',
+									  titleTextStyle: { color: '#1366d7', fontSize: '14' },
+									  pieHole: 0.55,
+									  height: 180,
+									  pieSliceText: 'value', 
+									  width: 200
+									};
+									var chart = new google.visualization.PieChart(document.getElementById('suites-dashboard'));
+									chart.draw(data, options);
+								  }
+								function testsChart() {
+									var data = google.visualization.arrayToDataTable([
+									  ['Test Status', 'Count'],
+									  ['Pass', passed],
+									  ['Fail', failed],
+									  ['Inconclusive', inconclusive],
+									  ['Error', errors],
+									  ['Skipped', skipped]
+									]);
+									var options = {
+									  backgroundColor: { fill:'transparent' },
+									  chartArea: {'width': '92%', 'height': '100%'},
+									  colors: ['#00af00', 'red', 'orange', 'tomato', 'dodgerblue'],
+									  fontName: 'Open Sans',
+									  fontSize: '11',
+									  titleTextStyle: { color: '#1366d7', fontSize: '14' },
+									  pieHole: 0.55,
+									  height: 180,
+									  pieSliceText: 'value', 
+									  width: 200
+									};
+									var chart = new google.visualization.PieChart(document.getElementById('tests-dashboard'));
+									chart.draw(data, options);
+								  }
                             });
                         </script>
                     </html>";
@@ -640,8 +701,8 @@
                                     </table>
                                 </div>
                                 <div <!--%FOOTERDISPLAY%--> class='fixture-footer'>
-                                    <span <!--%FIXTURESTARTEDATDISPLAY%--> class='startedAt'><i class='mdi-device-access-time'></i><!--%FIXTURESTARTEDAT%--></span>
-                                    <span <!--%FIXTUREENDEDATDISPLAY%--> class='endedAt'><i class='mdi-device-access-time'></i><!--%FIXTUREENDEDAT%--></span>
+                                    <span <!--%FIXTURESTARTEDATDISPLAY%--> alt='Fixture started at time' title='Fixture started at time' class='startedAt'><i class='mdi-device-access-time'></i><!--%FIXTURESTARTEDAT%--></span>
+                                    <span <!--%FIXTUREENDEDATDISPLAY%--> alt='Fixture ended at time' title='Fixture ended at time' class='endedAt'><i class='mdi-device-access-time'></i><!--%FIXTUREENDEDAT%--></span>
                                 </div>
                             </div>
                         </div>
