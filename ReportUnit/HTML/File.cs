@@ -591,6 +591,22 @@
                                     }
                                     $('.fixtures').masonry();
                                 });
+                                if (document.location.href.indexOf('?') > -1) {
+                                    var evt = window.location.search.split('?')[1];
+                                    switch (evt.toLowerCase()) {
+                                        case 'passedtests': clickListItem('tests-toggle', 1); break;
+                                        case 'failedtests': clickListItem('tests-toggle', 2); break;
+                                        case 'errortests': clickListItem('tests-toggle', 3); break;
+                                        case 'inconclusivetests': clickListItem('tests-toggle', 4); break;
+                                        case 'skippedtests': clickListItem('tests-toggle', 5); break;
+                                        case 'passedsuites': clickListItem('suite-toggle', 1); break;
+                                        case 'failedsuites': clickListItem('suite-toggle', 2); break;
+                                        case 'errorsuites': clickListItem('suite-toggle', 3); break;
+                                        case 'inconclusivesuites': clickListItem('suite-toggle', 4); break;
+                                        case 'skippedsuites': clickListItem('suite-toggle', 5); break;
+                                        default: break;
+                                    }
+                                }
                                 function filterByCategory(cat) {
                                     resetFilters();
                                     $('.fixture-content .card-panel').show(0);
@@ -611,6 +627,9 @@
                                     $('.fixtures .card-panel').show(0);
                                     $('tr').removeClass('has-filter').show();
                                     $('.suite-toggle li:first-child, .tests-toggle li:first-child, .feature-toggle li:first-child').click();
+                                }
+                                function clickListItem(listClass, index) {
+                                    $('.' + listClass).find('li').get(index).click();
                                 }
                                 var passedPercentage = Math.round(((passed / total) * 100)) + '%';
 								$('.pass-percentage').text(passedPercentage);
