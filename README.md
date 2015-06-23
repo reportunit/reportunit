@@ -12,7 +12,7 @@ Samples:
 
 ### Download Exe
 
-Download using <a href='http://reportunit.github.io'>this</a> link.
+Download using <a href='http://relevantcodes.com/reportunit'>this</a> link.
 
 ### Usage: Building Folder-Level Summary
 You can either generate a report for all files in a folder, or simply convert a given file. Both methods are shown below.
