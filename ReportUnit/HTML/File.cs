@@ -72,6 +72,11 @@
                                 .card-panel {
                                     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 1px 4px 0 rgba(0, 0, 0, 0.12);
                                 }
+
+                                .card-panel > .progress {
+                                    height: 5px !important;                                        
+                                }
+
                                 .btn {
                                     font-size: 12px;
                                 }
@@ -172,6 +177,29 @@
                                     font-size: 28px !important;
                                     padding: 50px 0 60px;
                                     text-align: center;
+                                }
+
+                                 /* ---- [ result table ] ---- */
+                                .result-table td:last-child {
+                                    min-width: 20%;
+                                }
+                                table.responsive-table.bordered tbody tr:last-child {
+                                    border-right: none;
+                                }
+                                .totals-row {
+                                    border-bottom: medium none !important;
+                                }
+                                .fixture-result-label {
+                                    border-radius: 2px; color: #fff; font-size: 10px;font-weight:400 !important;padding: 2px 7px;text-transform:uppercase;
+                                }
+                                .failed > .fixture-result-label, .failure > .fixture-result-label {
+                                    background-color: #eb4549;
+                                }
+                                .passed > .fixture-result-label, .success > .fixture-result-label {
+                                    background-color: #32cd32;
+                                }
+                                .other > .fixture-result-label {
+                                    background-color: #FFA81C;
                                 }
                 
                                 /* ---- [ filters ] ---- */
@@ -296,6 +324,118 @@
                                     color: #1e90ff; 
                                 }
 
+                                
+                                /* ---- [ bootstrap ] ---- */
+                                /*!
+                                * Bootstrap v3.3.4 (http://getbootstrap.com)
+                                * Copyright 2011-2015 Twitter, Inc.
+                                * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+                                */
+                                @-webkit-keyframes progress-bar-stripes {
+                                    from {
+                                        background-position: 40px 0;
+                                    }
+                                    to {
+                                        background-position: 0 0;
+                                    }
+                                }
+                                @-o-keyframes progress-bar-stripes {
+                                    from {
+                                        background-position: 40px 0;
+                                    }
+                                    to {
+                                        background-position: 0 0;
+                                    }
+                                }
+                                @keyframes progress-bar-stripes {
+                                    from {
+                                        background-position: 40px 0;
+                                    }
+                                    to {
+                                        background-position: 0 0;
+                                    }
+                                }
+                                .progress {
+                                    overflow: hidden;
+                                    height: 20px;
+                                    margin-bottom: 20px;
+                                    background-color: #f5f5f5;
+                                    border-radius: 4px;
+                                    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+                                    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+                                }
+                                .progress-bar {
+                                    float: left;
+                                    width: 0%;
+                                    height: 100%;
+                                    font-size: 12px;
+                                    line-height: 20px;
+                                    color: #ffffff;
+                                    text-align: center;
+                                    background-color: #337ab7;
+                                    -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+                                    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+                                    -webkit-transition: width 0.6s ease;
+                                    -o-transition: width 0.6s ease;
+                                    transition: width 0.6s ease;
+                                }
+                                .progress-striped .progress-bar, .progress-bar-striped {
+                                    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    -webkit-background-size: 40px 40px;
+                                    background-size: 40px 40px;
+                                }
+                                .progress.active .progress-bar, .progress-bar.active {
+                                    -webkit-animation: progress-bar-stripes 2s linear infinite;
+                                    -o-animation: progress-bar-stripes 2s linear infinite;
+                                    animation: progress-bar-stripes 2s linear infinite;
+                                }
+                                .progress-bar-success {
+                                    background-color: #5cb85c;
+                                }
+                                .progress-striped .progress-bar-success {
+                                    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                }
+                                .progress-bar-info {
+                                    background-color: #5bc0de;
+                                }
+                                .progress-striped .progress-bar-info {
+                                    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                }
+                                .progress-bar-warning {
+                                    background-color: #f0ad4e;
+                                }
+                                .progress-striped .progress-bar-warning {
+                                    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                }
+                                .progress-bar-danger {
+                                    background-color: #d9534f;
+                                }
+                                .progress-striped .progress-bar-danger {
+                                    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+                                }
+                                .clearfix:before, .clearfix:after {
+                                    content: ' ';
+                                    display: table;
+                                }
+                                .clearfix:after {
+                                    clear: both;
+                                }
+                                .center-block {
+                                    display: block;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                }
+
                                 /* ---- [ single ] ---- */
                                 .single .page-title .logo {
                                     display: inline-block;
@@ -411,6 +551,37 @@
                                                 <div class='progress'>
 													 <div class='determinate'></div>
 												 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col s12'>
+                                            <div class='card-panel'>
+                                                <div class='card-head'>
+                                                    <i class='mdi-editor-insert-drive-file'></i>
+                                                    &nbsp;&nbsp;Fixture Summary
+                                                </div>
+                                                <table class='bordered responsive-table result-table'>
+                                                    <tr>
+                                                        <th>Fixture</th>
+                                                        <th>Result</th>
+                                                        <th>Total</th>
+                                                        <th>Passed</th>
+                                                        <th>Failed</th>
+                                                        <th>Other</th>
+                                                        <th>Quick Status</th>
+                                                    </tr>
+                                                    <!--%INSERTFIXTURERESULT%-->
+                                                    <tr class='totals-row'>
+                                                        <td>TOTAL</td>
+                                                        <td></td>
+                                                        <td class='totals-all'><!--%FIXTURELEVELTOTAL%--></td>
+                                                        <td class='totals-passed' ><!--%FIXTURELEVELPASSEDTESTS%--></td>
+                                                        <td class='totals-failed'><!--%FIXTURELEVELFAILEDTESTS%--></td>
+                                                        <td class='totals-others'><!--%FIXTURELEVELOTHERTESTS%--></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -746,6 +917,32 @@
             }
         }
 
+        /// <summary>
+        /// Each row represents an input file from NUnit
+        /// </summary>
+        public static string Row
+        {
+            get
+            {
+                return @"<tr>
+                        <td><!--%TESTFIXTURE%--></td>
+                        <td class='test-fixture-result <!--%TESTFIXTURERESULT%-->'><span class='fixture-result-label'><!--%TESTFIXTURERESULT%--></span></td>
+                        <td class='total-count'><!--%TOTALFIXTURETESTS%--></td>
+                        <td class='pass-count'><!--%TOTALTESTSPASSED%--></td>
+                        <td class='fail-count'><!--%TOTALTESTSFAILED%--></td>
+                        <td class='others-count'><!--%ALLOTHERTESTSINFIXTURE%--></td>
+                        <td>
+                            <div class='progress'>
+                                <div class='progress-bar progress-bar-success progress-bar-striped' style='width: <!--%PASSEDPERCENTAGE%-->%'><span class='sr-only'><!--%PASSEDPERCENTAGE%-->%</span></div>
+                                <div class='progress-bar progress-bar-danger progress-bar-striped' style='width: <!--%FAILEDPERCENTAGE%-->%'><span class='sr-only'><!--%FAILEDPERCENTAGE%-->%</span></div>
+                                <div class='progress-bar progress-bar-warning progress-bar-striped' style='width: <!--%OTHERSPERCENTAGE%-->%'><span class='sr-only'><!--%OTHERSPERCENTAGE%-->%</span></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--%INSERTFIXTURERESULT%-->";
+            }
+        }
+
         public static string RunInfoRow
         {
             get
@@ -756,13 +953,13 @@
             }
         }
 
-        private static int cat = 1;
+        private static int _category = 1;
 
         public static string CategoryLi
         {
             get
             {
-                return "<option value='" + cat++ + "'><!--%CATEGORYNAME%--></option>";
+                return "<option value='" + _category++ + "'><!--%CATEGORYNAME%--></option>";
             }
         }
 
@@ -781,7 +978,7 @@
             }
         }
 
-        public static string NoTestsCSS
+        public static string NoTestsCss
         {
             get
             {

@@ -37,13 +37,15 @@ namespace ReportUnit.Parser
         public Report ProcessFile()
         {
             // create a data instance to be passed to the folder level report
-            _report = new Report();
-            _report.FileName = this._testResultFile;
-            _report.RunInfo.TestRunner = TestRunner.NUnit;
+            _report = new Report
+            {
+                FileName = this._testResultFile,
+                RunInfo = {TestRunner = TestRunner.NUnit},
+                Total = _doc.GetElementsByTagName("test-case").Count,
+                AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText
+            };
 
             // get total count of tests from the input file
-            _report.Total = _doc.GetElementsByTagName("test-case").Count;
-            _report.AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText;
 
             Console.WriteLine("[INFO] Number of tests: " + _report.Total);
 
@@ -147,16 +149,22 @@ namespace ReportUnit.Parser
         {
             Console.WriteLine("[INFO] Building fixture blocks...");
 
-            string errorMsg = null;
-            string descMsg = null;
             XmlNodeList testSuiteNodes = _doc.SelectNodes("//test-suite[@type='TestFixture']");
             int testCount = 0;
 
             // run for each test-suite
             foreach (XmlNode suite in testSuiteNodes)
             {
-                var testSuite = new TestSuite();
-                testSuite.Name = suite.Attributes["name"].InnerText;
+                var testSuite = new TestSuite
+                {
+                    Name = suite.Attributes["name"].InnerText,
+                    Passed = suite.SelectNodes(".//test-case[@result='Success' or @result='Passed']").Count,
+                    Failed = suite.SelectNodes(".//test-case[@result='Failed' or @result='Failure']").Count,
+                    Inconclusive = suite.SelectNodes(".//test-case[@result='Inconclusive' or @result='NotRunnable']").Count,
+                    Skipped = suite.SelectNodes(".//test-case[@result='Skipped' or @result='Ignored']").Count,
+                    Errors = suite.SelectNodes(".//test-case[@result='Error']").Count,
+                    Total = suite.SelectNodes(".//test-case").Count
+                };
 
                 if (suite.Attributes["start-time"] != null && suite.Attributes["end-time"] != null)
                 {
@@ -180,6 +188,8 @@ namespace ReportUnit.Parser
                 
                 // check if the testSuite has any errors (ie error in the TestFixtureSetUp)
                 var testSuiteFailureNode = suite.SelectSingleNode("failure");
+                string errorMsg;
+                string descMsg;
                 if (testSuiteFailureNode != null && testSuiteFailureNode.HasChildNodes)
                 {
                     errorMsg = descMsg = "";
@@ -199,9 +209,11 @@ namespace ReportUnit.Parser
                 {
                     errorMsg = descMsg = "";
 
-                    var tc = new Test();
-                    tc.Name = testcase.Attributes["name"].InnerText.Replace("<", "[").Replace(">", "]");
-                    tc.Status = testcase.Attributes["result"].InnerText.AsStatus();
+                    var tc = new Test
+                    {
+                        Name = testcase.Attributes["name"].InnerText.Replace("<", "[").Replace(">", "]"),
+                        Status = testcase.Attributes["result"].InnerText.AsStatus()
+                    };
 
                     if (testcase.Attributes["time"] != null)
                     {
