@@ -1,24 +1,26 @@
-﻿namespace ReportUnit
+﻿using ReportUnit.HTML;
+
+namespace ReportUnit
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
-    using ReportUnit.Design;
-    using ReportUnit.Layer;
-    using ReportUnit.Parser;
-    using ReportUnit.Support;    
+    using Design;
+    using Layer;
+    using Parser;
+    using Support;    
 
     internal class ReportBuilder
     {
-        private Theme theme;
-        private Source source;
+        private readonly Theme _theme;
+        private Source _source;
 
         /// <summary>
         /// FileParser for the type of test results to be parsed
         /// </summary>
-        private IParser testFileParser;
+        private IParser _testFileParser;
 
         /// <summary>
         /// Flag for file-level (single) report to add a class for BODY to disable sidenav
@@ -31,13 +33,12 @@
         ///     reportunit "input.xml" "output.html"
         ///         BEHAVIOR: This flag will be TRUE
         /// </summary>
-        private bool isSingle = false;
+        private bool _isSingle;
 
         public void FolderReport(string resultsDirectory, string outputDirectory)
         {
             List<string> allFiles = Directory.GetFiles(resultsDirectory, "*.*", SearchOption.TopDirectoryOnly).ToList();
             var links = new List<string>();
-            string outputFile;
 
             // if no files, end process
             if (allFiles.Count == 0)
@@ -46,18 +47,18 @@
                 return;
             }
 
-            string html = HTML.Folder.Base;
-            source = new Source();
+            var html = Folder.Base;
+            _source = new Source();
 
             // force link to always point to the existing folder
             links.Add("./Index.html");
 
-            foreach (string file in allFiles) 
+            foreach (var file in allFiles) 
             {
                 Console.WriteLine("\n" + new string('-', 9));
 
-                outputFile = Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(file) + ".html");
-                Report reportData = BuildReport(file, outputFile);
+                var outputFile = Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(file) + ".html");
+                var reportData = BuildReport(file, outputFile);
 
                 if (reportData != null)
                 {
@@ -79,7 +80,7 @@
                         runResult = reportData.Status.ToString();
                     }
 
-                    html = html.Replace(ReportHelper.MarkupFlag("insertResult"), HTML.Folder.Row)
+                    html = html.Replace(ReportHelper.MarkupFlag("insertResult"), Folder.Row)
                                 .Replace(ReportHelper.MarkupFlag("fullFilename"), Path.GetFileNameWithoutExtension(file) + ".html")
                                 .Replace(ReportHelper.MarkupFlag("filename"), Path.GetFileNameWithoutExtension(file))
                                 .Replace(ReportHelper.MarkupFlag("assembly"), Path.GetFileName(reportData.AssemblyName))
@@ -104,15 +105,9 @@
                 }
             }
 
-            string navLinks = "";
-            foreach (string link in links)
-            {
-                navLinks += HTML.Folder.NavLink
-                        .Replace(ReportHelper.MarkupFlag("linkSrc"), link)
-                        .Replace(ReportHelper.MarkupFlag("linkName"), Path.GetFileNameWithoutExtension(link));
-            }
+            string navLinks = links.Aggregate("", (current, link) => current + Folder.NavLink.Replace(ReportHelper.MarkupFlag("linkSrc"), link).Replace(ReportHelper.MarkupFlag("linkName"), Path.GetFileNameWithoutExtension(link)));
 
-            foreach (KeyValuePair<string, string> pair in source.SourceFiles)
+            foreach (KeyValuePair<string, string> pair in _source.SourceFiles)
             {
                 File.WriteAllText(pair.Key,
                         pair.Value.Replace(ReportHelper.MarkupFlag("nav"), navLinks)
@@ -129,19 +124,19 @@
 
         public void FileReport(string resultsFile, string outputFile)
         {
-            isSingle = true;
+            _isSingle = true;
 
             BuildReport(resultsFile, outputFile);
         }
 
         private Report BuildReport(string resultsFile, string outputFile)
         {
-            testFileParser = ParserFactory.LoadParser(resultsFile);
+            _testFileParser = ParserFactory.LoadParser(resultsFile);
 
-            if (testFileParser == null) 
+            if (_testFileParser == null) 
                 return null;
 
-            Report report = testFileParser.ProcessFile();
+            Report report = _testFileParser.ProcessFile();
 
             if (report == null) 
                 return null;
@@ -152,17 +147,51 @@
             {
                 try
                 {
-                    // do the replacing here
-                    html = html.Replace(ReportHelper.MarkupFlag("totalTests"), report.Total.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("passed"), report.Passed.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("failed"), report.Failed.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("inconclusive"), report.Inconclusive.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("skipped"), report.Skipped.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("errors"), report.Errors.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("inXml"), Path.GetFullPath(report.FileName))
-                                    .Replace(ReportHelper.MarkupFlag("duration"), report.Duration.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("result"), report.Status.ToString())
-                                    .Replace(ReportHelper.MarkupFlag("name"), report.AssemblyName);
+                   
+
+                    foreach (var fixture in report.TestFixtures)
+                    {
+                        int passed = fixture.Passed;
+                        int failed = fixture.Failed + fixture.Errors;
+                        int other = fixture.Inconclusive + fixture.Skipped;
+
+                        string runResult;
+
+                        if (fixture.Status == Status.Inconclusive || fixture.Status == Status.Skipped || fixture.Status == Status.Unknown)
+                        {
+                            runResult = "other";
+                        }
+                        else
+                        {
+                            runResult = fixture.Status.ToString();
+                        }
+
+                        html = html.Replace(ReportHelper.MarkupFlag("insertFixtureResult"), HTML.File.Row)
+                                .Replace(ReportHelper.MarkupFlag("testFixture"), fixture.Name)
+                                .Replace(ReportHelper.MarkupFlag("testFixtureResult"), runResult.ToLower())
+                                .Replace(ReportHelper.MarkupFlag("totalFixtureTests"), fixture.Total.ToString())
+                                .Replace(ReportHelper.MarkupFlag("totalTestsPassed"), passed.ToString())
+                                .Replace(ReportHelper.MarkupFlag("totalTestsFailed"), failed.ToString())
+                                .Replace(ReportHelper.MarkupFlag("allOtherTestsInFixture"), other.ToString())
+                                .Replace(ReportHelper.MarkupFlag("passedPercentage"), (Convert.ToInt32(passed) * 100 / Convert.ToInt32(fixture.Total)).ToString())
+                                .Replace(ReportHelper.MarkupFlag("failedPercentage"), (Convert.ToInt32(failed) * 100 / Convert.ToInt32(fixture.Total)).ToString())
+                                .Replace(ReportHelper.MarkupFlag("othersPercentage"), (Convert.ToInt32(other) * 100 / Convert.ToInt32(fixture.Total)).ToString());
+                    }
+
+                    html = html.Replace(ReportHelper.MarkupFlag("fixtureLevelTotal"), report.Total.ToString())
+                                .Replace(ReportHelper.MarkupFlag("fixtureLevelPassedTests"), report.Passed.ToString())
+                                .Replace(ReportHelper.MarkupFlag("fixtureLevelFailedTests"), (report.Errors + report.Failed).ToString())
+                                .Replace(ReportHelper.MarkupFlag("fixtureLevelOtherTests"), (report.Inconclusive + report.Skipped).ToString())
+                                .Replace(ReportHelper.MarkupFlag("totalTests"), report.Total.ToString())
+                                .Replace(ReportHelper.MarkupFlag("passed"), report.Passed.ToString())
+                                .Replace(ReportHelper.MarkupFlag("failed"), report.Failed.ToString())
+                                .Replace(ReportHelper.MarkupFlag("inconclusive"), report.Inconclusive.ToString())
+                                .Replace(ReportHelper.MarkupFlag("skipped"), report.Skipped.ToString())
+                                .Replace(ReportHelper.MarkupFlag("errors"), report.Errors.ToString())
+                                .Replace(ReportHelper.MarkupFlag("inXml"), Path.GetFullPath(report.FileName))
+                                .Replace(ReportHelper.MarkupFlag("duration"), report.Duration.ToString())
+                                .Replace(ReportHelper.MarkupFlag("result"), report.Status.ToString())
+                                .Replace(ReportHelper.MarkupFlag("name"), report.AssemblyName);
 
                     foreach (KeyValuePair<string, string> pair in report.RunInfo.Info)
                     {
@@ -183,15 +212,15 @@
             {
                 // replace OPTIONALCSS here with css to hide elements
                 html = html.Replace(ReportHelper.MarkupFlag("noTestsMessage"), HTML.File.NoTestsMessage)
-                            .Replace(ReportHelper.MarkupFlag("optionalCss"), HTML.File.NoTestsCSS + ReportHelper.MarkupFlag("optionalCss"))
+                            .Replace(ReportHelper.MarkupFlag("optionalCss"), HTML.File.NoTestsCss + ReportHelper.MarkupFlag("optionalCss"))
                             .Replace(ReportHelper.MarkupFlag("inXml"), Path.GetFileName(resultsFile));
             }
 
             // finally, save the source as the output file
-            if (source == null)
-                File.WriteAllText(outputFile, html.Apply(theme));
+            if (_source == null)
+                File.WriteAllText(outputFile, html.Apply(_theme));
             else
-                source.SourceFiles.Add(outputFile, html.Apply(theme));
+                _source.SourceFiles.Add(outputFile, html.Apply(_theme));
 
             return report;
         }
@@ -280,7 +309,7 @@
             }
 
             // add topbar for folder-level report to allow backward navigation to Index.html
-            if (isSingle)
+            if (_isSingle)
             {
                 html = html.Replace("<body>", "<body class='single'>");
             }
@@ -290,7 +319,7 @@
 
         public ReportBuilder(Theme theme)
         {
-            this.theme = theme;
+            this._theme = theme;
         }
     }
 }
