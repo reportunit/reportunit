@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Xml;
 using ReportUnit.Support;
 using ReportUnit.Layer;
@@ -16,7 +18,12 @@ namespace ReportUnit.Parser
         /// <summary>
         /// The input file from NUnit TestResult.xml
         /// </summary>
-        private string _testResultFile = "";
+		private string _testResultFile = "";
+
+		/// <summary>
+		/// Usually evaluates to the assembly name. Used to clean up test names so its easier to read in the outputted html.
+		/// </summary>
+		private string _fileNameWithoutExtension;
 
         /// <summary>
         /// Contains test-suite level data to be passed to the Folder level report to build summary
@@ -36,6 +43,8 @@ namespace ReportUnit.Parser
 
         public Report ProcessFile()
         {
+	        _fileNameWithoutExtension = Path.GetFileNameWithoutExtension(this._testResultFile);
+
             // create a data instance to be passed to the folder level report
             _report = new Report();
             _report.FileName = this._testResultFile;
@@ -58,8 +67,6 @@ namespace ReportUnit.Parser
                 _report.Inconclusive = _doc.SelectNodes(".//test-case[@result='Inconclusive' or @result='NotRunnable']").Count;
                 _report.Skipped = _doc.SelectNodes(".//test-case[@result='Skipped' or @result='Ignored']").Count;
                 _report.Errors = _doc.SelectNodes(".//test-case[@result='Error']").Count;
-
-                _report.Status = _doc.SelectNodes("//test-suite")[0].Attributes["result"].InnerText.AsStatus();
 
                 try
                 {
@@ -84,6 +91,8 @@ namespace ReportUnit.Parser
 
                 ProcessRunInfo();
                 ProcessFixtureBlocks();
+
+				_report.Status = ReportHelper.GetFixtureStatus(_report.TestFixtures.SelectMany(x => x.Tests));
             }
             else
             {
@@ -115,16 +124,16 @@ namespace ReportUnit.Parser
                 // try to parse the environment node
                 // some attributes in the environment node are different for 2.x and 3.x
                 XmlNode env = _doc.GetElementsByTagName("environment")[0];
-                if (env != null)
+                if (env != null && env.Attributes != null)
                 {
-                    _report.RunInfo.Info.Add("User", env.Attributes["user"].InnerText);
-                    _report.RunInfo.Info.Add("User Domain", env.Attributes["user-domain"].InnerText);
-                    _report.RunInfo.Info.Add("Machine Name", env.Attributes["machine-name"].InnerText);
-                    _report.RunInfo.Info.Add("Platform", env.Attributes["platform"].InnerText);
-                    _report.RunInfo.Info.Add("Os Version", env.Attributes["os-version"].InnerText);
-                    _report.RunInfo.Info.Add("Clr Version", env.Attributes["clr-version"].InnerText);
+					if (env.Attributes["user"] != null) _report.RunInfo.Info.Add("User", env.Attributes["user"].InnerText);
+					if (env.Attributes["user-domain"] != null) _report.RunInfo.Info.Add("User Domain", env.Attributes["user-domain"].InnerText);
+					if (env.Attributes["machine-name"] != null) _report.RunInfo.Info.Add("Machine Name", env.Attributes["machine-name"].InnerText);
+					if (env.Attributes["platform"] != null) _report.RunInfo.Info.Add("Platform", env.Attributes["platform"].InnerText);
+					if (env.Attributes["os-version"] != null) _report.RunInfo.Info.Add("Os Version", env.Attributes["os-version"].InnerText);
+					if (env.Attributes["clr-version"] != null) _report.RunInfo.Info.Add("Clr Version", env.Attributes["clr-version"].InnerText);
                     _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-                    _report.RunInfo.Info.Add("TestRunner Version", env.Attributes["nunit-version"].InnerText);
+					if (env.Attributes["nunit-version"] != null) _report.RunInfo.Info.Add("TestRunner Version", env.Attributes["nunit-version"].InnerText);
                 }
                 else
                 {
@@ -150,13 +159,19 @@ namespace ReportUnit.Parser
             string errorMsg = null;
             string descMsg = null;
             XmlNodeList testSuiteNodes = _doc.SelectNodes("//test-suite[@type='TestFixture']");
+			// if other test runner type is outputting its results in nunit format - then may not have full markup - so just get all "test-suite" nodes
+	        if (testSuiteNodes.Count == 0)
+			{
+				testSuiteNodes = _doc.SelectNodes(string.Format("//test-suite[contains(@name, '{0}.')]", _fileNameWithoutExtension));
+		        
+	        }
             int testCount = 0;
 
             // run for each test-suite
             foreach (XmlNode suite in testSuiteNodes)
             {
                 var testSuite = new TestSuite();
-                testSuite.Name = suite.Attributes["name"].InnerText;
+				testSuite.Name = suite.Attributes["name"].InnerText.Replace(_fileNameWithoutExtension + ".", "").Trim();
 
                 if (suite.Attributes["start-time"] != null && suite.Attributes["end-time"] != null)
                 {
@@ -200,10 +215,31 @@ namespace ReportUnit.Parser
                     errorMsg = descMsg = "";
 
                     var tc = new Test();
-                    tc.Name = testcase.Attributes["name"].InnerText.Replace("<", "[").Replace(">", "]");
-                    tc.Status = testcase.Attributes["result"].InnerText.AsStatus();
+					tc.Name = testcase.Attributes["name"].InnerText.Replace("<", "[").Replace(">", "]").Replace(testSuite.Name + ".", "").Replace(_fileNameWithoutExtension + ".", "");
 
-                    if (testcase.Attributes["time"] != null)
+					// figure out the status reslt of the test
+	                if (testcase.Attributes["result"] != null)
+	                {
+		                tc.Status = testcase.Attributes["result"].InnerText.AsStatus();
+	                }
+					else if (testcase.Attributes["executed"] != null && testcase.Attributes["success"] != null)
+					{
+						bool success, executed;
+						bool.TryParse(testcase.Attributes["executed"].InnerText, out executed);
+						bool.TryParse(testcase.Attributes["success"].InnerText, out success);
+
+						tc.Status = success ? Status.Passed : 
+											executed ? Status.Failed : Status.Skipped;
+					}
+					else if (testcase.Attributes["success"] != null)
+					{
+						bool success;
+						bool.TryParse(testcase.Attributes["success"].InnerText, out success);
+						tc.Status = success ? Status.Passed : Status.Failed;
+					}
+
+
+	                if (testcase.Attributes["time"] != null)
                     {
                         try
                         {

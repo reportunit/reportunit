@@ -1,4 +1,6 @@
-﻿namespace ReportUnit.Parser
+﻿using System.IO;
+
+namespace ReportUnit.Parser
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +19,12 @@
         /// <summary>
         /// The input file from MS Test TestResult.xml
         /// </summary>
-        private string _testResultFile = "";
+		private string _testResultFile = "";
+
+		/// <summary>
+		/// Usually evaluates to the assembly name. Used to clean up test names so its easier to read in the outputted html.
+		/// </summary>
+		private string _fileNameWithoutExtension;
 
         /// <summary>
         /// Contains report level data to be passed to the Folder level report to build summary
@@ -44,7 +51,9 @@
         }
 
         public Report ProcessFile()
-        {
+		{
+			_fileNameWithoutExtension = Path.GetFileNameWithoutExtension(this._testResultFile);
+
             // create a data instance to be passed to the folder level report
             _report = new Report();
             _report.FileName = this._testResultFile;
@@ -164,7 +173,7 @@
             {
 
                 Test tc = new Test();
-                tc.Name = testResult.Attributes["testName"].InnerText;
+				tc.Name = testResult.Attributes["testName"].InnerText.Replace(_fileNameWithoutExtension + ".", "");
                 tc.Status = testResult.Attributes["outcome"].InnerText.AsStatus();
 
                 try
@@ -213,14 +222,14 @@
                 // get test details and fixture
                 string testId = testResult.Attributes["testId"].InnerText;
                 var testDefinition = _doc.SelectSingleNode("descendant::t:UnitTest[@id='" + testId + "']/t:TestMethod", _nsmgr);
-                var className = testDefinition.Attributes["className"].InnerText;
+				var className = testDefinition.Attributes["className"].InnerText.Replace(_fileNameWithoutExtension + ".", "").Trim();
 
                 // get the test fixture details
                 var testFixture = _report.TestFixtures.SingleOrDefault(f => f.Name.Equals(className, StringComparison.CurrentCultureIgnoreCase));
                 if (testFixture == null)
                 {
                     testFixture = new TestSuite();
-                    testFixture.Name = className;
+					testFixture.Name = className;
 
                     _report.TestFixtures.Add(testFixture);
                 }

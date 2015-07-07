@@ -32,6 +32,7 @@
         public Test()
         {
             Categories = new List<string>();
+	        Status = Layer.Status.Unknown;
         }
     }
 }

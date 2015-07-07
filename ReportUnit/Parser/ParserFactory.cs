@@ -42,7 +42,11 @@
                 case TestRunner.MSTest2010:
                     Console.WriteLine("[INFO] The file " + resultsFile + " contains MSTest 2010 test results");
                     fileParser = new MsTest2010().LoadFile(resultsFile);
-                    break;
+					break;
+				case TestRunner.XUnitV2:
+					Console.WriteLine("[INFO] The file " + resultsFile + " contains xUnit v2 test results");
+					fileParser = new XUnitV2().LoadFile(resultsFile);
+					break;
                 default:
                     Console.Write("[INFO] Skipping " + resultsFile + ". It is not of a known test runner type.");
                     break;
@@ -89,6 +93,21 @@
 
                     XmlNode model = doc.SelectSingleNode("//ns:testModel", nsmgr);
                     if (model != null) return TestRunner.Gallio;
+
+
+					// xUnit - will have <assembly ... test-framework="xUnit.net 2....."/>
+					XmlNode assemblyNode = doc.SelectSingleNode("//assembly");
+	                if (assemblyNode != null && assemblyNode.Attributes != null &&
+	                    assemblyNode.Attributes["test-framework"] != null)
+	                {
+		                string testFramework = assemblyNode.Attributes["test-framework"].InnerText.ToLower();
+
+						if (testFramework.Contains("xunit") && testFramework.Contains("2."))
+		                {
+			                return TestRunner.XUnitV2;
+		                }
+	                }
+
 
                     // NUnit
                     // NOTE: not all nunit test files (ie when have nunit output format from other test runners) will contain the environment node
