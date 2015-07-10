@@ -45,7 +45,11 @@
                                     color: #cf6487;
                                 }
 
-                                /* ---- [ sidenav ] ---- */
+                                /* ---- [ sidenav / topnav ] ---- */
+                                nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+                                    height: 54px;
+                                    line-height: 54px;
+                                }
                                 .side-nav.fixed {
 									width: 280px;
 								}
