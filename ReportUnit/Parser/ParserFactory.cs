@@ -47,6 +47,10 @@
 					Console.WriteLine("[INFO] The file " + resultsFile + " contains xUnit v2 test results");
 					fileParser = new XUnitV2().LoadFile(resultsFile);
 					break;
+                case TestRunner.TestNG:
+                    Console.WriteLine("[INFO] The file " + resultsFile + " contains TestNG test results");
+                    fileParser = new TestNG().LoadFile(resultsFile);
+                    break;
                 default:
                     Console.Write("[INFO] Skipping " + resultsFile + ". It is not of a known test runner type.");
                     break;
@@ -118,6 +122,12 @@
                     // check for test-suite nodes - if it has those - its probably nunit tests
                     var testSuiteNodes = doc.SelectNodes("//test-suite");
                     if (testSuiteNodes != null && testSuiteNodes.Count > 0) return TestRunner.NUnit;
+
+
+                    // TestNG
+                    string docEl = doc.DocumentElement.Name;
+                    if (docEl == "testng-results")
+                        return TestRunner.TestNG;
                 }
             }
             catch { }

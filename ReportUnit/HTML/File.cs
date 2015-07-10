@@ -15,7 +15,7 @@
                     @"<!DOCTYPE html>
                     <html lang='en'>
                         <!--
-                            ReportUnit [TestSuite Summary] v1.0 | http://reportunit.github.io/
+                            ReportUnit [TestSuite Summary] v1.1 | http://reportunit.relevantcodes.com/
                             Created by Anshoo Arora (Relevant Codes) | Released under the MIT license
                         --> 
                         <head>
@@ -26,13 +26,13 @@
                             <meta name='author' content=''>
                             <title>ReportUnit TestRunner Report</title>
                             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css'>
-                            <link href='http://fonts.googleapis.com/css?family=Nunito:300|Open+Sans:400,600' rel='stylesheet' type='text/css'>
+                            <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
                             <style>
                                 html { 
-                                    background-color: #f3f6fa;  
+                                    background-color: #f1f4f8;  
                                 }
                                 body {
-                                    font-family: 'Open Sans';
+                                    font-family: 'Nunito';
                                     font-size: 14px;
                                 }
                                 pre {
@@ -56,6 +56,7 @@
                                     max-width: 400px;
                                     min-width: 150px;
                                     padding-right: 25px;
+                                    vertical-align: top;
                                 }
                                 td {
                                     padding: 8px;
@@ -71,6 +72,7 @@
                                 }
                                 .card-panel {
                                     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 1px 4px 0 rgba(0, 0, 0, 0.12);
+                                    padding: 15px;
                                 }
                                 .btn {
                                     font-size: 12px;
@@ -90,7 +92,7 @@
 
                                 /* ---- [ nav / sidenav ] ---- */
                                 .side-nav.fixed {
-									width: 300px;
+									width: 280px;
 								}
                                 .side-nav a {
                                     line-height: 22px;
@@ -99,7 +101,7 @@
                                 .side-nav.fixed a {
                                     font-size: 14px;
                                     height: auto;
-                                    padding: 20px 15px;
+                                    padding: 15px;
                                 }
                                 .side-nav a {
                                     height: auto;
@@ -124,7 +126,7 @@
                                     display: none;
                                 }
                                 .nav-main {
-                                    padding-left: 335px;
+                                    padding-left: 315px;
                                 }
                                 .page-title .logo {
                                     display: none;
@@ -137,20 +139,17 @@
             
                                 /* ---- [ main ] ---- */
                                 .main {
-                                    background-color: #f3f6fa;
+                                    background-color: #f1f4f8;
                                     /*padding-left: 300px;*/
                                 }
                                 .main-wrap {
-                                    padding: 40px 40px 100px 325px;
+                                    padding: 40px 40px 100px 300px;
                                 }
                                 .main-wrap > .row {
                                     margin-bottom: 0;
                                 }
             
                                 /* ---- [ dashboard ] ---- */
-                                .card-panel {
-                                    padding: 15px;
-                                }
                                 .card-panel > div {
                                     font-size: 14px;
                                 }
@@ -169,8 +168,8 @@
                                     display: inline-block;
                                 }
                                 .panel-lead {
-                                    font-size: 28px !important;
-                                    padding: 50px 0 60px;
+                                    font-size: 24px !important;
+                                    padding: 50px 0 70px;
                                     text-align: center;
                                 }
                 
@@ -194,9 +193,8 @@
                 
                                 /* ---- [ fixture / suites ] ---- */
                                 .fixtures .card-panel {
-                                    border: 1px solid #9d9d9d;
-                                    box-shadow: none;
                                     cursor: pointer;
+                                    padding-bottom: 8px;
                                 }
                                 .fixture-head { 
                                     padding-bottom: 60px;
@@ -274,6 +272,7 @@
                                     padding: 10px 20px;
                                 }
                                 .is-expanded { 
+                                    border: 1px solid #9d9d9d;
                                     color: #000; 
                                     height: auto; 
                                 }
@@ -375,13 +374,13 @@
                             <div class='header'>
                                 <nav>
                                     <ul id='slide-out' class='side-nav fixed'>
-                                        <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
+                                        <li class='logo'><a href='http://reportunit.relevantcodes.com/'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
                                     <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
                                     <div class='nav-main'>
                                         <div class='page-title'>
-                                           <div class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></div>
+                                           <div class='logo'><a href='http://reportunit.relevantcodes.com/'><span>ReportUnit</span></a></div>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;<!--%FILENAME%--></span>
                                             <a class='modal-trigger waves-effect waves-light run-info-icon tooltipped' data-position='left' data-tooltip='Run Info' href='#modal1'><i class='mdi-action-info-outline'></i></a>
                                         </div>
@@ -491,10 +490,10 @@
                         <script type='text/javascript'>
                             google.load('visualization', '1', {packages:['corechart']});
                             $(document).ready(function() {
-                                $('.button-collapse').sideNav();
                                 $('select').material_select();
                                 $('.modal-trigger').leanModal();
                                 $('.tooltipped').tooltip({delay: 20});
+                                $('.button-collapse').sideNav({ menuWidth: 280 });
                                 $('.fixture-content .card-content').each(function() {
                                     if ($(this).text().trim() == '') {
                                         $(this).hide(); 
@@ -649,7 +648,7 @@
 									  backgroundColor: { fill:'transparent' },
 									  chartArea: {'width': '92%', 'height': '100%'},
 									  colors: ['#00af00', 'red', 'orange', 'tomato', 'dodgerblue'],
-									  fontName: 'Open Sans',
+									  fontName: 'Nunito',
 									  fontSize: '11',
 									  titleTextStyle: { color: '#1366d7', fontSize: '14' },
 									  pieHole: 0.55,
@@ -673,7 +672,7 @@
 									  backgroundColor: { fill:'transparent' },
 									  chartArea: {'width': '92%', 'height': '100%'},
 									  colors: ['#00af00', 'red', 'orange', 'tomato', 'dodgerblue'],
-									  fontName: 'Open Sans',
+									  fontName: 'Nunito',
 									  fontSize: '11',
 									  titleTextStyle: { color: '#1366d7', fontSize: '14' },
 									  pieHole: 0.55,

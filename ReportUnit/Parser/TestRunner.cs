@@ -5,6 +5,7 @@
         Gallio,
         MSTest2010,
         NUnit,
+        TestNG,
 		XUnitV2,
         Unknown
     }

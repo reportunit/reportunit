@@ -7,7 +7,6 @@ using ReportUnit.Layer;
 
 namespace ReportUnit.Parser
 {
-
     internal class NUnit : IParser
     {
         /// <summary>

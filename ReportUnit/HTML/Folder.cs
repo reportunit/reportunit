@@ -13,7 +13,7 @@
                     @"<!DOCTYPE html>
                     <html lang='en'>
                         <!--
-                            ReportUnit [Folder Summary] v1.0 | http://reportunit.github.io/
+                            ReportUnit [Folder Summary] v1.1 | http://reportunit.relevantcodes.com/
                             Created by Anshoo Arora (Relevant Codes) | Released under the MIT license
                         --> 
                         <head>
@@ -24,13 +24,13 @@
                             <meta name='author' content=''>
                             <title>ReportUnit Executive Report</title>
                             <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css'>
-                            <link href='http://fonts.googleapis.com/css?family=Nunito:300|Open+Sans:400,600' rel='stylesheet' type='text/css'>
+                            <link href='http://fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
                             <style>
                                 html {
-                                    background-color: #f3f6fa;
+                                    background-color: #f1f4f8;
                                 }
                                 body {
-                                    font-family: 'Open Sans';
+                                    font-family: Nunito;
                                     font-size: 14px;
                                 }
 
@@ -47,7 +47,7 @@
 
                                 /* ---- [ sidenav ] ---- */
                                 .side-nav.fixed {
-									width: 300px;
+									width: 280px;
 								}
                                 .side-nav a {
                                     line-height: 22px;
@@ -56,7 +56,7 @@
                                 .side-nav.fixed a {
                                     font-size: 14px;
                                     height: auto;
-                                    padding: 20px 15px;
+                                    padding: 15px;
                                 }
                                 nav a.button-collapse {
                                     display: inline-block;
@@ -88,22 +88,49 @@
                                     background-color: transparent !important;
                                 }
                                 .nav-main {
-                                    padding-left: 335px;
+                                    padding-left: 315px;
                                 }
-            
+                                
+                                /* ---- [ dashboard ] ---- */
+                                .card-panel > div {
+                                    font-size: 14px;
+                                }
+                                .dashboard .card-panel {
+	                                height: 235px;
+                                }
+                                .dashboard .card-panel > div {
+	                                font-family: Nunito;
+	                                font-size: 13px;
+	                                font-weight: 300;
+                                }
+                                .chart-o {
+                                    text-align: center;
+                                }
+                                .chart-o > div {
+                                    display: inline-block;
+                                }
+                                .panel-lead {
+                                    font-size: 24px !important;
+                                    padding: 50px 0 70px;
+                                    text-align: center;
+                                }
+
                                 /* ---- [ main ] ---- */
                                 .main {
-                                    background-color: #f3f6fa;
+                                    background-color: #f1f4f8;
                                     /* padding-left: 300px; */
                                 }
                                 .main-wrap {
-                                    padding: 40px 40px 100px 325px;
+                                    padding: 40px 40px 100px 300px;
                                 }
                                 .main-wrap > .row {
                                     margin-bottom: 0;
                                 }
             
                                 /* ---- [ dashboard ] ---- */
+                                .dashboard .progress {
+                                    height: 4px !important;
+                                }
                                 .card-panel {
                                     padding: 15px;
                                 }
@@ -281,6 +308,9 @@
                                     .main {
                                         padding-left: 0;
                                     }
+                                    .main-wrap {
+                                        padding-left: 40px;
+                                    }
                                     .button-collapse {
                                         padding-left: 10px;
                                     }
@@ -291,7 +321,7 @@
                             <div class='header'>
                                 <nav>
                                     <ul id='slide-out' class='side-nav fixed'>
-                                        <li class='logo'><a href='http://reportunit.github.io'><span>ReportUnit</span></a></li>
+                                        <li class='logo'><a href='http://reportunit.relevantcodes.com'><span>ReportUnit</span></a></li>
                                         <!--%NAV%-->
                                     </ul>
                                     <a href='#' data-activates='slide-out' class='button-collapse'><i class='mdi-navigation-menu'></i></a>
@@ -305,35 +335,26 @@
                             <div class='main'>
                                 <div class='main-wrap'>
                                     <div class='row'>
-                                        <div class='col s12 m6 l3'>
-                                            <div class='card-panel'>
-                                                <div>Total Tests</div>
-                                                <div class='chart total-tests' data-percent=''>
-                                                    <span class='percent'></span>
+                                        <div class='row dashboard'>
+                                            <div class='col s12 m6 l4'>
+                                                <div class='card-panel'>
+                                                    <div alt='Count of all passed tests' title='Count of all passed tests'>Fixture Summary</div>    
+                                                    <div class='chart-o' id='suites-dashboard'></div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class='col s12 m6 l3'>
-                                            <div class='card-panel'>
-                                                <div>Passed</div>    
-                                                <div class='chart total-passed' data-percent=''>
-                                                    <span class='percent'></span>
+                                            <div class='col s12 m6 l4'>
+                                                <div class='card-panel'>
+                                                    <div alt='Count of all failed tests' title='Count of all failed tests'>Tests Summary</div>
+                                                    <div class='chart-o' id='tests-dashboard'></div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class='col s12 m6 l3'>
-                                            <div class='card-panel'>
-                                                <div>Failed</div>
-                                                <div class='chart total-failed' data-percent=''>
-                                                    <span class='percent'></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class='col s12 m6 l3'>
-                                            <div class='card-panel'>
-                                                <div>Other</div>
-                                                <div class='chart total-other' data-percent=''>
-                                                    <span class='percent'></span>
+                                            <div class='col s12 m12 l4'>
+                                                <div class='card-panel'>
+                                                    <div alt='Count of all inconclusive tests' title='Count of all inconclusive tests'>Pass Percentage</div>
+												    <div class='panel-lead pass-percentage'></div>
+                                                    <div class='progress'>
+													     <div class='determinate'></div>
+												     </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -374,23 +395,16 @@
                                 </div>
                             </div>
                             <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
-                            <script src='https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.4/jquery.easypiechart.min.js'></script>
+                            <script type='text/javascript' src='https://www.google.com/jsapi'></script>
                             <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js'></script>
                             <script>
+                                google.load('visualization', '1', {packages:['corechart']});
                                 $(function() {
-                                    $('.button-collapse').sideNav();
+                                    $('.button-collapse').sideNav({ menuWidth: 280 });
                                     var total = testCountByStatus('td.total-count');
                                     var passed = testCountByStatus('td.pass-count');
                                     var failed = testCountByStatus('td.fail-count');
                                     var other = testCountByStatus('td.others-count');
-                                    $('.total-tests').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#9c27b0', lineCap: 'butt', scaleColor: '#fff', size: 100, });
-                                    $('.total-tests').data('easyPieChart').update(total);
-                                    $('.total-passed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#53b657', lineCap: 'butt', scaleColor: '#fff', size: 100, });
-                                    $('.total-passed').data('easyPieChart').update(passed / total * 100);
-                                    $('.total-failed').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#f8576c', lineCap: 'butt', scaleColor: '#fff', size: 100, });
-                                    $('.total-failed').data('easyPieChart').update(failed / total * 100);
-                                    $('.total-other').easyPieChart({ lineWidth: 7,  trackColor: '#f1f2f3', barColor: '#ffc107', lineCap: 'butt', scaleColor: '#fff', size: 100, });
-                                    $('.total-other').data('easyPieChart').update(other / total * 100);
                                     $('.nav.nav-sidebar a').filter(function(){
                                         return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];
                                     }).parent().addClass('active');
@@ -405,6 +419,55 @@
                                     $('.totals-passed, .total-passed > span').text(passed);
                                     $('.totals-failed, .total-failed > span').text(failed);
                                     $('.totals-others, .total-other > span').text(other);
+                                    var passedPercentage = Math.round(((passed / total) * 100)) + '%';
+								    $('.pass-percentage').text(passedPercentage);
+								    $('.dashboard .determinate').attr('style', 'width:' + passedPercentage);
+                                  google.setOnLoadCallback(suitesChart);
+								  google.setOnLoadCallback(filesChart);
+                                  function filesChart() {
+									var data = google.visualization.arrayToDataTable([
+									  ['Test Status', 'Count'],
+									  ['Pass', $('.file-status.passed').length],
+									  ['Fail', $('.file-status.failed').length],
+									  ['Other', $('.file-status.other').length]
+									]);
+									var options = {
+									  backgroundColor: { fill:'transparent' },
+									  chartArea: {'width': '92%', 'height': '100%'},
+									  colors: ['#00af00', 'red', 'orange', 'tomato', 'dodgerblue'],
+									  fontName: 'Nunito',
+									  fontSize: '11',
+									  titleTextStyle: { color: '#1366d7', fontSize: '14' },
+									  pieHole: 0.55,
+									  height: 180,
+									  pieSliceText: 'value', 
+									  width: 200
+									};
+									var chart = new google.visualization.PieChart(document.getElementById('suites-dashboard'));
+									chart.draw(data, options);
+								  }
+								function suitesChart() {
+									var data = google.visualization.arrayToDataTable([
+									  ['Test Status', 'Count'],
+									  ['Pass', passed],
+									  ['Fail', failed],
+									  ['Inconclusive', other]
+									]);
+									var options = {
+									  backgroundColor: { fill:'transparent' },
+									  chartArea: {'width': '92%', 'height': '100%'},
+									  colors: ['#00af00', 'red', 'orange', 'tomato', 'dodgerblue'],
+									  fontName: 'Nunito',
+									  fontSize: '11',
+									  titleTextStyle: { color: '#1366d7', fontSize: '14' },
+									  pieHole: 0.55,
+									  height: 180,
+									  pieSliceText: 'value', 
+									  width: 200
+									};
+									var chart = new google.visualization.PieChart(document.getElementById('tests-dashboard'));
+									chart.draw(data, options);
+								  }
                                 });
                             </script>
                         </body>
