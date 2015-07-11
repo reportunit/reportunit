@@ -7,6 +7,8 @@ using ReportUnit.Layer;
 
 namespace ReportUnit.Parser
 {
+    using Logging;
+
     internal class NUnit : IParser
     {
         /// <summary>
@@ -28,6 +30,12 @@ namespace ReportUnit.Parser
         /// Contains test-suite level data to be passed to the Folder level report to build summary
         /// </summary>
         private Report _report;
+
+        /// <summary>
+        /// Logger
+        /// </summary>
+        /// <param name="testResultFile"></param>
+        private static Logger logger = Logger.GetLogger();
 
         public IParser LoadFile(string testResultFile)
         {
@@ -53,12 +61,12 @@ namespace ReportUnit.Parser
             _report.Total = _doc.GetElementsByTagName("test-case").Count;
             _report.AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText;
 
-            Console.WriteLine("[INFO] Number of tests: " + _report.Total);
+            logger.Info("Number of tests: " + _report.Total);
 
             // only proceed if the test count is more than 0
             if (_report.Total >= 1)
             {
-                Console.WriteLine("[INFO] Processing root and test-suite elements...");
+                logger.Info("Processing root and test-suite elements...");
 
                 // pull values from XML source
                 _report.Passed = _doc.SelectNodes(".//test-case[@result='Success' or @result='Passed']").Count;
@@ -142,7 +150,7 @@ namespace ReportUnit.Parser
             catch (Exception ex)
             {
                 _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-                Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
+                logger.Error("There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
             }
 
         }
@@ -153,7 +161,7 @@ namespace ReportUnit.Parser
         /// </summary>
         private void ProcessFixtureBlocks()
         {
-            Console.WriteLine("[INFO] Building fixture blocks...");
+            logger.Info("Building fixture blocks...");
 
             string errorMsg = null;
             string descMsg = null;
@@ -236,7 +244,6 @@ namespace ReportUnit.Parser
 						bool.TryParse(testcase.Attributes["success"].InnerText, out success);
 						tc.Status = success ? Status.Passed : Status.Failed;
 					}
-
 
 	                if (testcase.Attributes["time"] != null)
                     {

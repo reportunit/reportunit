@@ -2,11 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
-using ReportUnit.Support;
-using ReportUnit.Layer;
 
 namespace ReportUnit.Parser
 {
+    using Layer;
+    using Logging;
+    using Support;
+
     internal class TestNG : IParser
     {
         /// <summary>
@@ -28,6 +30,11 @@ namespace ReportUnit.Parser
         /// Contains test-suite level data to be passed to the Folder level report to build summary
         /// </summary>
         private Report _report;
+
+        /// <summary>
+        /// Logger
+        /// </summary>
+        private static Logger logger = Logger.GetLogger();
 
         public IParser LoadFile(string testResultFile)
         {
@@ -53,12 +60,12 @@ namespace ReportUnit.Parser
             _report.Total = _doc.GetElementsByTagName("test-method").Count;
             _report.AssemblyName = "";
 
-            Console.WriteLine("[INFO] Number of tests: " + _report.Total);
+            logger.Info("Number of tests: " + _report.Total);
 
             // only proceed if the test count is more than 0
             if (_report.Total >= 1)
             {
-                Console.WriteLine("[INFO] Processing root and test-suite elements...");
+                logger.Info("[Processing test method elements...");
 
                 // pull values from XML source
                 _report.Passed = _doc.SelectNodes(".//test-method[@status='PASS']").Count;
@@ -113,7 +120,7 @@ namespace ReportUnit.Parser
         /// </summary>
         private void ProcessFixtureBlocks()
         {
-            Console.WriteLine("[INFO] Building fixture blocks...");
+            logger.Info("Building fixture blocks...");
 
             string errorMsg = null;
             XmlNodeList testSuiteNodes = _doc.SelectNodes("//test");

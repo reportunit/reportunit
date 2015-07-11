@@ -4,8 +4,12 @@
     using System.IO;
     using System.Xml;
 
+    using Logging;
+
     internal static class ParserFactory
     {
+        private static Logger logger = Logger.GetLogger();
+
         /// <summary>
         /// Find the appropriate Parser for the test file
         /// </summary>
@@ -15,7 +19,7 @@
         {
             if (!File.Exists(resultsFile))
             {
-                Console.WriteLine("[ERROR] Input file does not exist: " + resultsFile);
+                logger.Error("Input file does not exist " + resultsFile);
                 return null;
             }
             
@@ -23,7 +27,7 @@
             
             if (string.IsNullOrWhiteSpace(fileExtension))
             {
-                Console.WriteLine("[ERROR] Input file does not have a file extension: " + resultsFile);
+                logger.Error("Input file does not have a file extension: " + resultsFile);
                 return null;
             }
 
@@ -32,27 +36,27 @@
             switch (TestRunnerType(resultsFile))
             {
                 case TestRunner.NUnit:
-                    Console.WriteLine("[INFO] The file " + resultsFile + " contains NUnit test results");
+                    logger.Info("The file " + resultsFile + " contains NUnit test results");
                     fileParser = new NUnit().LoadFile(resultsFile);
                     break;
                 case TestRunner.Gallio:
-                    Console.WriteLine("[INFO] The file " + resultsFile + " contains Gallio test results");
+                    logger.Info("The file " + resultsFile + " contains Gallio test results");
                     fileParser = new Gallio().LoadFile(resultsFile);
                     break;
                 case TestRunner.MSTest2010:
-                    Console.WriteLine("[INFO] The file " + resultsFile + " contains MSTest 2010 test results");
+                    logger.Info("The file " + resultsFile + " contains MSTest 2010 test results");
                     fileParser = new MsTest2010().LoadFile(resultsFile);
 					break;
 				case TestRunner.XUnitV2:
-					Console.WriteLine("[INFO] The file " + resultsFile + " contains xUnit v2 test results");
+                    logger.Info("The file " + resultsFile + " contains xUnit v2 test results");
 					fileParser = new XUnitV2().LoadFile(resultsFile);
 					break;
                 case TestRunner.TestNG:
-                    Console.WriteLine("[INFO] The file " + resultsFile + " contains TestNG test results");
+                    logger.Info("The file " + resultsFile + " contains TestNG test results");
                     fileParser = new TestNG().LoadFile(resultsFile);
                     break;
                 default:
-                    Console.Write("[INFO] Skipping " + resultsFile + ". It is not of a known test runner type.");
+                    logger.Info("Skipping " + resultsFile + ". It is not of a known test runner type.");
                     break;
             }
 
@@ -125,8 +129,7 @@
 
 
                     // TestNG
-                    string docEl = doc.DocumentElement.Name;
-                    if (docEl == "testng-results")
+                    if (doc.DocumentElement.Name == "testng-results")
                         return TestRunner.TestNG;
                 }
             }

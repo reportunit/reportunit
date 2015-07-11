@@ -6,8 +6,9 @@ namespace ReportUnit.Parser
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml;
-    using ReportUnit.Layer;
-    using ReportUnit.Support;
+    using Layer;
+    using Logging;
+    using Support;
 
     internal class MsTest2010 : IParser
     {
@@ -36,6 +37,11 @@ namespace ReportUnit.Parser
         /// </summary>
         private XmlNamespaceManager _nsmgr;
 
+        /// <summary>
+        /// Logger
+        /// </summary>
+        Logger logger = Logger.GetLogger();
+
         public IParser LoadFile(string testResultFile)
         {
             if (_doc == null) _doc = new XmlDocument();
@@ -62,12 +68,12 @@ namespace ReportUnit.Parser
             // get total count of tests from the input file
             _report.Total = _doc.SelectNodes("descendant::t:UnitTestResult", _nsmgr).Count;
 
-            Console.WriteLine("[INFO] Number of tests: " + _report.Total);
+            logger.Info("[Number of tests: " + _report.Total);
 
             // only proceed if the test count is more than 0
             if (_report.Total >= 1)
             {
-                Console.WriteLine("[INFO] Processing root and test-suite elements...");
+                logger.Info("[Processing root and test-suite elements...");
 
                 // pull values from XML source
                 _report.AssemblyName = _doc.GetElementsByTagName("UnitTest")[0]["TestMethod"].Attributes["codeBase"].InnerText;
@@ -100,7 +106,7 @@ namespace ReportUnit.Parser
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Something weird happened: " + ex.Message);
+                    logger.Fatal("Something weird happened: " + ex.Message);
                     return null;
                 }
             }
@@ -152,7 +158,7 @@ namespace ReportUnit.Parser
             catch (Exception ex)
             {
                 _report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
-                Console.WriteLine("[ERROR] There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
+                logger.Error("There was an error processing the _ENVIRONMENT_ node: " + ex.Message);
             }
         }
 

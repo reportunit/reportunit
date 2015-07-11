@@ -130,6 +130,11 @@
                                 .main-wrap > .row {
                                     margin-bottom: 0;
                                 }
+                                .console-logs-icon {
+                                    float: right;
+                                    font-size: 20px;
+                                    padding-right: 55px;
+                                }
             
                                 /* ---- [ dashboard ] ---- */
                                 .dashboard .progress {
@@ -335,6 +340,7 @@
                                     <div class='nav-main'>
                                         <div class='page-title'>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;Executive Summary</span>
+                                            <a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='left' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-input'></i></a>
                                         </div>
                                     </div>
                                 </nav>
@@ -400,6 +406,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div id='modal2' class='modal'>
+                                    <div class='modal-content'>
+                                        <h4>Console Log</h4>
+                                        <!--%CONSOLELOGS%-->
+                                    </div>
+                                    <div class='modal-footer'>
+                                        <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
+                                    </div>
+                                </div>
                             </div>
                             <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
                             <script type='text/javascript' src='https://www.google.com/jsapi'></script>
@@ -408,6 +423,7 @@
                                 google.load('visualization', '1', {packages:['corechart']});
                                 $(function() {
                                     $('.button-collapse').sideNav({ menuWidth: 280 });
+                                    $('.modal-trigger').leanModal();
                                     var total = testCountByStatus('td.total-count');
                                     var passed = testCountByStatus('td.pass-count');
                                     var failed = testCountByStatus('td.fail-count');

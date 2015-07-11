@@ -46,6 +46,9 @@
     <Compile Include="Design\Styles.cs" />
     <Compile Include="Design\Theme.cs" />
     <Compile Include="Layer\Source.cs" />
+    <Compile Include="Logging\Level.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Parser\TestNG.cs" />
     <Compile Include="Parser\XUnitV2.cs" />
     <Compile Include="ReportBuilder.cs" />

@@ -135,10 +135,15 @@
                                 .page-title .logo {
                                     display: none;
                                 }
-                                .run-info-icon {
+                                .console-logs-icon, .run-info-icon {
                                     float: right;
                                     font-size: 20px;
+                                }
+                                .run-info-icon {
                                     padding-right: 55px
+                                }
+                                .console-logs-icon {
+                                    padding-right: 5px;
                                 }
             
                                 /* ---- [ main ] ---- */
@@ -387,6 +392,7 @@
                                            <div class='logo'><a href='http://reportunit.relevantcodes.com/'><span>ReportUnit</span></a></div>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;<!--%FILENAME%--></span>
                                             <a class='modal-trigger waves-effect waves-light run-info-icon tooltipped' data-position='left' data-tooltip='Run Info' href='#modal1'><i class='mdi-action-info-outline'></i></a>
+                                            <a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='left' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-input'></i></a>
                                         </div>
                                     </div>
                                 </nav>
@@ -485,6 +491,15 @@
                                 <div class='hidden total-inconclusive'><!--%INCONCLUSIVE%--></div>
                                 <div class='hidden total-errors'><!--%ERRORS%--></div>
                                 <div class='hidden total-skipped'><!--%SKIPPED%--></div>
+                            </div>
+                            <div id='modal2' class='modal'>
+                                <div class='modal-content'>
+                                    <h4>Console Log</h4>
+                                    <!--%CONSOLELOGS%-->
+                                </div>
+                                <div class='modal-footer'>
+                                    <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
+                                </div>
                             </div>
                         </body>
                         <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>

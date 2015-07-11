@@ -7,6 +7,7 @@ using ReportUnit.Layer;
 
 namespace ReportUnit.Parser
 {
+    using Logging;
 
 	internal class XUnitV2 : IParser
 	{
@@ -29,6 +30,11 @@ namespace ReportUnit.Parser
 		/// Contains test-suite level data to be passed to the Folder level report to build summary
 		/// </summary>
 		private Report _report;
+
+        /// <summary>
+        /// Logger
+        /// </summary>
+        Logger logger = Logger.GetLogger();
 
 		public IParser LoadFile(string testResultFile)
 		{

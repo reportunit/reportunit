@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml;
-    using ReportUnit.Layer;
-    using ReportUnit.Support;
+    using Layer;
+    using Logging;
+    using Support;
 
     internal class Gallio : IParser
     {
@@ -28,6 +29,11 @@
         /// Xml namespace for processing file
         /// </summary>
         private XmlNamespaceManager _nsmgr;
+
+        /// <summary>
+        /// Logger
+        /// </summary>
+        Logger logger = Logger.GetLogger();
 
         public IParser LoadFile(string testResultFile)
         {
@@ -54,11 +60,11 @@
             _report.Total = _doc.SelectNodes("descendant::ns:testStep[@isTestCase='true']", _nsmgr).Count;
             _report.AssemblyName = _doc.SelectSingleNode("//ns:files/ns:file", _nsmgr).InnerText;
 
-            Console.WriteLine("[INFO] Number of tests: " + _report.Total);
+            logger.Info("[Number of tests: " + _report.Total);
 
             if (_report.Total >= 1)
             {
-                Console.WriteLine("[INFO] Processing root and test-suite elements...");
+                logger.Info("[Processing root and test-suite elements...");
 
                 // pull values from XML source
                 _report.Passed = Int32.Parse(_doc.SelectSingleNode("//ns:statistics/@passedCount", _nsmgr).InnerText);
@@ -131,13 +137,13 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine("[ERROR] There was an error processing RunInfo: " + ex.Message);
+                logger.Error("There was an error processing RunInfo: " + ex.Message);
             }
         }
 
         private void ProcessFixtureBlocks()
         {
-            Console.WriteLine("[INFO] Building fixture blocks...");
+            logger.Info("[Building fixture blocks...");
 
             string errorMsg = null;
             string descMsg = null;

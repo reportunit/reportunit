@@ -5,10 +5,11 @@
     using System.IO;
     using System.Linq;
 
-    using ReportUnit.Design;
-    using ReportUnit.Layer;
-    using ReportUnit.Parser;
-    using ReportUnit.Support;    
+    using Design;
+    using Layer;
+    using Logging;
+    using Parser;
+    using Support;    
 
     internal class ReportBuilder
     {
@@ -19,6 +20,11 @@
         /// FileParser for the type of test results to be parsed
         /// </summary>
         private IParser testFileParser;
+
+        /// <summary>
+        /// Logger
+        /// </summary>
+        private static Logger logger = Logger.GetLogger();
 
         /// <summary>
         /// Flag for file-level (single) report to add a class for BODY to disable sidenav
@@ -42,7 +48,7 @@
             // if no files, end process
             if (allFiles.Count == 0)
             {
-                Console.WriteLine("[INFO] No XML files were found in the given location. Exiting..");
+                logger.Info("No XML files were found in the given location. Exiting..");
                 return;
             }
 
@@ -54,7 +60,8 @@
 
             foreach (string file in allFiles) 
             {
-                Console.WriteLine("\n" + new string('-', 9));
+                ///Console.WriteLine("\n" + new string('-', 9));
+                Console.WriteLine("");
 
                 outputFile = Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(file) + ".html");
                 Report reportData = BuildReport(file, outputFile);
@@ -114,12 +121,15 @@
 
             foreach (KeyValuePair<string, string> pair in source.SourceFiles)
             {
-                File.WriteAllText(pair.Key,
-                        pair.Value.Replace(ReportHelper.MarkupFlag("nav"), navLinks)
-                        .Replace(ReportHelper.MarkupFlag("filename"), Path.GetFileNameWithoutExtension(pair.Key)));
+                File.WriteAllText(pair.Key, pair.Value
+                        .Replace(ReportHelper.MarkupFlag("nav"), navLinks)
+                        .Replace(ReportHelper.MarkupFlag("filename"), Path.GetFileNameWithoutExtension(pair.Key))
+                        .Replace(ReportHelper.MarkupFlag("consoleLogs"), logger.GetLogsAsString()));
             }
 
-            File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), html.Replace(ReportHelper.MarkupFlag("nav"), navLinks));
+            File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), html
+                .Replace(ReportHelper.MarkupFlag("nav"), navLinks)
+                .Replace(ReportHelper.MarkupFlag("consoleLogs"), logger.GetLogsAsString()));
         }
 
         public void FolderReport(string resultsDirectory)
@@ -175,7 +185,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Something weird happened: " + ex.Message);
+                    logger.Fatal("Something weird happened: " + ex.Message);
                     return null;
                 }
             }

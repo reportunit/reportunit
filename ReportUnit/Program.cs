@@ -12,7 +12,8 @@ namespace ReportUnit
     using System.IO;
     using System.Linq;
 
-    using ReportUnit.Design;
+    using Design;
+    using Logging;
 
     class Program
     {
@@ -22,6 +23,11 @@ namespace ReportUnit
         private static string reportUnitUsage = "[INFO] Usage 1:  ReportUnit \"path-to-folder\"" +
                                                 "\n[INFO] Usage 2:  ReportUnit \"input-folder\" \"output-folder\"" +
                                                 "\n[INFO] Usage 3:  ReportUnit \"input.xml\" \"output.html\"";
+
+        /// <summary>
+        /// Logger
+        /// </summary>
+        private static Logger logger = Logger.GetLogger();
 
         /// <summary>
         /// Entry point
@@ -35,12 +41,12 @@ namespace ReportUnit
         ///         args.length = 2 && args[0] is xml-input && args[1] is html-output
         /// </param>
         static void Main(string[] args)
-        {
+        {            
             CopyrightMessage();
 
             if (args.Length == 0 || args.Length > 2)
             {
-                Console.WriteLine("[ERROR] Invalid number of arguments specified.\n" + reportUnitUsage);
+                logger.Error("Invalid number of arguments specified.\n" + reportUnitUsage);
                 return;
             }
 
@@ -48,7 +54,7 @@ namespace ReportUnit
             {
                 if (arg.Trim() == "" || arg == "\\\\")
                 {
-                    Console.WriteLine("[ERROR] Invalid argument(s) specified.\n" + reportUnitUsage);
+                    logger.Error("Invalid argument(s) specified.\n" + reportUnitUsage);
                     return;
                 }
             }
@@ -71,7 +77,7 @@ namespace ReportUnit
 
                 if (!Directory.Exists(args[0]))
                 {
-                    Console.WriteLine("[ERROR] Input directory " + args[0] + " not found.");
+                    logger.Error("Input directory " + args[0] + " not found.");
                     return;
                 }
 
@@ -84,7 +90,7 @@ namespace ReportUnit
                 }
                 else
                 {
-                    Console.WriteLine("[ERROR] Invalid files specified.\n" + reportUnitUsage);
+                    logger.Error("Invalid files specified.\n" + reportUnitUsage);
                 }
 
                 return;
@@ -98,7 +104,7 @@ namespace ReportUnit
 
             if (!Directory.Exists(args[0]))
             {
-                Console.WriteLine("{ERROR] The path of directory you have specified does not exist.\n" + reportUnitUsage);
+                logger.Error("The path of directory you have specified does not exist.\n" + reportUnitUsage);
                 return;
             }
 
