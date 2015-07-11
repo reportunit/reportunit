@@ -17,7 +17,7 @@
             log.Level = level;
             log.Message = message;
 
-            Console.WriteLine("[{0}][{1}] {2}", log.Timestamp.ToString("yyyy.MM.dd HH:mm:ss"), level.ToString(), message);
+            Console.WriteLine(log.ToString());
 
             queue.Enqueue(log);
         }
@@ -33,7 +33,7 @@
 
             foreach (Log log in queue)
             {
-                logs += log.Message + "<br />";
+                logs += log.ToString() + "<br />";
             }
 
             return logs;
