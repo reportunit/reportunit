@@ -312,6 +312,9 @@
                                     .main {
                                         padding-left: 0;
                                     }
+                                    .nav-main {
+                                        padding-left: 65px;
+                                    }
                                     .main-wrap {
                                         padding-left: 40px;
                                     }
