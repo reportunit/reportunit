@@ -340,7 +340,7 @@
                                     <div class='nav-main'>
                                         <div class='page-title'>
                                             <span><i class='mdi-file-folder-open'></i>&nbsp;&nbsp;Executive Summary</span>
-                                            <a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='left' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-input'></i></a>
+                                            <a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='left' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-assignment'></i></a>
                                         </div>
                                     </div>
                                 </nav>

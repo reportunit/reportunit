@@ -60,11 +60,11 @@
             _report.Total = _doc.SelectNodes("descendant::ns:testStep[@isTestCase='true']", _nsmgr).Count;
             _report.AssemblyName = _doc.SelectSingleNode("//ns:files/ns:file", _nsmgr).InnerText;
 
-            logger.Info("[Number of tests: " + _report.Total);
+            logger.Info("Number of tests: " + _report.Total);
 
             if (_report.Total >= 1)
             {
-                logger.Info("[Processing root and test-suite elements...");
+                logger.Info("Processing root and test-suite elements...");
 
                 // pull values from XML source
                 _report.Passed = Int32.Parse(_doc.SelectSingleNode("//ns:statistics/@passedCount", _nsmgr).InnerText);
@@ -143,7 +143,7 @@
 
         private void ProcessFixtureBlocks()
         {
-            logger.Info("[Building fixture blocks...");
+            logger.Info("Building fixture blocks...");
 
             string errorMsg = null;
             string descMsg = null;
