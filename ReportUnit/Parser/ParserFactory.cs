@@ -47,8 +47,12 @@
                     logger.Info("The file " + resultsFile + " contains MSTest 2010 test results");
                     fileParser = new MsTest2010().LoadFile(resultsFile);
 					break;
+				case TestRunner.XUnitV1:
+                    logger.Info("The file " + resultsFile + " contains xUnit v1 test results");
+					fileParser = new XUnitV1().LoadFile(resultsFile);
+					break;
 				case TestRunner.XUnitV2:
-                    logger.Info("The file " + resultsFile + " contains xUnit v2 test results");
+					logger.Info("The file " + resultsFile + " contains xUnit v2 test results");
 					fileParser = new XUnitV2().LoadFile(resultsFile);
 					break;
                 case TestRunner.TestNG:
@@ -110,9 +114,16 @@
 	                {
 		                string testFramework = assemblyNode.Attributes["test-framework"].InnerText.ToLower();
 
-						if (testFramework.Contains("xunit") && testFramework.Contains("2."))
+						if (testFramework.Contains("xunit"))
 		                {
-			                return TestRunner.XUnitV2;
+			                if (testFramework.Contains(" 2."))
+							{
+								return TestRunner.XUnitV2;   
+			                }
+							else if (testFramework.Contains(" 1."))
+							{
+								return TestRunner.XUnitV1;
+							}
 		                }
 	                }
 

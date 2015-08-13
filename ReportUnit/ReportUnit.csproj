@@ -50,6 +50,7 @@
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Parser\TestNG.cs" />
+    <Compile Include="Parser\XUnitV1.cs" />
     <Compile Include="Parser\XUnitV2.cs" />
     <Compile Include="ReportBuilder.cs" />
     <Compile Include="HTML\File.cs" />
