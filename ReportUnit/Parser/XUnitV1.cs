@@ -9,7 +9,7 @@ namespace ReportUnit.Parser
 {
     using Logging;
 
-	internal class XUnitV2 : IParser
+	internal class XUnitV1 : IParser
 	{
 		/// <summary>
 		/// XmlDocument instance
@@ -17,7 +17,7 @@ namespace ReportUnit.Parser
 		private XmlDocument _doc;
 
 		/// <summary>
-		/// The input file from NUnit TestResult.xml
+		/// The input file from Xunit TestResult.xml
 		/// </summary>
 		private string _testResultFile = "";
 
@@ -25,6 +25,16 @@ namespace ReportUnit.Parser
 		/// Usually evaluates to the assembly name. Used to clean up test names so its easier to read in the outputted html.
 		/// </summary>
 		private string _fileNameWithoutExtension;
+
+		/// <summary>
+		/// The path the assembly file was originally built to
+		/// </summary>
+		private string _assemblyFilePath;
+
+		/// <summary>
+		/// The folder the file was originally built to
+		/// </summary>
+		private string _assemblyFolder;
 
 		/// <summary>
 		/// Contains test-suite level data to be passed to the Folder level report to build summary
@@ -50,15 +60,18 @@ namespace ReportUnit.Parser
 		public Report ProcessFile()
 		{
 			_fileNameWithoutExtension = Path.GetFileNameWithoutExtension(this._testResultFile);
+			_assemblyFilePath = (_doc.SelectNodes("//assembly") != null && _doc.SelectNodes("//assembly").Count > 0) ? _doc.SelectNodes("//assembly")[0].Attributes["name"].InnerText : _testResultFile;
+			_assemblyFolder = _assemblyFilePath.Replace(Path.GetFileName(_assemblyFilePath), "");
+
 
 			// create a data instance to be passed to the folder level report
 			_report = new Report();
 			_report.FileName = this._testResultFile;
-			_report.RunInfo.TestRunner = TestRunner.XUnitV2;
+			_report.RunInfo.TestRunner = TestRunner.XUnitV1;
 
 			// get total count of tests from the input file
 			_report.Total = _doc.GetElementsByTagName("test").Count;
-			_report.AssemblyName = _doc.SelectNodes("//assembly")[0].Attributes["name"].InnerText;
+			_report.AssemblyName = Path.GetFileName(_assemblyFilePath);
 
 			Console.WriteLine("[INFO] Number of tests: " + _report.Total);
 
@@ -105,14 +118,6 @@ namespace ReportUnit.Parser
 		private void ProcessRunInfo()
 		{
 			_report.RunInfo.Info.Add("TestResult File", _testResultFile);
-
-			try
-			{
-				DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
-				_report.RunInfo.Info.Add("Last Run", lastModified.ToString("d MMM yyyy HH:mm"));
-			}
-			catch (Exception) { }
-
 			if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
 
 
@@ -120,6 +125,7 @@ namespace ReportUnit.Parser
 			{
 				// try to parse the assembly node
 				XmlNode assembly = _doc.GetElementsByTagName("assembly")[0];
+				ProcessLastRun(assembly);
 				if (assembly != null && assembly.Attributes != null)
 				{
 					if (assembly.Attributes["environment"] != null) _report.RunInfo.Info.Add("Environment", assembly.Attributes["environment"].InnerText);
@@ -130,13 +136,34 @@ namespace ReportUnit.Parser
 				{
 					_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
 				}
+
 			}
 			catch (Exception ex)
 			{
+				ProcessLastRun(null);
 				_report.RunInfo.Info.Add("TestRunner", _report.RunInfo.TestRunner.ToString());
 				Console.WriteLine("[ERROR] There was an error processing the _ASSEMBLY_ node: " + ex.Message);
 			}
 
+		}
+		private void ProcessLastRun(XmlNode assembly)
+		{
+			string lastRun = null;
+			// try to parse the assembly node
+			if (assembly != null && assembly.Attributes != null)
+			{
+				if (assembly.Attributes["run-date"] != null && assembly.Attributes["run-time"] != null)
+				{
+					lastRun = string.Format("{0} {1}", assembly.Attributes["run-time"].InnerText, assembly.Attributes["run-date"].InnerText);
+				}
+			}
+			if (string.IsNullOrWhiteSpace(lastRun))
+			{
+				lastRun = System.IO.File.GetLastWriteTime(_testResultFile).ToString("d MMM yyyy HH:mm");
+			}
+
+
+			_report.RunInfo.Info.Add("Last Run", lastRun);
 		}
 
 		/// <summary>
@@ -153,52 +180,25 @@ namespace ReportUnit.Parser
 			int testCount = 0;
 
 			// run for each test collection
-			foreach (XmlNode suite in collectionNodes)
+			foreach (XmlNode colNode in collectionNodes)
 			{
-				var testSuite = new TestSuite();
-				testSuite.Name = suite.Attributes["name"].InnerText.Replace("Test collection for", "").Replace(_fileNameWithoutExtension + ".", "").Trim();
-
-				if (suite.Attributes["time"] != null)
-				{
-					double duration;
-					if (double.TryParse(suite.Attributes["time"].InnerText, out duration))
-					{
-						testSuite.Duration = duration;
-						testSuite.StartTime = duration.ToString();
-					}
-				}
-
-				// check if the testSuite has any errors (ie error in the TestFixtureSetUp)
-				/*var testSuiteFailureNode = suite.SelectSingleNode("failure");
-				if (testSuiteFailureNode != null && testSuiteFailureNode.HasChildNodes)
-				{
-					errorMsg = descMsg = "";
-					var message = testSuiteFailureNode.SelectSingleNode(".//message");
-
-					if (message != null)
-					{
-						errorMsg = message.InnerText.Trim();
-						errorMsg += testSuiteFailureNode.SelectSingleNode(".//stack-trace") != null ? " -> " + testSuiteFailureNode.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "").Replace("\n", "") : "";
-					}
-					testSuite.StatusMessage = errorMsg;
-				}*/
-
-
 				// add each test of the test-fixture
-				foreach (XmlNode testcase in suite.SelectNodes(".//test"))
+				foreach (XmlNode testCaseNode in colNode.SelectNodes(".//test"))
 				{
+					var testCollection = GetCollectionForTest(colNode, testCaseNode);
+
 					errorMsg = descMsg = "";
 
 					var tc = new Test();
-					tc.Name = testcase.Attributes["name"].InnerText.Replace(_fileNameWithoutExtension + ".", "").Replace(testSuite.Name + ".", "");
-					tc.Status = testcase.Attributes["result"].InnerText.AsStatus();
+					tc.Name = testCaseNode.Attributes["method"] != null ? testCaseNode.Attributes["method"].InnerText : testCaseNode.Attributes["name"].InnerText.Replace(testCollection.Name + ".", "");
+					tc.Status = testCaseNode.Attributes["result"].InnerText.AsStatus();
 
-					if (testcase.Attributes["time"] != null)
+					if (testCaseNode.Attributes["time"] != null)
 					{
 						try
 						{
 							Double d;
-							var durationTimeSpan = testcase.Attributes["time"].InnerText;
+							var durationTimeSpan = testCaseNode.Attributes["time"].InnerText;
 							if (Double.TryParse(durationTimeSpan, out d))
 							{
 								tc.Duration = d;
@@ -213,12 +213,12 @@ namespace ReportUnit.Parser
 						tc.Categories.Add(category.Attributes["value"].InnerText);
 					}*/
 
-					var message = testcase.SelectSingleNode(".//message");
+					var message = testCaseNode.SelectSingleNode(".//message");
 
 					if (message != null)
 					{
 						errorMsg = "<pre>";// + message.InnerText.Trim();
-						errorMsg += testcase.SelectSingleNode(".//stack-trace") != null ? " -> " + testcase.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "") : "";
+						errorMsg += testCaseNode.SelectSingleNode(".//stack-trace") != null ? " -> " + testCaseNode.SelectSingleNode(".//stack-trace").InnerText.Replace("\r", "") : "";
 						errorMsg += "</pre>";
 						errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
 					}
@@ -233,15 +233,71 @@ namespace ReportUnit.Parser
 					}*/
 
 					tc.StatusMessage = descMsg + errorMsg;
-					testSuite.Tests.Add(tc);
+					testCollection.Tests.Add(tc);
 
 					Console.Write("\r{0} tests processed...", ++testCount);
 				}
-
-				testSuite.Status = ReportHelper.GetFixtureStatus(testSuite.Tests);
-
-				_report.TestFixtures.Add(testSuite);
 			}
+
+			// update status of all the collections
+			foreach (var testCollection in _report.TestFixtures)
+			{
+				testCollection.Status = ReportHelper.GetFixtureStatus(testCollection.Tests);
+			}
+		}
+
+		private TestSuite GetCollectionForTest(XmlNode colNode, XmlNode testCaseNode)
+		{
+			// work otu the collection name
+			String collectionName = null;
+
+			if (testCaseNode.Attributes["type"] != null)
+			{
+				collectionName = testCaseNode.Attributes["type"].InnerText.Replace(_fileNameWithoutExtension + ".", "");
+			}
+			if (string.IsNullOrWhiteSpace(collectionName) && colNode.Attributes["name"] != null)
+			{
+				collectionName = colNode.Attributes["name"].InnerText
+					.Replace("Test collection for", "")
+					.Replace("xUnit.net v1 Tests for", "")
+					.Replace(_assemblyFolder, "")
+					.Trim();
+			}
+			if (string.IsNullOrWhiteSpace(collectionName))
+			{
+				collectionName = _fileNameWithoutExtension;
+			}
+
+			// check if the collection exists
+			TestSuite testCollection = _report.TestFixtures.FirstOrDefault(c => String.Equals(c.Name, collectionName));
+			if (testCollection == null)
+			{
+				testCollection = new TestSuite();
+				testCollection.Name = collectionName;
+
+				_report.TestFixtures.Add(testCollection);
+			}
+
+
+			if (colNode.Attributes != null && colNode.Attributes.Count > 0)
+			{
+				// in xunit v1 xml reports - often have only one collection 
+				testCollection = _report.TestFixtures.FirstOrDefault(tf => string.IsNullOrWhiteSpace(tf.Name)) ?? new TestSuite();
+
+				
+
+				if (colNode.Attributes["time"] != null)
+				{
+					double duration;
+					if (double.TryParse(colNode.Attributes["time"].InnerText, out duration))
+					{
+						testCollection.Duration = duration;
+						testCollection.StartTime = duration.ToString();
+					}
+				}
+			}
+
+			return testCollection;
 		}
 	}
 }

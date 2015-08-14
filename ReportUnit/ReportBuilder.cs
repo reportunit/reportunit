@@ -81,7 +81,11 @@
                     {
                         runResult = "other";
                     }
-                    else
+					else if (reportData.Status == Status.Error || reportData.Status == Status.Failed)
+					{
+						runResult = Status.Failed.ToString();
+					}
+					else
                     {
                         runResult = reportData.Status.ToString();
                     }
