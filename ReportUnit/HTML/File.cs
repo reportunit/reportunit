@@ -34,6 +34,7 @@
                                 body {
                                     font-family: 'Nunito';
                                     font-size: 14px;
+                                    font-weight: 300;
                                 }
                                 pre {
                                     background-color: #f8f9fa;
@@ -149,7 +150,6 @@
                                 /* ---- [ main ] ---- */
                                 .main {
                                     background-color: #f1f4f8;
-                                    /*padding-left: 300px;*/
                                 }
                                 .main-wrap {
                                     padding: 40px 40px 100px 300px;
@@ -215,7 +215,6 @@
                                 .fixture-name {
                                     float: left; 
                                     font-size: 20px;
-                                    font-weight: 500;
                                     max-width: 410px; 
                                     word-break: break-all; 
                                 }

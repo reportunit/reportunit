@@ -32,6 +32,7 @@
                                 body {
                                     font-family: Nunito;
                                     font-size: 14px;
+                                    font-weight: 300;
                                 }
 
                                 /* ---- [ global ] ---- */
@@ -122,7 +123,6 @@
                                 /* ---- [ main ] ---- */
                                 .main {
                                     background-color: #f1f4f8;
-                                    /* padding-left: 300px; */
                                 }
                                 .main-wrap {
                                     padding: 40px 40px 100px 300px;

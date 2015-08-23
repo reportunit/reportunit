@@ -65,7 +65,7 @@ namespace ReportUnit.Parser
             // only proceed if the test count is more than 0
             if (_report.Total >= 1)
             {
-                logger.Info("[Processing test method elements...");
+                logger.Info("Processing test method elements...");
 
                 // pull values from XML source
                 _report.Passed = _doc.SelectNodes(".//test-method[@status='PASS']").Count;
