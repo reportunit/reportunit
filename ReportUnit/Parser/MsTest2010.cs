@@ -177,12 +177,11 @@ namespace ReportUnit.Parser
             // run for each test-suite
             foreach (XmlNode testResult in unitTestResults)
             {
-
                 Test tc = new Test();
 				tc.Name = testResult.Attributes["testName"].InnerText.Replace(_fileNameWithoutExtension + ".", "");
                 tc.Status = testResult.Attributes["outcome"].InnerText.AsStatus();
 
-                try
+                if (testResult.Attributes["duration"] != null)
                 {
                     TimeSpan d;
                     var durationTimeSpan = testResult.Attributes["duration"].InnerText;
@@ -191,7 +190,7 @@ namespace ReportUnit.Parser
                         tc.Duration = d.TotalMilliseconds;
                     }
                 }
-                catch (Exception)
+                else if (testResult.Attributes["startTime"] != null && testResult.Attributes["endTime"] != null)
                 {
                     tc.Duration = DateTimeHelper.DifferenceInMilliseconds(testResult.Attributes["startTime"].InnerText, testResult.Attributes["endTime"].InnerText);
                 }
