@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 
 namespace ReportUnit.Parser
 {
@@ -227,7 +228,7 @@ namespace ReportUnit.Parser
                 // get test details and fixture
                 string testId = testResult.Attributes["testId"].InnerText;
                 var testDefinition = _doc.SelectSingleNode("descendant::t:UnitTest[@id='" + testId + "']/t:TestMethod", _nsmgr);
-				var className = testDefinition.Attributes["className"].InnerText.Replace(_fileNameWithoutExtension + ".", "").Trim();
+				var className = FixtureName(testDefinition.Attributes["className"].InnerText);
 
                 // get the test fixture details
                 var testFixture = _report.TestFixtures.SingleOrDefault(f => f.Name.Equals(className, StringComparison.CurrentCultureIgnoreCase));
@@ -246,6 +247,43 @@ namespace ReportUnit.Parser
 
                 Console.Write("\r{0} tests processed...", ++testCount);
             }
+        }
+
+        /// <summary>
+        /// Discerns a fixture name from a className, removing likely redundant namespaces
+        /// </summary>
+        /// <param name="className">A class name that's either an ordinary name or a fully qualified name</param>
+        /// <returns>A simpler fixture name</returns>
+        private string FixtureName(string className)
+        {
+            if (className == null) return String.Empty;
+
+            string typeName;
+            string assemblyName = String.Empty;
+
+            // Remove any assembly properties of the form "property=value" off the end
+            var likelyAssemblyNameFirst = className.Split(',').Reverse().SkipWhile(x => x.Contains('=')).ToList();
+            // the remainder is either "typename, assemblyname" or something like typename<T1,T2>
+            if (likelyAssemblyNameFirst.Count > 1 && !likelyAssemblyNameFirst[0].Contains('>'))
+            {
+                assemblyName = likelyAssemblyNameFirst[0].Trim();
+                typeName = String.Join(",", likelyAssemblyNameFirst.Skip(1).Reverse());
+            }
+            else
+            {
+                typeName = String.Join(",", ((IEnumerable<string>) likelyAssemblyNameFirst).Reverse());
+            }
+
+            // Remove a starting "assemblyname." or everything up through a ".assemblyname."
+            var shortenedNames =
+                new[] {_fileNameWithoutExtension, assemblyName}.Select(
+                    namePrefix =>
+                        string.IsNullOrEmpty(namePrefix)
+                            ? typeName
+                            : typeName.StartsWith(namePrefix + ".")
+                                ? typeName.Substring(namePrefix.Length + 1)
+                                : typeName.Split(new[] {"." + namePrefix + "."}, 2, StringSplitOptions.None).Last());
+            return shortenedNames.OrderBy(x => x.Length).First();
         }
     }
 }
