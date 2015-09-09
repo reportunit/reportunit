@@ -45,7 +45,7 @@ namespace ReportUnit.Parser
 
         /// <summary>
         /// Logger
-        ///// </summary>
+        /// </summary>
         /// <param name="testResultFile"></param>
         private static Logger logger = Logger.GetLogger();
 
