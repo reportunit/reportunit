@@ -20,6 +20,11 @@
         public string StatusMessage { get; set; }
 
         /// <summary>
+        /// Console Logs
+        /// </summary>
+        public string ConsoleLogs { get; set; }
+
+        /// <summary>
         /// How long the test took to run (in milliseconds)
         /// </summary>
         public double Duration { get; set; }
