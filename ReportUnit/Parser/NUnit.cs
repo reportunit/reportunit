@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -17,9 +18,20 @@ namespace ReportUnit.Parser
         private XmlDocument _doc;
 
         /// <summary>
+        /// Dictonary to hold consol oputput for each test
+        /// </summary>
+        private Dictionary<string, string> _consoleOutput;
+
+        /// <summary>
         /// The input file from NUnit TestResult.xml
         /// </summary>
 		private string _testResultFile = "";
+
+        /// <summary>
+        /// The input file from NUnit TestResult.xml
+        /// </summary>
+        private string _consoleOutputFile = "";
+        
 
 		/// <summary>
 		/// Usually evaluates to the assembly name. Used to clean up test names so its easier to read in the outputted html.
@@ -40,13 +52,58 @@ namespace ReportUnit.Parser
         public IParser LoadFile(string testResultFile)
         {
             if (_doc == null) _doc = new XmlDocument();
+            if (_consoleOutput == null) _consoleOutput = new Dictionary<string, string>();
 
             _testResultFile = testResultFile;
 
             _doc.Load(testResultFile);
-
+            LoadConsoleOutputFile();
             return this;
         }
+
+        private void LoadConsoleOutputFile()
+        {
+            //Todo this is not clean enough.
+            _consoleOutputFile = _testResultFile.Replace(".xml",".txt");
+
+
+            if (File.Exists(_consoleOutputFile))
+            {
+                using (var reader = new StreamReader(_consoleOutputFile))
+                {
+                    string currentTest = "unknown";
+                    List<string> testLines = new List<string>();
+
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("***"))
+                        {
+                            AddConsolOutput(currentTest, testLines);
+                            currentTest = line.Trim('*', ' ');
+                        }
+                        else
+                        {
+                            testLines.Add(line);
+                        }
+                    }
+                    AddConsolOutput(currentTest, testLines);
+                }
+                
+            }
+        }
+
+        private void AddConsolOutput(string currentTest, List<string> testLines)
+        {
+            if (testLines.Count > 0)
+            {
+                Console.WriteLine("Adding Consol Output{0}", currentTest);
+                var content = string.Join(Environment.NewLine, testLines.ToArray());
+                _consoleOutput.Add(currentTest,content);
+                testLines.Clear();
+            }
+        }
+
 
         public Report ProcessFile()
         {
@@ -56,7 +113,6 @@ namespace ReportUnit.Parser
             _report = new Report();
             _report.FileName = this._testResultFile;
             _report.RunInfo.TestRunner = TestRunner.NUnit;
-
             // get total count of tests from the input file
             _report.Total = _doc.GetElementsByTagName("test-case").Count;
             _report.AssemblyName = _doc.SelectNodes("//test-suite")[0].Attributes["name"].InnerText;
@@ -115,7 +171,12 @@ namespace ReportUnit.Parser
         private void ProcessRunInfo()
         {
             _report.RunInfo.Info.Add("TestResult File", _testResultFile);
-
+            _report.RunInfo.Info.Add("TestResult Console Output File", String.Format("{0} ({1})",_consoleOutputFile,_consoleOutput.Count));
+            foreach (var keval in _consoleOutput)
+            {
+                _report.RunInfo.Info.Add(keval.Key, String.Format("({0})", keval.Value.Length));
+                
+            }
             try
             {
                 DateTime lastModified = System.IO.File.GetLastWriteTime(_testResultFile);
@@ -124,8 +185,7 @@ namespace ReportUnit.Parser
             catch (Exception) { }
 
             if (_report.Duration > 0) _report.RunInfo.Info.Add("Duration", string.Format("{0} ms", _report.Duration));
-
-
+      
             try
             {
                 // try to parse the environment node
@@ -222,8 +282,9 @@ namespace ReportUnit.Parser
                     errorMsg = descMsg = "";
 
                     var tc = new Test();
-					tc.Name = testcase.Attributes["name"].InnerText.Replace("<", "[").Replace(">", "]").Replace(testSuite.Name + ".", "").Replace(_fileNameWithoutExtension + ".", "");
-
+                    var tcName = testcase.Attributes["name"].InnerText;
+					tc.Name = tcName.Replace("<", "[").Replace(">", "]").Replace(testSuite.Name + ".", "").Replace(_fileNameWithoutExtension + ".", "");
+                   
 					// figure out the status reslt of the test
 	                if (testcase.Attributes["result"] != null)
 	                {
@@ -275,6 +336,10 @@ namespace ReportUnit.Parser
                         errorMsg += "</pre>";
                         errorMsg = errorMsg == "<pre></pre>" ? "" : errorMsg;
                     }
+                    if (_consoleOutput.ContainsKey(tcName))
+                    {
+                        tc.ConsoleLogs = "<pre>" + _consoleOutput[tcName].Replace(Environment.NewLine, "<br />")+"</pre>";
+                    }
 
                     XmlNode desc = testcase.SelectSingleNode(".//property[@name='Description']");
 
@@ -285,7 +350,8 @@ namespace ReportUnit.Parser
                         descMsg = descMsg == "<p class='description'>Description: </p>" ? "" : descMsg;
                     }
 
-                    tc.StatusMessage = descMsg + errorMsg;
+                   
+                    tc.StatusMessage = descMsg + errorMsg + tc.ConsoleLogs;
                     testSuite.Tests.Add(tc);
 
                     Console.Write("\r{0} tests processed...", ++testCount);
