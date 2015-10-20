@@ -1,4 +1,4 @@
-﻿namespace ReportUnit.Logging
+﻿namespace ReportUnit.Core.Logging
 {
     internal enum Level
     {

@@ -1,4 +1,4 @@
-﻿namespace ReportUnit.Logging
+﻿namespace ReportUnit.Core.Logging
 {
     using System;
     using System.Collections.Generic;

@@ -1,7 +1,10 @@
-﻿namespace ReportUnit.Layer
-{
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+using ReportUnit.Core.Parser;
+
+namespace ReportUnit.Core.Model
+{
     /// <summary>
     /// Detailed information on the environment and machine that the tests were run under
     /// </summary>
@@ -20,6 +23,6 @@
         /// <summary>
         /// The type of test runner that generated the data (eg NUnit, mstest)
         /// </summary>
-        public Parser.TestRunner TestRunner { get; set; }
+        public TestRunner TestRunner { get; set; }
     }
 }

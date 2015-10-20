@@ -34,8 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RazorEngine">
+      <HintPath>..\packages\RazorEngine.3.7.3\lib\net40\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,41 +49,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Design\Styles.cs" />
-    <Compile Include="Design\Theme.cs" />
-    <Compile Include="Layer\Source.cs" />
-    <Compile Include="Logging\Level.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Parser\TestNG.cs" />
-    <Compile Include="Parser\XUnitV1.cs" />
-    <Compile Include="Parser\XUnitV2.cs" />
-    <Compile Include="ReportBuilder.cs" />
-    <Compile Include="HTML\File.cs" />
-    <Compile Include="HTML\Folder.cs" />
-    <Compile Include="Layer\Report.cs" />
-    <Compile Include="Layer\RunInfo.cs" />
-    <Compile Include="Layer\Status.cs" />
-    <Compile Include="Layer\Test.cs" />
-    <Compile Include="Layer\TestSuite.cs" />
-    <Compile Include="Parser\Gallio.cs" />
-    <Compile Include="Parser\IParser.cs" />
-    <Compile Include="Parser\MsTest2010.cs" />
-    <Compile Include="Parser\NUnit.cs" />
-    <Compile Include="Parser\TestRunner.cs" />
-    <Compile Include="Parser\ParserFactory.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="ReportUnit.Core\Logging\Level.cs" />
+    <Compile Include="ReportUnit.Core\Logging\Log.cs" />
+    <Compile Include="ReportUnit.Core\Logging\Logger.cs" />
+    <Compile Include="ReportUnit.Core\Parser\IParser.cs" />
+    <Compile Include="ReportUnit.Core\Parser\NUnit.cs" />
+    <Compile Include="ReportUnit.Core\Parser\ParserFactory.cs" />
+    <Compile Include="ReportUnit.Core\Model\Report.cs" />
+    <Compile Include="ReportUnit.Core\Model\RunInfo.cs" />
+    <Compile Include="ReportUnit.Core\Model\Status.cs" />
+    <Compile Include="ReportUnit.Core\Model\Test.cs" />
+    <Compile Include="ReportUnit.Core\Model\TestSuite.cs" />
+    <Compile Include="ReportUnit.Core\Parser\TestRunner.cs" />
+    <Compile Include="ReportUnit.Core\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Support\DateTimeHelper.cs" />
-    <Compile Include="Support\ReportHelper.cs" />
+    <Compile Include="ReportUnit.Core\ReportUnitService.cs" />
+    <Compile Include="ReportUnit.Core\Templates\File.cs" />
+    <Compile Include="ReportUnit.Core\Templates\SideNav.cs" />
+    <Compile Include="ReportUnit.Core\Templates\Suite.cs" />
+    <Compile Include="ReportUnit.Core\Templates\Test.cs" />
+    <Compile Include="ReportUnit.Core\Utils\DateTimeHelper.cs" />
+    <Compile Include="ReportUnit.Core\Utils\ReportUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="Readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="license.txt" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

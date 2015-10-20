@@ -1,6 +1,6 @@
-﻿namespace ReportUnit.Layer
+﻿namespace ReportUnit.Core.Model
 {
-    internal enum Status
+    public enum Status
     {
         Unknown, // unknown status that doesn't map to one of the below
         Skipped, //skipped, not-run, notrun, ignored
@@ -71,9 +71,9 @@
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        internal static string ToString(this Status status)
+        public static string ToString(this Status status)
         {
-            return status.ToString();
+            return status.ToString().ToLower();
         }
     }
 }

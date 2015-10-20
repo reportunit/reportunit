@@ -1,24 +1,28 @@
-﻿namespace ReportUnit.Layer
-{
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    /// <summary>
-    /// Information for a test fixture
-    /// </summary>
-    internal class TestSuite
+namespace ReportUnit.Core.Model
+{
+    public class TestSuite
     {
         public TestSuite()
         {
-            Tests = new List<Test>();
+            TestList = new List<Test>();
             this.Status = Status.Unknown;
         }
 
+        public string TestListAsHtml { get; set; }
+
         public string Name { get; set; }
+        public string Description { get; set; }
 
         public Status Status { get; set; }
 
         /// <summary>
-        /// Error messages, description, etc
+        /// Error or other status messages
         /// </summary>
         public string StatusMessage { get; set; }
 
@@ -31,6 +35,6 @@
         /// </summary>
         public double Duration { get; set; }
 
-        public List<Test> Tests { get; private set; }
+        public List<Test> TestList { get; private set; }
     }
 }

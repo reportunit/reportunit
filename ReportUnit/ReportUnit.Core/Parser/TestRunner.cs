@@ -1,6 +1,6 @@
-﻿namespace ReportUnit.Parser
+﻿namespace ReportUnit.Core.Parser
 {
-    internal enum TestRunner
+    public enum TestRunner
     {
         Gallio,
         MSTest2010,

@@ -6,14 +6,15 @@
 * See the accompanying LICENSE file for terms.
 */
 
-namespace ReportUnit
+namespace ReportUnit.Core
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
-    using Design;
-    using Logging;
+    using ReportUnit.Core.Parser;
+    using ReportUnit.Core.Logging;
 
     class Program
     {
@@ -41,7 +42,7 @@ namespace ReportUnit
         ///         args.length = 2 && args[0] is xml-input && args[1] is html-output
         /// </param>
         static void Main(string[] args)
-        {            
+        {
             CopyrightMessage();
 
             if (args.Length == 0 || args.Length > 2)
@@ -71,7 +72,7 @@ namespace ReportUnit
                     if (!Directory.GetParent(args[1]).Exists)
                         Directory.CreateDirectory(Directory.GetParent(args[1]).FullName);
 
-                    new ReportBuilder(Theme.Standard).FileReport(args[0], args[1]);
+                    new ReportUnitService().CreateFileReport(args[0], args[1]);
                     return;
                 }
 
@@ -86,7 +87,7 @@ namespace ReportUnit
 
                 if (Directory.Exists(args[0]) && Directory.Exists(args[1]))
                 {
-                    new ReportBuilder(Theme.Standard).FolderReport(args[0], args[1]);
+                    new ReportUnitService().CreateFolderReport(args[0], args[1]);
                 }
                 else
                 {
@@ -98,7 +99,7 @@ namespace ReportUnit
 
             if (Path.GetExtension(args[0]).ToLower().Contains("xml"))
             {
-                new ReportBuilder(Theme.Standard).FileReport(args[0], Path.ChangeExtension(args[0], "html"));
+                new ReportUnitService().CreateFileReport(args[0], Path.ChangeExtension(args[0], "html"));
                 return;
             }
 
@@ -108,7 +109,7 @@ namespace ReportUnit
                 return;
             }
 
-            new ReportBuilder(Theme.Standard).FolderReport(args[0]); 
+            new ReportUnitService().CreateFolderReport(args[0], args[0]);
         }
 
         private static void CopyrightMessage()
