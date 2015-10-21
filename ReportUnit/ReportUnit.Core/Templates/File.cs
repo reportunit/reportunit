@@ -198,7 +198,7 @@ namespace ReportUnit.Core.Templates
             
                                 /* ---- [ dashboard ] ---- */
                                 .dashboard.hide + .row {
-                                    margin-top: -30px;
+                                    margin-top: -10px;
                                 }
                                 .dashboard .card-panel {
 	                                height: 280px;
@@ -252,7 +252,7 @@ namespace ReportUnit.Core.Templates
                                 /* ---- [ filters ] ---- */
                                 .filters {
                                     padding-left: 10px;
-                                    padding-top: 50px;
+                                    padding-top: 20px;
                                 }
                                 .btn, .btn-large {
                                     background-color: #ee6e73;
@@ -678,8 +678,11 @@ namespace ReportUnit.Core.Templates
                                 $('.modal-trigger').leanModal();
                                 $('.tooltipped').tooltip({delay: 10});
                                 $('.button-collapse').sideNav({ menuWidth: 260 });
+            
+                                /* Enable Dashboard checkbox is started as unchecked */
                                 $('#enableDashboard').prop('checked', false);
 
+                                /* control content container position for vertical scroll */
                                 $(window).scroll(function() {
                                     var scrollTop = $('.dashboard').is(':visible') ? 475 : 135;
                                     if ($(window).scrollTop() > scrollTop) {
@@ -709,8 +712,12 @@ namespace ReportUnit.Core.Templates
                                     }, 200);
 								});
 
+                                /* for a single report item, hide sidenav */
                                 if ($('.report-item').length == 1) {
-                                    $('.menu-toggle').click();
+                                    $('#slide-out').addClass('hide');
+                                    pinWidth = '56%';
+                                    $('.pin').css('width', pinWidth);
+                                    $('.main-wrap, nav').css('padding-left', '20px');
                                 }
 
                                 /* toggle dashboard on 'Enable Dashboard' click */
@@ -730,27 +737,9 @@ namespace ReportUnit.Core.Templates
 	                                $('.details-container').append(html);
                                 });
 
-                                $('.suite-content .card-content').each(function() {
-                                    if ($(this).text().trim() == '') {
-                                        $(this).hide(); 
-                                    }
-                                });
-
-                                $('.nav.nav-sidebar a').filter(function(){
+                                $('#slide-out .report-item > a').filter(function(){
                                     return this.href.match(/[^\/]+$/)[0] == document.location.pathname.match(/[^\/]+$/)[0];
                                 }).parent().addClass('active');
-                                
-                                /* */
-                                $('.menu li').click(function(evt) {
-                                    var elm = $(this).children('span');
-                                    
-                                    if (elm.hasClass('selected')) {
-                                        return;
-                                    }
-
-                                    $('#' + $('.menu span.selected').removeClass('selected').attr('class')).hide(0);
-                                    $('#' + elm.attr('class')).fadeIn(200); elm.addClass('selected'); 
-                                });
 
                                 /* filters -> by suite status */
                                 $('.suite-toggle li').click(function() {
@@ -927,7 +916,7 @@ namespace ReportUnit.Core.Templates
 	                            $('#' + id).after(legendHolder.firstChild);
                             }
                         </script>
-                    </html>";//.Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); 
+                    </html>".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); 
         }
     }
 }
