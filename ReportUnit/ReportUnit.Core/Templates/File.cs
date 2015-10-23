@@ -201,13 +201,13 @@ namespace ReportUnit.Core.Templates
                                     margin-top: -10px;
                                 }
                                 .dashboard .card-panel {
-	                                height: 280px;
+	                                height: 260px;
                                 }
                                 #test-analysis, #suite-analysis {
-                                    height: 130px;
+                                    height: 115px;
                                     margin: 30px auto 0;
                                     text-align: center;
-                                    width: 160px;
+                                    width: 145px;
                                 }
                                 .fh .card-panel {
                                     height: 275px;
@@ -245,7 +245,7 @@ namespace ReportUnit.Core.Templates
                                 }
                                 .panel-lead {
                                     font-size: 24px !important;
-                                    padding: 50px 0 120px;
+                                    padding: 50px 0 100px;
                                     text-align: center;
                                 }
                 
@@ -680,7 +680,7 @@ namespace ReportUnit.Core.Templates
                                 $('.button-collapse').sideNav({ menuWidth: 260 });
             
                                 /* Enable Dashboard checkbox is started as unchecked */
-                                $('#enableDashboard').prop('checked', false);
+                                $('#enableDashboard').prop('checked', true);
 
                                 /* control content container position for vertical scroll */
                                 $(window).scroll(function() {
@@ -842,7 +842,7 @@ namespace ReportUnit.Core.Templates
 
                                 suitesChart(); testsChart();
                                 $('ul.doughnut-legend').addClass('right');
-                                $('.dashboard').addClass('hide');
+                                
                                 resetFilters();
                                 $('.suite:first-child').click();
                             });
