@@ -1,4 +1,4 @@
-﻿namespace ReportUnit.Core.Parser
+﻿namespace ReportUnit.Parser
 {
     public enum TestRunner
     {

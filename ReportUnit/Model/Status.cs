@@ -1,4 +1,4 @@
-﻿namespace ReportUnit.Core.Model
+﻿namespace ReportUnit.Model
 {
     public enum Status
     {
@@ -17,7 +17,7 @@
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        internal static Status AsStatus(this string str)
+        internal static Status ToStatus(this string str)
         {
             if (string.IsNullOrWhiteSpace(str))
             {

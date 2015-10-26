@@ -49,27 +49,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReportUnit.Core\Logging\Level.cs" />
-    <Compile Include="ReportUnit.Core\Logging\Log.cs" />
-    <Compile Include="ReportUnit.Core\Logging\Logger.cs" />
-    <Compile Include="ReportUnit.Core\Parser\IParser.cs" />
-    <Compile Include="ReportUnit.Core\Parser\NUnit.cs" />
-    <Compile Include="ReportUnit.Core\Parser\ParserFactory.cs" />
-    <Compile Include="ReportUnit.Core\Model\Report.cs" />
-    <Compile Include="ReportUnit.Core\Model\RunInfo.cs" />
-    <Compile Include="ReportUnit.Core\Model\Status.cs" />
-    <Compile Include="ReportUnit.Core\Model\Test.cs" />
-    <Compile Include="ReportUnit.Core\Model\TestSuite.cs" />
-    <Compile Include="ReportUnit.Core\Parser\TestRunner.cs" />
-    <Compile Include="ReportUnit.Core\Program.cs" />
+    <Compile Include="Logging\Level.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Parser\Gallio.cs" />
+    <Compile Include="Parser\IParser.cs" />
+    <Compile Include="Parser\NUnit.cs" />
+    <Compile Include="Parser\ParserFactory.cs" />
+    <Compile Include="Model\Report.cs" />
+    <Compile Include="Model\RunInfo.cs" />
+    <Compile Include="Model\Status.cs" />
+    <Compile Include="Model\Test.cs" />
+    <Compile Include="Model\TestSuite.cs" />
+    <Compile Include="Parser\TestRunner.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportUnit.Core\ReportUnitService.cs" />
-    <Compile Include="ReportUnit.Core\Templates\File.cs" />
-    <Compile Include="ReportUnit.Core\Templates\SideNav.cs" />
-    <Compile Include="ReportUnit.Core\Templates\Suite.cs" />
-    <Compile Include="ReportUnit.Core\Templates\Test.cs" />
-    <Compile Include="ReportUnit.Core\Utils\DateTimeHelper.cs" />
-    <Compile Include="ReportUnit.Core\Utils\ReportUtil.cs" />
+    <Compile Include="ReportUnitService.cs" />
+    <Compile Include="Templates\File.cs" />
+    <Compile Include="Templates\SideNav.cs" />
+    <Compile Include="Templates\Suite.cs" />
+    <Compile Include="Templates\Test.cs" />
+    <Compile Include="Utils\DateTimeHelper.cs" />
+    <Compile Include="Utils\ReportUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

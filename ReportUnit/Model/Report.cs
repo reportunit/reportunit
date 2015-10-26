@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
-using ReportUnit.Core.Parser;
+using ReportUnit.Parser;
 
-namespace ReportUnit.Core.Model
+namespace ReportUnit.Model
 {
     public class Report
     {

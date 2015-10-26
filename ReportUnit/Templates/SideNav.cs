@@ -1,4 +1,4 @@
-﻿namespace ReportUnit.Core.Templates
+﻿namespace ReportUnit.Templates
 {
     public class SideNav
     {

@@ -10,15 +10,15 @@ using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Text;
 
-using ReportUnit.Core.Logging;
-using ReportUnit.Core.Model;
-using ReportUnit.Core.Parser;
+using ReportUnit.Logging;
+using ReportUnit.Model;
+using ReportUnit.Parser;
 
-namespace ReportUnit.Core
+namespace ReportUnit
 {
     class ReportUnitService
     {
-        private const string ns = "ReportUnit.Core.Parser";
+        private const string ns = "ReportUnit.Parser";
         private Logger logger = Logger.GetLogger();
 
         public ReportUnitService() { }
@@ -82,7 +82,7 @@ namespace ReportUnit.Core
 
             // change this for any parser that is complete
             // currently only NUnit is ready
-            if (!testRunner.Equals(TestRunner.NUnit))
+            if (!testRunner.Equals(TestRunner.NUnit) && !testRunner.Equals(TestRunner.Gallio))
             {
                 testRunner = TestRunner.Unknown;
             }

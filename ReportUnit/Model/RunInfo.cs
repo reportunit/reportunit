@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using ReportUnit.Core.Parser;
+using ReportUnit.Parser;
 
-namespace ReportUnit.Core.Model
+namespace ReportUnit.Model
 {
     /// <summary>
     /// Detailed information on the environment and machine that the tests were run under

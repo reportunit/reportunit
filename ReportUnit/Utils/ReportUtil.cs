@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ReportUnit.Core.Model;
+using ReportUnit.Model;
 
-namespace ReportUnit.Core.Utils
+namespace ReportUnit.Utils
 {
     internal class ReportUtil
     {

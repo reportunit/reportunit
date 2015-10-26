@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-using ReportUnit.Core.Logging;
-using ReportUnit.Core.Model;
+using ReportUnit.Logging;
+using ReportUnit.Model;
 
-namespace ReportUnit.Core.Parser
+namespace ReportUnit.Parser
 {
     internal class ParserFactory
     {

@@ -1,4 +1,4 @@
-﻿namespace ReportUnit.Core.Support
+﻿namespace ReportUnit.Support
 {
     using System;
 

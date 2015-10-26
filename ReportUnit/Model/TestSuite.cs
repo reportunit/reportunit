@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportUnit.Core.Model
+namespace ReportUnit.Model
 {
     public class TestSuite
     {

@@ -1,6 +1,6 @@
-﻿using ReportUnit.Core.Model;
+﻿using ReportUnit.Model;
 
-namespace ReportUnit.Core.Parser
+namespace ReportUnit.Parser
 {
     public interface IParser
     {

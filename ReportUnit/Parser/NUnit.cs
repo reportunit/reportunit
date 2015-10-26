@@ -11,18 +11,22 @@ using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Text;
 
-using ReportUnit.Core.Model;
-using ReportUnit.Core.Utils;
-using ReportUnit.Core.Logging;
+using ReportUnit.Model;
+using ReportUnit.Utils;
+using ReportUnit.Logging;
 
-namespace ReportUnit.Core.Parser
+namespace ReportUnit.Parser
 {
     internal class NUnit : IParser
     {
+        private string resultsFile;
+
         private Logger logger = Logger.GetLogger();
 
         public Report Parse(string resultsFile)
         {
+            this.resultsFile = resultsFile;
+
             XDocument doc = XDocument.Load(resultsFile);
 
             Report report = new Report();
@@ -32,20 +36,7 @@ namespace ReportUnit.Core.Parser
             report.TestRunner = TestRunner.NUnit;
 
             // run-info & environment values -> RunInfo
-            RunInfo runInfo = new RunInfo();
-            runInfo.TestRunner = TestRunner.NUnit;
-
-            XElement env = doc.Descendants("environment").First();
-            runInfo.Info.Add("Test Results File", resultsFile);
-            runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);
-            runInfo.Info.Add("Assembly Name", report.AssemblyName);
-            runInfo.Info.Add("OS Version", env.Attribute("os-version").Value);
-            runInfo.Info.Add("Platform", env.Attribute("platform").Value);
-            runInfo.Info.Add("CLR Version", env.Attribute("clr-version").Value);
-            runInfo.Info.Add("Machine Name", env.Attribute("machine-name").Value);
-            runInfo.Info.Add("User", env.Attribute("user").Value);
-            runInfo.Info.Add("User Domain", env.Attribute("user-domain").Value);
-
+            var runInfo = CreateRunInfo(doc, report);
             report.AddRunInfo(runInfo.Info);
 
             // report counts
@@ -81,6 +72,7 @@ namespace ReportUnit.Core.Parser
                     ? Int32.Parse(doc.Root.Attribute("ignored").Value) 
                     : 0;
 
+            // report duration
             report.StartTime = 
                 doc.Root.Attribute("start-time") != null 
                     ? doc.Root.Attribute("start-time").Value 
@@ -91,11 +83,11 @@ namespace ReportUnit.Core.Parser
                     ? doc.Root.Attribute("end-time").Value 
                     : "";
 
-            IEnumerable<XElement> xmlSuites = doc
+            IEnumerable<XElement> suites = doc
                 .Descendants("test-suite")
                 .Where(x => x.Attribute("type").Value.Equals("TestFixture", StringComparison.CurrentCultureIgnoreCase));
             
-            xmlSuites.AsParallel().ToList().ForEach(ts =>
+            suites.AsParallel().ToList().ForEach(ts =>
             {
                 var testSuite = new TestSuite();
                 testSuite.Name = ts.Attribute("name").Value;
@@ -128,7 +120,7 @@ namespace ReportUnit.Core.Parser
                     var test = new Model.Test();
 
                     test.Name = tc.Attribute("name").Value;
-                    test.Status = StatusExtensions.AsStatus(tc.Attribute("result").Value);
+                    test.Status = StatusExtensions.ToStatus(tc.Attribute("result").Value);
                     
                     // main a master list of all status
                     // used to build the status filter in the view
@@ -148,6 +140,7 @@ namespace ReportUnit.Core.Parser
                             ? tc.Attribute("end-time").Value 
                             : "";
 
+                    // description
                     var description = 
                         tc.Descendants("property")
                         .Where(c => c.Attribute("name").Value.Equals("Description", StringComparison.CurrentCultureIgnoreCase));
@@ -169,12 +162,14 @@ namespace ReportUnit.Core.Parser
                                     
                         cats.ForEach(x => 
                         {
-                            string cat = x.Attribute("value").Value.Trim().Replace(" ", "");
+                            string cat = x.Attribute("value").Value;
+
                             test.CategoryList.Add(cat);
                             report.CategoryList.Add(cat);
                         });
                     }
-                                
+                    
+                    // error and other status messages
                     test.StatusMessage = 
                         tc.Element("failure") != null 
                             ? tc.Element("failure").Element("message").Value 
@@ -195,6 +190,25 @@ namespace ReportUnit.Core.Parser
             });
 
             return report;
+        }
+
+        private RunInfo CreateRunInfo(XDocument doc, Report report)
+        {
+            RunInfo runInfo = new RunInfo();
+            runInfo.TestRunner = report.TestRunner;
+
+            XElement env = doc.Descendants("environment").First();
+            runInfo.Info.Add("Test Results File", resultsFile);
+            runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);
+            runInfo.Info.Add("Assembly Name", report.AssemblyName);
+            runInfo.Info.Add("OS Version", env.Attribute("os-version").Value);
+            runInfo.Info.Add("Platform", env.Attribute("platform").Value);
+            runInfo.Info.Add("CLR Version", env.Attribute("clr-version").Value);
+            runInfo.Info.Add("Machine Name", env.Attribute("machine-name").Value);
+            runInfo.Info.Add("User", env.Attribute("user").Value);
+            runInfo.Info.Add("User Domain", env.Attribute("user-domain").Value);
+
+            return runInfo;
         }
         
         public NUnit() { }

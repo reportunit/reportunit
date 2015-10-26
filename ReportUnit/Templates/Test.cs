@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportUnit.Core.Templates
+namespace ReportUnit.Templates
 {
     internal class Test
     {

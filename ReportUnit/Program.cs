@@ -6,15 +6,15 @@
 * See the accompanying LICENSE file for terms.
 */
 
-namespace ReportUnit.Core
+namespace ReportUnit
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
-    using ReportUnit.Core.Parser;
-    using ReportUnit.Core.Logging;
+    using ReportUnit.Parser;
+    using ReportUnit.Logging;
 
     class Program
     {
