@@ -49,6 +49,9 @@ namespace ReportUnit
                 }
             }
 
+            // sidenav links can only be known after all files are processed
+            // some files may be invalid, so the entire input file collection may not be used
+            // only valid processed files go here ->
             foreach (KeyValuePair<Report, string> entry in reportCollection)
             {
                 File.WriteAllText(Path.Combine(outputDirectory, entry.Key.GetHtmlFileName()), entry.Value.Replace("<!--%SIDENAV%-->", sidenavLinks));
@@ -62,7 +65,6 @@ namespace ReportUnit
             var testRunner = GetTestRunner(inputFile);
 
             string html = "";
-            string sidenavUrl = "";
 
             if (!(testRunner.Equals(TestRunner.Unknown)))
             {
@@ -70,10 +72,9 @@ namespace ReportUnit
                 var report = parser.Parse(inputFile);
 
                 html = Engine.Razor.RunCompile(Templates.File.GetSource(), "reportKey", typeof(Model.Report), report, null);
-                sidenavUrl = Engine.Razor.RunCompile(Templates.SideNav.GetSource(), "sidenavKey", typeof(Report), report, null);
             }
 
-            File.WriteAllText(outputFile, html.Replace("<!--%SIDENAV%-->", sidenavUrl));
+            File.WriteAllText(outputFile, html);
         }
 
         private TestRunner GetTestRunner(string inputFile)

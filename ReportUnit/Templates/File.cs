@@ -713,7 +713,7 @@ namespace ReportUnit.Templates
 								});
 
                                 /* for a single report item, hide sidenav */
-                                if ($('.report-item').length == 1) {
+                                if ($('.report-item').length <= 1) {
                                     $('#slide-out').addClass('hide');
                                     pinWidth = '56%';
                                     $('.pin').css('width', pinWidth);
