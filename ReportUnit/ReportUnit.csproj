@@ -54,6 +54,7 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Parser\Gallio.cs" />
     <Compile Include="Parser\IParser.cs" />
+    <Compile Include="Parser\MSTest2010.cs" />
     <Compile Include="Parser\NUnit.cs" />
     <Compile Include="Parser\ParserFactory.cs" />
     <Compile Include="Model\Report.cs" />
@@ -62,6 +63,8 @@
     <Compile Include="Model\Test.cs" />
     <Compile Include="Model\TestSuite.cs" />
     <Compile Include="Parser\TestRunner.cs" />
+    <Compile Include="Parser\XUnitV1.cs" />
+    <Compile Include="Parser\XUnitV2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportUnitService.cs" />

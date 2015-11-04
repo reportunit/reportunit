@@ -27,8 +27,7 @@ namespace ReportUnit.Parser
         {
             this.resultsFile = resultsFile;
 
-            XNamespace xns = "http://www.gallio.org/";
-            this.xns = xns;
+            xns = "http://www.gallio.org/";
             XDocument doc = XDocument.Load(resultsFile);
 
             Report report = new Report();
@@ -46,11 +45,12 @@ namespace ReportUnit.Parser
                 .Where(x => x.Attribute("isTestCase").Value.Equals("true", StringComparison.CurrentCultureIgnoreCase));
 
             // report counts
+            var statistics = doc.Descendants(xns + "statistics").First();
             report.Total = tests.Count();
-            report.Passed = Int32.Parse(doc.Descendants(xns + "statistics").First().Attribute("passedCount").Value);
-            report.Failed = Int32.Parse(doc.Descendants(xns + "statistics").First().Attribute("failedCount").Value);
-            report.Inconclusive = Int32.Parse(doc.Descendants(xns + "statistics").First().Attribute("inconclusiveCount").Value);
-            report.Skipped = Int32.Parse(doc.Descendants(xns + "statistics").First().Attribute("skippedCount").Value);
+            report.Passed = Int32.Parse(statistics.Attribute("passedCount").Value);
+            report.Failed = Int32.Parse(statistics.Attribute("failedCount").Value);
+            report.Inconclusive = Int32.Parse(statistics.Attribute("inconclusiveCount").Value);
+            report.Skipped = Int32.Parse(statistics.Attribute("skippedCount").Value);
             report.Errors = 0;
 
             // report duration

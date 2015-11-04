@@ -81,13 +81,6 @@ namespace ReportUnit
         {
             var testRunner = new ParserFactory(inputFile).GetTestRunnerType();
 
-            // change this for any parser that is complete
-            // currently only NUnit is ready
-            if (!testRunner.Equals(TestRunner.NUnit) && !testRunner.Equals(TestRunner.Gallio))
-            {
-                testRunner = TestRunner.Unknown;
-            }
-
             logger.Info("The file " + inputFile + " contains " + Enum.GetName(typeof(TestRunner), testRunner) + " test results");
 
             return testRunner;

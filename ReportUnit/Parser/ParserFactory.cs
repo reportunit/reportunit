@@ -90,11 +90,6 @@ namespace ReportUnit.Parser
                     // check for test-suite nodes - if it has those - its probably nunit tests
                     var testSuiteNodes = doc.SelectNodes("//test-suite");
                     if (testSuiteNodes != null && testSuiteNodes.Count > 0) return TestRunner.NUnit;
-
-
-                    // TestNG
-                    if (doc.DocumentElement.Name == "testng-results")
-                        return TestRunner.TestNG;
                 }
             }
             catch { }

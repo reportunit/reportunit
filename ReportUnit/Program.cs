@@ -67,7 +67,7 @@ namespace ReportUnit
 
             if (args.Length == 2)
             {
-                if ((Path.GetExtension(args[0]).ToLower().Contains("xml")) && (Path.GetExtension(args[1]).ToLower().Contains("htm")))
+                if ((Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")) && (Path.GetExtension(args[1]).ToLower().Contains("htm")))
                 {
                     if (!Directory.GetParent(args[1]).Exists)
                         Directory.CreateDirectory(Directory.GetParent(args[1]).FullName);
@@ -114,7 +114,7 @@ namespace ReportUnit
 
         private static void CopyrightMessage()
         {
-            Console.WriteLine("\n--\nReportUnit v1.1. Report generator for the test-runner family.");
+            Console.WriteLine("\n--\nReportUnit v1.5. Report generator for the test-runner family.");
             Console.WriteLine("http://reportunit.relevantcodes.com/");
             Console.WriteLine("Copyright (c) 2015 Anshoo Arora (Relevant Codes)");
             Console.WriteLine("Developers:  Anshoo Arora, Sandra Greenhalgh\n--\n");
