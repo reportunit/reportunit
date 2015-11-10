@@ -34,7 +34,7 @@ namespace ReportUnit.Templates
                     <title>ReportUnit TestRunner Report</title>
                     <link href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css' rel='stylesheet' type='text/css'>
                     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
-                    <link href='file:///C:/Users/Anshoo/Documents/Visual Studio 2013/Projects/reportunit/resources/reportunit.css' rel='stylesheet' type='text/css'>
+                    <link href='http://cdn.rawgit.com/reportunit/reportunit/master/resources/reportunit.css' rel='stylesheet' type='text/css'>
                 </head>
                 <body>    
                     <div class='header'>
@@ -267,7 +267,7 @@ namespace ReportUnit.Templates
                 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
-                <script src='file:///C:/Users/Anshoo/Documents/Visual Studio 2013/Projects/reportunit/resources/reportunit.js'></script>
+                <script src='http://cdn.rawgit.com/reportunit/reportunit/master/resources/reportunit.js'></script>
             </html>
             ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); 
         }
