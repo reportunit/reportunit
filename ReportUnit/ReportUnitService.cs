@@ -30,7 +30,8 @@ namespace ReportUnit
             var filePathList = Directory.GetFiles(inputDirectory, "*.*", SearchOption.TopDirectoryOnly).ToList();
 
             var reportCollection = new Dictionary<Report, string>();
-            var sidenavLinks = "";
+            var sidenavLinks = Templates.SideNav.GetIndexLink();
+            var reportList = new List<Report>();
 
             foreach (var filePath in filePathList)
             {
@@ -40,6 +41,7 @@ namespace ReportUnit
                 {
                     IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
                     var report = parser.Parse(filePath);
+                    reportList.Add(report);
 
                     string reportHtml = Engine.Razor.RunCompile(Templates.File.GetSource(), "reportKey", typeof(Model.Report), report, null);
 
@@ -49,6 +51,9 @@ namespace ReportUnit
                 }
             }
 
+            string summaryHtml = Engine.Razor.RunCompile(Templates.Summary.GetSource(), "summaryKey", typeof(List<Model.Report>), reportList, null); 
+            File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summaryHtml.Replace("<!--%SIDENAV%-->", sidenavLinks));
+            
             // sidenav links can only be known after all files are processed
             // some files may be invalid, so the entire input file collection may not be used
             // only valid processed files go here ->

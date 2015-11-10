@@ -11,5 +11,15 @@
 	                    </a>
                     </li>".Replace("\r\n", "").Replace("\t", "").Replace("    ", "");
         }
+
+        public static string GetIndexLink()
+        {
+            return @"<li class='waves-effect report-item'>
+	                    <a href='./Index.html'>
+		                    <i class='mdi-action-assignment'></i>
+		                    Index
+	                    </a>
+                    </li>".Replace("\r\n", "").Replace("\t", "").Replace("    ", "");
+        }
     }
 }

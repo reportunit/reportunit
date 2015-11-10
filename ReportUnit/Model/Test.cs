@@ -43,14 +43,6 @@ namespace ReportUnit.Model
                 return "";
             }
 
-            /*string cats = "";
-
-            foreach (var cat in CategoryList)
-            {
-                cats = cats + " " + cat.Trim().ToLower().Replace(" ", "");
-            }
-
-            return cats;*/
             return string.Join(" ", CategoryList);
         }
 

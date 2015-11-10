@@ -20,14 +20,13 @@ namespace ReportUnit.Parser
     internal class Gallio : IParser
     {
         private string resultsFile;
-        private XNamespace xns;
+        private XNamespace xns = "http://www.gallio.org/";
         private Logger logger = Logger.GetLogger();
 
         public Report Parse(string resultsFile)
         {
             this.resultsFile = resultsFile;
 
-            xns = "http://www.gallio.org/";
             XDocument doc = XDocument.Load(resultsFile);
 
             Report report = new Report();

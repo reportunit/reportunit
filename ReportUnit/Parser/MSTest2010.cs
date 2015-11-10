@@ -20,12 +20,11 @@ namespace ReportUnit.Parser
     internal class MSTest2010 : IParser
     {
         private string resultsFile;
-        private XNamespace xns;
+        private XNamespace xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
         private Logger logger = Logger.GetLogger();
 
         public Report Parse(string resultsFile)
         {
-            xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
             XDocument doc = XDocument.Load(resultsFile);
 
             Report report = new Report();
@@ -42,9 +41,22 @@ namespace ReportUnit.Parser
             report.Total = resultNodes.Count();
             report.Passed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Passed")).Count();
             report.Failed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Failed")).Count();
-            report.Inconclusive = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Inconclusive") || x.Attribute("outcome").Value.Equals("passedButRunAborted") || x.Attribute("outcome").Value.Equals("disconnected") || x.Attribute("outcome").Value.Equals("notRunnable") || x.Attribute("outcome").Value.Equals("warning") || x.Attribute("outcome").Value.Equals("pending")).Count();
+            report.Inconclusive = resultNodes
+                .Where(x => 
+                    x.Attribute("outcome").Value.Equals("Inconclusive") 
+                    || x.Attribute("outcome").Value.Equals("passedButRunAborted") 
+                    || x.Attribute("outcome").Value.Equals("disconnected") 
+                    || x.Attribute("outcome").Value.Equals("notRunnable") 
+                    || x.Attribute("outcome").Value.Equals("warning") 
+                    || x.Attribute("outcome").Value.Equals("pending"))
+                .Count();
             report.Skipped = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("NotExecuted")).Count();
-            report.Errors = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Passed") || x.Attribute("outcome").Value.Equals("Aborted") || x.Attribute("outcome").Value.Equals("timeout")).Count();
+            report.Errors = resultNodes
+                .Where(x => 
+                    x.Attribute("outcome").Value.Equals("Passed") 
+                    || x.Attribute("outcome").Value.Equals("Aborted") 
+                    || x.Attribute("outcome").Value.Equals("timeout"))
+                .Count();
 
             // report duration
             XElement times = doc.Descendants(xns + "Times").First();
