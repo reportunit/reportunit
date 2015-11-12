@@ -102,16 +102,16 @@ namespace ReportUnit.Templates
 			                <div class='row'>
                                 <div class='col s12'>
                                     <div class='card-panel'>
-                                        <table class='table'>
+                                        <table class='table bordered'>
                                             <thead>
                                                 <tr>
                                                     <th>File</th>
                                                     <th>TestRunner</th>
-                                                    <th>Result</th>
                                                     <th>Total Tests</th>
                                                     <th>Passed</th>
                                                     <th>Failed</th>
                                                     <th>Others</th>
+                                                    <th>Quick Summary</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -120,11 +120,48 @@ namespace ReportUnit.Templates
                                                     <tr>
                                                         <td><a href='./@Model[ix].GetHtmlFileName()'>@Model[ix].FileName</a></td>
                                                         <td>@Model[ix].TestRunner</td>
-                                                        <td>@Model[ix].Status</td>
                                                         <td>@Model[ix].Total</td>
                                                         <td>@Model[ix].Passed</td>
                                                         <td>@Model[ix].Failed</td>
                                                         <td>@(Model[ix].Inconclusive + Model[ix].Skipped + Model[ix].Errors)</td>
+                                                        <td>
+                                                            @{var total = Model[ix].Total;
+                                                                var passed = Model[ix].Passed;
+                                                                var failed = Model[ix].Failed;
+                                                                var others = Model[ix].Total - (Model[ix].Passed + Model[ix].Failed);
+                                                            }
+                                                            @if (Model[ix].Total != 0) 
+                                                            {
+                                                                <div class='progress2'>
+                                                                    @if (passed != 0)
+                                                                    {
+	                                                                    <div style='width: @((passed / total) * 100)%' class='progress-bar2 progress-bar-success progress-bar-striped'>
+		                                                                    <span class='sr-only'>@passed</span>
+	                                                                    </div> 
+                                                                    }
+                                                                    @if  (others != 0)
+                                                                    {
+	                                                                    <div style='width: @((others / total) * 100)%' class='progress-bar2 progress-bar-warning progress-bar-striped'>
+		                                                                    <span class='sr-only'>@others</span>
+	                                                                    </div>
+                                                                    }
+                                                                    @if  (failed != 0)
+                                                                    {
+	                                                                    <div style='width: @((failed / total) * 100)%' class='progress-bar2 progress-bar-danger progress-bar-striped'>
+		                                                                    <span class='sr-only'>@failed</span>
+	                                                                    </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class='progress2'>
+	                                                                <div style='width: 0%' class='progress-bar2 progress-bar-success progress-bar-striped'>
+		                                                                <span class='sr-only'>0</span>
+	                                                                </div>
+                                                                </div>
+                                                            }
+                                                        </td>
                                                     </tr>
                                                 }
                                             </tbody>
@@ -137,7 +174,6 @@ namespace ReportUnit.Templates
 	                <div id='modal2' class='modal'>
 		                <div class='modal-content'>
 			                <h4>Console Log</h4>
-			                <!--%CONSOLELOGS%-->
 		                </div>
 		                <div class='modal-footer'>
 			                <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
@@ -148,7 +184,7 @@ namespace ReportUnit.Templates
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
                 <script src='file:///C:/Users/Anshoo/Documents/Visual Studio 2013/Projects/reportunit/resources/reportunit.js'></script>
-                <script src='http://cdn.rawgit.com/reportunit/reportunit/master/resources/reportunit.js' type='text/javascript'></script> --> 
+                <script src='http://cdn.rawgit.com/reportunit/reportunit/master/resources/reportunit.js' type='text/javascript'></script>
             </html>
             ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); ;
         }

@@ -56,17 +56,17 @@ namespace ReportUnit.Model
         /// <summary>
         /// Total number of tests run
         /// </summary>
-        public int Total { get; set; }
+        public double Total { get; set; }
 
-        public int Passed { get; set; }
+        public double Passed { get; set; }
 
-        public int Failed { get; set; }
+        public double Failed { get; set; }
 
-        public int Inconclusive { get; set; }
+        public double Inconclusive { get; set; }
 
-        public int Skipped { get; set; }
+        public double Skipped { get; set; }
 
-        public int Errors { get; set; }
+        public double Errors { get; set; }
 
         public Report()
         {

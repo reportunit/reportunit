@@ -18,10 +18,10 @@ $(document).ready(function() {
 
 	/* control content container position for vertical scroll */
 	$(window).scroll(function() {
-		var scrollTop = $('.dashboard').is(':visible') ? 475 : 135;
+		var scrollTop = $('.dashboard').is(':visible') ? 330 : 85;
 		
 		if ($(window).scrollTop() > scrollTop) {
-			var margin = $('.dashboard').is(':visible') ? '-' + scrollTop + 'px' : '-135px';
+			var margin = $('.dashboard').is(':visible') ? '-' + scrollTop + 'px' : '-45px';
 			$('.details-view').css('position', 'fixed').css('margin-top', margin);
 		} 
 		else {

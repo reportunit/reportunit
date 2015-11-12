@@ -27,8 +27,8 @@ th, td {
 	padding: 10px;
 	word-break: break-all;
 }
-.test-features {
-	display: none !important;
+thead tr {
+	border-bottom: 2px solid #ccc !important;
 }
 
 /* -- [ material overrides ] -- */
@@ -289,6 +289,9 @@ p.description {
 .endedAt {
 	margin-left: 4px;
 }
+.test-features {
+	display: none !important;
+}
 
 /* ---- [ details container ] ---- */
 .details-view {
@@ -356,35 +359,53 @@ td > .label {
 	padding: 4px 7px;
 }
 
-/* ---- [ single ] ---- */
-.single .page-title .logo {
-	display: inline-block;
+/* -- [ progress bar ] -- */
+.progress2 {
+	background-color: #f5f5f5;
+	border-radius: 4px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+	height: 15px;
+	margin: 0;
+	max-width: 350px;
+	overflow: hidden;
 }
-.single .page-title span {
-	border-color: #fff;
+.progress-bar-success {
+	background-color: #32bf32 !important;
 }
-.single #slide-out, .single .button-collapse, .single .mdi-file-folder-open {
-	display: none !important;
+.progress-bar-warning {
+	background-color: #ffa81c !important;
 }
-.single .main {
-	padding-left: 0 !important;
+.progress-bar-danger {
+	background-color: #FF5A5E !important;
 }
-.single .main-wrap {
-	margin: 0 auto;
-	padding-left: 40px;
-	padding-right: 40px;
+.progress-bar-skip {
+	background-color: #46BFBD !important;
 }
-.single .nav-main {
-	margin: 0 auto;
-	padding-left: 52px;
-}
-.single .logo-single {
-	display: inline-block !important;
-}
-.single .reportunit-logo-main {
+.progress-bar2 {
+	background-color: #337ab7;
+	box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+	color: #fff;
 	float: left;
-	margin-right: 0;
+	font-size: 11px;
+	font-weight: 500;
+	height: 100%;
+	line-height: 15px;
+	text-align: center;
+	transition: width 0.6s ease 0s;
+	width: 0;
+}
+.progress-striped .progress-bar, .progress-bar-striped {
+	background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+	background-size: 40px 40px;
+}
+.sr-only {
+	border: 0 none;
+	clip: rect(0px, 0px, 0px, 0px);
+	height: 1px;
+	margin: -1px;
 	padding: 0;
+	position: relative;
+	width: 1px;
 }
 
 /* ---- [ media queries ] ---- */
