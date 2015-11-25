@@ -199,7 +199,8 @@ namespace ReportUnit.Parser
 
             XElement env = doc.Descendants("environment").First();
             runInfo.Info.Add("Test Results File", resultsFile);
-            runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);
+            if (env.Attribute("nunit-version") != null)
+                runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);
             runInfo.Info.Add("Assembly Name", report.AssemblyName);
             runInfo.Info.Add("OS Version", env.Attribute("os-version").Value);
             runInfo.Info.Add("Platform", env.Attribute("platform").Value);
