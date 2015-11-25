@@ -32,7 +32,7 @@ namespace ReportUnit.Parser
             Report report = new Report();
 
             report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
-            report.AssemblyName = doc.Root.Attribute("name").Value;
+            report.AssemblyName = doc.Root.Attribute( "name" ) != null ? doc.Root.Attribute("name").Value : null;
             report.TestRunner = TestRunner.NUnit;
 
             // run-info & environment values -> RunInfo
