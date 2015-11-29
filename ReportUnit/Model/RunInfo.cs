@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using ReportUnit.Parser;
 
 namespace ReportUnit.Model
 {
-    /// <summary>
-    /// Detailed information on the environment and machine that the tests were run under
-    /// </summary>
-    internal class RunInfo
+	/// <summary>
+	/// Detailed information on the environment and machine that the tests were run under
+	/// </summary>
+	internal class RunInfo
     {
         public RunInfo()
         {

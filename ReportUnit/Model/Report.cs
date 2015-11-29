@@ -1,13 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Collections.Generic;
 
 using ReportUnit.Parser;
 
 namespace ReportUnit.Model
 {
-    public class Report
+	public class Report
     {
         public List<Status> StatusList;
 

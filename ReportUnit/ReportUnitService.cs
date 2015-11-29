@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using RazorEngine;
 using RazorEngine.Configuration;
@@ -16,14 +15,12 @@ using ReportUnit.Parser;
 
 namespace ReportUnit
 {
-    class ReportUnitService
+	class ReportUnitService
     {
-        private const string ns = "ReportUnit.Parser";
-        private Logger logger = Logger.GetLogger();
+        private const string Ns = "ReportUnit.Parser";
+        private readonly Logger _logger = Logger.GetLogger();
 
-        public ReportUnitService() { }
-
-        public void CreateFolderReport(string inputDirectory, string outputDirectory)
+		public void CreateFolderReport(string inputDirectory, string outputDirectory)
         {
             InitializeRazor();
 
@@ -33,31 +30,24 @@ namespace ReportUnit
             var sidenavLinks = Templates.SideNav.GetIndexLink();
             var reportList = new List<Report>();
 
-            foreach (var filePath in filePathList)
+            foreach (var report in from filePath in filePathList let testRunner = GetTestRunner(filePath) where !testRunner.Equals(TestRunner.Unknown) let parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(Ns + "." + Enum.GetName(typeof(TestRunner), testRunner)) where parser != null select parser.Parse(filePath))
             {
-                var testRunner = GetTestRunner(filePath);
+	            reportList.Add(report);
 
-                if (!(testRunner.Equals(TestRunner.Unknown)))
-                {
-                    IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
-                    var report = parser.Parse(filePath);
-                    reportList.Add(report);
+	            var reportHtml = Engine.Razor.RunCompile(Templates.File.GetSource(), "reportKey", typeof(Report), report);
 
-                    string reportHtml = Engine.Razor.RunCompile(Templates.File.GetSource(), "reportKey", typeof(Model.Report), report, null);
+	            sidenavLinks += Engine.Razor.RunCompile(Templates.SideNav.GetSource(), "sidenavKey", typeof(Report), report);
 
-                    sidenavLinks += Engine.Razor.RunCompile(Templates.SideNav.GetSource(), "sidenavKey", typeof(Report), report, null);
-
-                    reportCollection.Add(report, reportHtml);
-                }
+	            reportCollection.Add(report, reportHtml);
             }
 
-            string summaryHtml = Engine.Razor.RunCompile(Templates.Summary.GetSource(), "summaryKey", typeof(List<Model.Report>), reportList, null); 
+            var summaryHtml = Engine.Razor.RunCompile(Templates.Summary.GetSource(), "summaryKey", typeof(List<Report>), reportList); 
             File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summaryHtml.Replace("<!--%SIDENAV%-->", sidenavLinks));
             
             // sidenav links can only be known after all files are processed
             // some files may be invalid, so the entire input file collection may not be used
             // only valid processed files go here ->
-            foreach (KeyValuePair<Report, string> entry in reportCollection)
+            foreach (var entry in reportCollection)
             {
                 File.WriteAllText(Path.Combine(outputDirectory, entry.Key.GetHtmlFileName()), entry.Value.Replace("<!--%SIDENAV%-->", sidenavLinks));
             }
@@ -69,14 +59,17 @@ namespace ReportUnit
 
             var testRunner = GetTestRunner(inputFile);
 
-            string html = "";
+            var html = "";
 
             if (!(testRunner.Equals(TestRunner.Unknown)))
             {
-                IParser parser = (IParser) Assembly.GetExecutingAssembly().CreateInstance(ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
-                var report = parser.Parse(inputFile);
+                var parser = (IParser) Assembly.GetExecutingAssembly().CreateInstance(Ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
+	            if (parser != null)
+	            {
+		            var report = parser.Parse(inputFile);
 
-                html = Engine.Razor.RunCompile(Templates.File.GetSource(), "reportKey", typeof(Model.Report), report, null);
+		            html = Engine.Razor.RunCompile(Templates.File.GetSource(), "reportKey", typeof(Report), report);
+	            }
             }
 
             File.WriteAllText(outputFile, html);
@@ -86,14 +79,14 @@ namespace ReportUnit
         {
             var testRunner = new ParserFactory(inputFile).GetTestRunnerType();
 
-            logger.Info("The file " + inputFile + " contains " + Enum.GetName(typeof(TestRunner), testRunner) + " test results");
+            _logger.Info("The file " + inputFile + " contains " + Enum.GetName(typeof(TestRunner), testRunner) + " test results");
 
             return testRunner;
         }
 
         private void InitializeRazor()
         {
-            TemplateServiceConfiguration templateConfig = new TemplateServiceConfiguration();
+            var templateConfig = new TemplateServiceConfiguration();
             templateConfig.DisableTempFileLocking = true;
             templateConfig.EncodedStringFactory = new RawStringFactory();
             templateConfig.CachingProvider = new DefaultCachingProvider(x => { });

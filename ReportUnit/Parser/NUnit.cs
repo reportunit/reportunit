@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
 
 using ReportUnit.Model;
 using ReportUnit.Utils;
@@ -17,7 +9,7 @@ using ReportUnit.Logging;
 
 namespace ReportUnit.Parser
 {
-    internal class NUnit : IParser
+	internal class NUnit : IParser
     {
         private string resultsFile;
 
@@ -27,9 +19,9 @@ namespace ReportUnit.Parser
         {
             this.resultsFile = resultsFile;
 
-            XDocument doc = XDocument.Load(resultsFile);
+            var doc = XDocument.Load(resultsFile);
 
-            Report report = new Report();
+            var report = new Report();
 
             report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
             report.AssemblyName = doc.Root.Attribute( "name" ) != null ? doc.Root.Attribute("name").Value : null;
@@ -44,32 +36,32 @@ namespace ReportUnit.Parser
 
             report.Passed = 
                 doc.Root.Attribute("passed") != null 
-                    ? Int32.Parse(doc.Root.Attribute("passed").Value) 
+                    ? int.Parse(doc.Root.Attribute("passed").Value) 
                     : doc.Descendants("test-case").Where(x => x.Attribute("result").Value.Equals("success", StringComparison.CurrentCultureIgnoreCase)).Count();
 
             report.Failed = 
                 doc.Root.Attribute("failed") != null 
-                    ? Int32.Parse(doc.Root.Attribute("failed").Value) 
-                    : Int32.Parse(doc.Root.Attribute("failures").Value);
+                    ? int.Parse(doc.Root.Attribute("failed").Value) 
+                    : int.Parse(doc.Root.Attribute("failures").Value);
             
             report.Errors = 
                 doc.Root.Attribute("errors") != null 
-                    ? Int32.Parse(doc.Root.Attribute("errors").Value) 
+                    ? int.Parse(doc.Root.Attribute("errors").Value) 
                     : 0;
             
             report.Inconclusive = 
                 doc.Root.Attribute("inconclusive") != null 
-                    ? Int32.Parse(doc.Root.Attribute("inconclusive").Value) 
-                    : Int32.Parse(doc.Root.Attribute("inconclusive").Value);
+                    ? int.Parse(doc.Root.Attribute("inconclusive").Value) 
+                    : int.Parse(doc.Root.Attribute("inconclusive").Value);
             
             report.Skipped = 
                 doc.Root.Attribute("skipped") != null 
-                    ? Int32.Parse(doc.Root.Attribute("skipped").Value) 
-                    : Int32.Parse(doc.Root.Attribute("skipped").Value);
+                    ? int.Parse(doc.Root.Attribute("skipped").Value) 
+                    : int.Parse(doc.Root.Attribute("skipped").Value);
             
             report.Skipped += 
                 doc.Root.Attribute("ignored") != null 
-                    ? Int32.Parse(doc.Root.Attribute("ignored").Value) 
+                    ? int.Parse(doc.Root.Attribute("ignored").Value) 
                     : 0;
 
             // report duration
@@ -83,7 +75,7 @@ namespace ReportUnit.Parser
                     ? doc.Root.Attribute("end-time").Value 
                     : "";
 
-            IEnumerable<XElement> suites = doc
+            var suites = doc
                 .Descendants("test-suite")
                 .Where(x => x.Attribute("type").Value.Equals("TestFixture", StringComparison.CurrentCultureIgnoreCase));
             
@@ -98,8 +90,8 @@ namespace ReportUnit.Parser
                         ? ts.Attribute("start-time").Value 
                         : string.Empty;
 
-                testSuite.StartTime = 
-                    String.IsNullOrEmpty(testSuite.StartTime) && ts.Attribute("time") != null 
+                testSuite.StartTime =
+					string.IsNullOrEmpty(testSuite.StartTime) && ts.Attribute("time") != null 
                         ? ts.Attribute("time").Value 
                         : testSuite.StartTime; 
 
@@ -131,8 +123,8 @@ namespace ReportUnit.Parser
                         tc.Attribute("start-time") != null 
                             ? tc.Attribute("start-time").Value 
                             : "";
-                    test.StartTime = 
-                        String.IsNullOrEmpty(test.StartTime) && (tc.Attribute("time") != null) 
+                    test.StartTime =
+						string.IsNullOrEmpty(test.StartTime) && (tc.Attribute("time") != null) 
                             ? tc.Attribute("time").Value 
                             : test.StartTime;
                     test.EndTime = 
@@ -149,20 +141,20 @@ namespace ReportUnit.Parser
                             ? description.ToArray()[0].Attribute("value").Value 
                             : "";
 
-                    bool hasCategories = 
+                    var hasCategories = 
                         tc.Descendants("property")
                         .Where(c => c.Attribute("name").Value.Equals("Category", StringComparison.CurrentCultureIgnoreCase)).Count() > 0;
 
                     if (hasCategories) 
                     {
-                        List<XElement> cats = tc
+                        var cats = tc
                             .Descendants("property")
                             .Where(c => c.Attribute("name").Value.Equals("Category", StringComparison.CurrentCultureIgnoreCase))
                             .ToList();
                                     
                         cats.ForEach(x => 
                         {
-                            string cat = x.Attribute("value").Value;
+                            var cat = x.Attribute("value").Value;
 
                             test.CategoryList.Add(cat);
                             report.CategoryList.Add(cat);
@@ -194,10 +186,10 @@ namespace ReportUnit.Parser
 
         private RunInfo CreateRunInfo(XDocument doc, Report report)
         {
-            RunInfo runInfo = new RunInfo();
+            var runInfo = new RunInfo();
             runInfo.TestRunner = report.TestRunner;
 
-            XElement env = doc.Descendants("environment").First();
+            var env = doc.Descendants("environment").First();
             runInfo.Info.Add("Test Results File", resultsFile);
             if (env.Attribute("nunit-version") != null)
                 runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);

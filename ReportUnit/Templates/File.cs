@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReportUnit.Templates
+﻿namespace ReportUnit.Templates
 {
-    internal class File
+	internal class File
     {
         public static string GetSource()
         {

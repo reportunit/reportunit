@@ -3,7 +3,7 @@
     public enum TestRunner
     {
         Gallio,
-        MSTest2010,
+        MsTest2010,
         NUnit,
 		XUnitV1,
 		XUnitV2,

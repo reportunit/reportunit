@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using ReportUnit.Model;
 
 namespace ReportUnit.Utils
 {
-    internal class ReportUtil
+	internal class ReportUtil
     {
         // fixture level status codes
         public static Status GetFixtureStatus(IEnumerable<Test> tests)
@@ -23,9 +20,7 @@ namespace ReportUnit.Utils
             if (statuses.Any(x => x == Status.Error)) return Status.Error;
             if (statuses.Any(x => x == Status.Inconclusive)) return Status.Inconclusive;
             if (statuses.Any(x => x == Status.Passed)) return Status.Passed;
-            if (statuses.Any(x => x == Status.Skipped)) return Status.Skipped;
-
-            return Status.Unknown;
+            return statuses.Any(x => x == Status.Skipped) ? Status.Skipped : Status.Unknown;
         }
     }
 }

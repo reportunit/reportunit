@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReportUnit.Templates
+﻿namespace ReportUnit.Templates
 {
-    internal class Suite
+	internal class Suite
     {
         public static string GetSource()
         {
@@ -43,7 +37,7 @@ namespace ReportUnit.Templates
                                     </tbody>
                                 </table>
                             </div>
-                        </div>".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); ;
+                        </div>".Replace("\r\n", "").Replace("\t", "").Replace("    ", "");
         }
     }
 }
