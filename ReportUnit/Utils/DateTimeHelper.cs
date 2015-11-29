@@ -1,8 +1,8 @@
-﻿namespace ReportUnit.Support
-{
-    using System;
+﻿using System;
 
-    internal class DateTimeHelper
+namespace ReportUnit.Utils
+{
+	internal class DateTimeHelper
     {
         /// <summary>
         /// Work out the difference between two date time strings in milliseconds

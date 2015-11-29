@@ -6,29 +6,25 @@
 * See the accompanying LICENSE file for terms.
 */
 
+using System.Linq;
+
 namespace ReportUnit
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
+	using System;
+	using System.IO;
+	using Logging;
 
-    using ReportUnit.Parser;
-    using ReportUnit.Logging;
-
-    class Program
+	class Program
     {
-        /// <summary>
-        /// ReportUnit usage
-        /// </summary>
-        private static string reportUnitUsage = "[INFO] Usage 1:  ReportUnit \"path-to-folder\"" +
-                                                "\n[INFO] Usage 2:  ReportUnit \"input-folder\" \"output-folder\"" +
-                                                "\n[INFO] Usage 3:  ReportUnit \"input.xml\" \"output.html\"";
+		/// <summary>
+		/// ReportUnit usage
+		/// </summary>
+		private const string ReportUnitUsage = "[INFO] Usage 1:  ReportUnit \"path-to-folder\"" + "\n[INFO] Usage 2:  ReportUnit \"input-folder\" \"output-folder\"" + "\n[INFO] Usage 3:  ReportUnit \"input.xml\" \"output.html\"";
 
-        /// <summary>
+		/// <summary>
         /// Logger
         /// </summary>
-        private static Logger logger = Logger.GetLogger();
+        private static readonly Logger Logger = Logger.GetLogger();
 
         /// <summary>
         /// Entry point
@@ -47,27 +43,26 @@ namespace ReportUnit
 
             if (args.Length == 0 || args.Length > 2)
             {
-                logger.Error("Invalid number of arguments specified.\n" + reportUnitUsage);
+                Logger.Error("Invalid number of arguments specified.\n" + ReportUnitUsage);
                 return;
             }
 
-            foreach (string arg in args)
+            if (args.Any(arg => arg.Trim() == "" || arg == "\\\\"))
             {
-                if (arg.Trim() == "" || arg == "\\\\")
-                {
-                    logger.Error("Invalid argument(s) specified.\n" + reportUnitUsage);
-                    return;
-                }
+	            Logger.Error("Invalid argument(s) specified.\n" + ReportUnitUsage);
+	            return;
             }
 
-            for (int ix = 0; ix < args.Length; ix++)
+            for (var ix = 0; ix < args.Length; ix++)
             {
                 args[ix] = args[ix].Replace('"', '\\');
             }
 
             if (args.Length == 2)
             {
-                if ((Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")) && (Path.GetExtension(args[1]).ToLower().Contains("htm")))
+	            var s = Path.GetExtension(args[0]);
+	            var extension1 = Path.GetExtension(args[1]);
+	            if (extension1 != null && (s != null && ((s.ToLower().Contains("xml") || s.ToLower().Contains("trx")) && (extension1.ToLower().Contains("htm")))))
                 {
                     if (!Directory.GetParent(args[1]).Exists)
                         Directory.CreateDirectory(Directory.GetParent(args[1]).FullName);
@@ -78,7 +73,7 @@ namespace ReportUnit
 
                 if (!Directory.Exists(args[0]))
                 {
-                    logger.Error("Input directory " + args[0] + " not found.");
+                    Logger.Error("Input directory " + args[0] + " not found.");
                     return;
                 }
 
@@ -91,13 +86,14 @@ namespace ReportUnit
                 }
                 else
                 {
-                    logger.Error("Invalid files specified.\n" + reportUnitUsage);
+                    Logger.Error("Invalid files specified.\n" + ReportUnitUsage);
                 }
 
                 return;
             }
 
-            if (Path.GetExtension(args[0]).ToLower().Contains("xml"))
+	        var extension = Path.GetExtension(args[0]);
+	        if (extension != null && extension.ToLower().Contains("xml"))
             {
                 new ReportUnitService().CreateFileReport(args[0], Path.ChangeExtension(args[0], "html"));
                 return;
@@ -105,7 +101,7 @@ namespace ReportUnit
 
             if (!Directory.Exists(args[0]))
             {
-                logger.Error("The path of directory you have specified does not exist.\n" + reportUnitUsage);
+                Logger.Error("The path of directory you have specified does not exist.\n" + ReportUnitUsage);
                 return;
             }
 

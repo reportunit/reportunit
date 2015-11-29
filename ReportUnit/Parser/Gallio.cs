@@ -2,176 +2,182 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
-
 using ReportUnit.Model;
 using ReportUnit.Utils;
-using ReportUnit.Logging;
+
 
 namespace ReportUnit.Parser
 {
-    internal class Gallio : IParser
-    {
-        private string resultsFile;
-        private XNamespace xns = "http://www.gallio.org/";
-        private Logger logger = Logger.GetLogger();
+	internal class Gallio : IParser
+	{
+		public string ResultsFile { get; private set; }
+		private readonly XNamespace _xns = "http://www.gallio.org/";
 
-        public Report Parse(string resultsFile)
-        {
-            this.resultsFile = resultsFile;
 
-            XDocument doc = XDocument.Load(resultsFile);
+		public Report Parse(string resultsFile)
+		{
+			ResultsFile = resultsFile;
 
-            Report report = new Report();
+			var doc = XDocument.Load(resultsFile);
 
-            report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
-            report.AssemblyName = doc.Descendants(xns + "files").First().Descendants(xns + "file").First().Value;
-            report.TestRunner = TestRunner.Gallio;
+			var report = new Report();
 
-            // run-info & environment values -> RunInfo
-            var runInfo = CreateRunInfo(doc, report).Info;
-            report.AddRunInfo(runInfo);
+			report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
+			report.AssemblyName = doc.Descendants(_xns + "files").First().Descendants(_xns + "file").First().Value;
+			report.TestRunner = TestRunner.Gallio;
 
-            // test cases
-            var tests = doc.Descendants(xns + "testStep")
-                .Where(x => x.Attribute("isTestCase").Value.Equals("true", StringComparison.CurrentCultureIgnoreCase));
+			// run-info & environment values -> RunInfo
+			var runInfo = CreateRunInfo(doc, report).Info;
+			report.AddRunInfo(runInfo);
 
-            // report counts
-            var statistics = doc.Descendants(xns + "statistics").First();
-            report.Total = tests.Count();
-            report.Passed = Int32.Parse(statistics.Attribute("passedCount").Value);
-            report.Failed = Int32.Parse(statistics.Attribute("failedCount").Value);
-            report.Inconclusive = Int32.Parse(statistics.Attribute("inconclusiveCount").Value);
-            report.Skipped = Int32.Parse(statistics.Attribute("skippedCount").Value);
-            report.Errors = 0;
+			// test cases
+			var tests = doc.Descendants(_xns + "testStep")
+				.Where(x => x.Attribute("isTestCase").Value.Equals("true", StringComparison.CurrentCultureIgnoreCase));
 
-            // report duration
-            XElement testPackageRun = doc.Descendants(xns + "testPackageRun").First();
-            report.StartTime = testPackageRun.Attribute("startTime").Value;
-            report.EndTime = testPackageRun.Attribute("endTime").Value;
+			// report counts
+			var statistics = doc.Descendants(_xns + "statistics").First();
+			var xElements = tests as XElement[] ?? tests.ToArray();
+			report.Total = xElements.Count();
+			report.Passed = int.Parse(statistics.Attribute("passedCount").Value);
+			report.Failed = int.Parse(statistics.Attribute("failedCount").Value);
+			report.Inconclusive = int.Parse(statistics.Attribute("inconclusiveCount").Value);
+			report.Skipped = int.Parse(statistics.Attribute("skippedCount").Value);
+			report.Errors = 0;
 
-            var suitesList = new List<string>();
-            TestSuite testSuite = null;
+			// report duration
+			var testPackageRun = doc.Descendants(_xns + "testPackageRun").First();
+			report.StartTime = testPackageRun.Attribute("startTime").Value;
+			report.EndTime = testPackageRun.Attribute("endTime").Value;
 
-            tests.AsParallel().ToList().ForEach(tc =>
-            {
-                var testSuiteName = tc.Attribute("fullName").Value;
-                testSuiteName = testSuiteName.Contains('/') 
-                    ? testSuiteName.Split('/')[testSuiteName.Split('/').Length - 2] 
-                    : testSuiteName;
+			var suitesList = new List<string>();
+			TestSuite testSuite = null;
 
-                if (!suitesList.Contains(testSuiteName))
-                {
-                    testSuite = new TestSuite();
-                    testSuite.Name = testSuiteName;
-                    testSuite.StartTime = tc.Parent.Attribute("startTime").Value;
-                    testSuite.EndTime = tc.Parent.Attribute("endTime").Value;
+			xElements.AsParallel().ToList().ForEach(tc =>
+			{
+				var testSuiteName = tc.Attribute("fullName").Value;
+				testSuiteName = testSuiteName.Contains('/')
+					? testSuiteName.Split('/')[testSuiteName.Split('/').Length - 2]
+					: testSuiteName;
 
-                    report.TestSuiteList.Add(testSuite);
+				if (!suitesList.Contains(testSuiteName))
+				{
+					if (tc.Parent != null)
+						testSuite = new TestSuite
+						{
+							Name = testSuiteName,
+							StartTime = tc.Parent.Attribute("startTime").Value,
+							EndTime = tc.Parent.Attribute("endTime").Value
+						};
 
-                    suitesList.Add(testSuiteName);
-                }
+					report.TestSuiteList.Add(testSuite);
 
-                var test = new Model.Test();
+					suitesList.Add(testSuiteName);
+				}
 
-                test.Name = tc.Attribute("name").Value;
-                test.Status = StatusExtensions.ToStatus(tc.Parent.Descendants(xns + "outcome").First().Attribute("status").Value);
+				var test = new Test
+				{
+					Name = tc.Attribute("name").Value
+				};
 
-                // main a master list of all status
-                // used to build the status filter in the view
-                report.StatusList.Add(test.Status);
+				if (tc.Parent != null)
+				{
+					test.Status = tc.Parent.Descendants(_xns + "outcome").First().Attribute("status").Value.ToStatus();
 
-                var entry = tc.Descendants(xns + "entry");
+					// main a master list of all status
+					// used to build the status filter in the view
+					report.StatusList.Add(test.Status);
 
-                // description
-                var description = entry != null 
-                    ? entry.Where(x => x.Attribute("key").Value.Equals("Description")) 
-                    : null;
-                test.Description =  description != null && description.Count() > 0 
-                    ? description.First().Value 
-                    : "";
+					var entry = tc.Descendants(_xns + "entry");
 
-                // error and other status messages
-                var ignoreReason = entry != null 
-                    ? entry.Where(x => x.Attribute("key").Value.Equals("IgnoreReason")) 
-                    : null;
-                test.StatusMessage = ignoreReason != null && ignoreReason.Count() > 0 
-                    ? ignoreReason.First().Value 
-                    : "";
+					// description
+					var enumerable = entry as XElement[] ?? entry.ToArray();
+					var description = enumerable.Where(x => x.Attribute("key").Value.Equals("Description"));
+					var elements = description as XElement[] ?? description.ToArray();
+					test.Description = elements.Any()
+						? elements.First().Value
+						: "";
 
-                var testLog = tc.Parent.Descendants(xns + "testLog");
-                test.StatusMessage += testLog != null && testLog.Count() > 0 
-                    ? testLog.First().Value 
-                    : "";
+					// error and other status messages
+					var ignoreReason = enumerable.Where(x => x.Attribute("key").Value.Equals("IgnoreReason"));
+					var reason = ignoreReason as XElement[] ?? ignoreReason.ToArray();
+					test.StatusMessage = reason.Any()
+						? reason.First().Value
+						: "";
 
-                // assign categories
-                var category = entry != null 
-                    ? entry.Where(x => x.Attribute("key").Value.Equals("Category")) 
-                    : null;
-                if (category != null && category.Count() > 0)
-                {
-                    category.ToList().ForEach(s => 
-                    {
-                        string cat = s.Value;
+					if (tc.Parent != null)
+					{
+						var testLog = tc.Parent.Descendants(_xns + "testLog");
+						var log = testLog as XElement[] ?? testLog.ToArray();
+						test.StatusMessage += log.Any()
+							? log.First().Value
+							: "";
+					}
 
-                        test.CategoryList.Add(cat);
-                        report.CategoryList.Add(cat);
-                    });
-                }
+					// assign categories
+					var category = enumerable.Where(x => x.Attribute("key").Value.Equals("Category"));
+					var xElements1 = category as XElement[] ?? category.ToArray();
+					if (xElements1.Any())
+					{
+						xElements1.ToList().ForEach(s =>
+						{
+							var cat = s.Value;
 
-                testSuite.TestList.Add(test);
-                testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
-            });
+							test.CategoryList.Add(cat);
+							report.CategoryList.Add(cat);
+						});
+					}
+				}
 
-            return report;
-        }
+				if (testSuite == null) return;
+				testSuite.TestList.Add(test);
+				testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
+			});
 
-        private RunInfo CreateRunInfo(XDocument doc, Report report)
-        {
-            // run-info & environment values -> RunInfo
-            RunInfo runInfo = new RunInfo();
+			return report;
+		}
 
-            runInfo.TestRunner = report.TestRunner;
-            runInfo.Info.Add("File", report.AssemblyName);
+		private RunInfo CreateRunInfo(XContainer doc, Report report)
+		{
+			// run-info & environment values -> RunInfo
+			var runInfo = new RunInfo();
 
-            var children = doc.Descendants(xns + "children").First();
+			runInfo.TestRunner = report.TestRunner;
+			runInfo.Info.Add("File", report.AssemblyName);
 
-            var testKind = children.Descendants(xns + "entry")
-                .Where(x => x.Attribute("key").Value.Equals("TestKind", StringComparison.CurrentCultureIgnoreCase));
-            var testKindValue = testKind != null && testKind.Count() > 0 
-                ? testKind.First().Descendants(xns + "value").First().Value 
-                : "";
-            runInfo.Info.Add("TestKind", testKindValue);
+			var children = doc.Descendants(_xns + "children").First();
 
-            var codebase = children.Descendants(xns + "entry")
-                .Where(x => x.Attribute("key").Value.Equals("CodeBase", StringComparison.CurrentCultureIgnoreCase));
-            var codebaseValue = codebase != null && codebase.Count() > 0 
-                ? codebase.First().Descendants(xns + "value").First().Value 
-                : "";
-            runInfo.Info.Add("CodeBase", codebaseValue);
+			var testKind = children.Descendants(_xns + "entry")
+				.Where(x => x.Attribute("key").Value.Equals("TestKind", StringComparison.CurrentCultureIgnoreCase));
+			var xElements = testKind as XElement[] ?? testKind.ToArray();
+			var testKindValue = xElements.Any()
+				? xElements.First().Descendants(_xns + "value").First().Value
+				: "";
+			runInfo.Info.Add("TestKind", testKindValue);
 
-            var framework = children.Descendants(xns + "entry")
-                .Where(x => x.Attribute("key").Value.Equals("Framework", StringComparison.CurrentCultureIgnoreCase));
-            var frameworkValue = framework != null && framework.Count() > 0 
-                ? testKind.First().Descendants(xns + "value").First().Value 
-                : "";
-            runInfo.Info.Add("Framework", frameworkValue);
+			var codebase = children.Descendants(_xns + "entry")
+				.Where(x => x.Attribute("key").Value.Equals("CodeBase", StringComparison.CurrentCultureIgnoreCase));
+			var enumerable = codebase as XElement[] ?? codebase.ToArray();
+			var codebaseValue = enumerable.Any()
+				? enumerable.First().Descendants(_xns + "value").First().Value
+				: "";
+			runInfo.Info.Add("CodeBase", codebaseValue);
 
-            var version = children.Descendants(xns + "entry")
-                .Where(x => x.Attribute("key").Value.Equals("Version", StringComparison.CurrentCultureIgnoreCase));
-            var versionValue = version != null && version.Count() > 0 
-                ? testKind.First().Descendants(xns + "value").First().Value 
-                : "";
-            runInfo.Info.Add("Version", versionValue);
+			var framework = children.Descendants(_xns + "entry")
+				.Where(x => x.Attribute("key").Value.Equals("Framework", StringComparison.CurrentCultureIgnoreCase));
+			var frameworkValue = framework.Any()
+				? xElements.First().Descendants(_xns + "value").First().Value
+				: "";
+			runInfo.Info.Add("Framework", frameworkValue);
 
-            return runInfo;
-        }
-    }
+			var version = children.Descendants(_xns + "entry")
+				.Where(x => x.Attribute("key").Value.Equals("Version", StringComparison.CurrentCultureIgnoreCase));
+			var versionValue = version.Any()
+				? xElements.First().Descendants(_xns + "value").First().Value
+				: "";
+			runInfo.Info.Add("Version", versionValue);
+
+			return runInfo;
+		}
+	}
 }

@@ -1,85 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
-
 using ReportUnit.Model;
-using ReportUnit.Utils;
-using ReportUnit.Logging;
 
 namespace ReportUnit.Parser
 {
-    internal class MSTest2010 : IParser
-    {
-        private string resultsFile;
-        private XNamespace xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
-        private Logger logger = Logger.GetLogger();
+	internal class MsTest2010 : IParser
+	{
+		private readonly XNamespace _xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
 
-        public Report Parse(string resultsFile)
-        {
-            XDocument doc = XDocument.Load(resultsFile);
 
-            Report report = new Report();
+		public Report Parse(string resultsFile)
+		{
+			var doc = XDocument.Load(resultsFile);
 
-            report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
-            report.TestRunner = TestRunner.MSTest2010;
+			var report = new Report
+			{
+				FileName = Path.GetFileNameWithoutExtension(resultsFile),
+				TestRunner = TestRunner.MsTest2010
+			};
 
-            // run-info & environment values -> RunInfo
-            var runInfo = CreateRunInfo(doc, report).Info;
-            report.AddRunInfo(runInfo);
 
-            // report counts
-            var resultNodes = doc.Descendants(xns + "UnitTestResult");
-            report.Total = resultNodes.Count();
-            report.Passed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Passed")).Count();
-            report.Failed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Failed")).Count();
-            report.Inconclusive = resultNodes
-                .Where(x => 
-                    x.Attribute("outcome").Value.Equals("Inconclusive") 
-                    || x.Attribute("outcome").Value.Equals("passedButRunAborted") 
-                    || x.Attribute("outcome").Value.Equals("disconnected") 
-                    || x.Attribute("outcome").Value.Equals("notRunnable") 
-                    || x.Attribute("outcome").Value.Equals("warning") 
-                    || x.Attribute("outcome").Value.Equals("pending"))
-                .Count();
-            report.Skipped = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("NotExecuted")).Count();
-            report.Errors = resultNodes
-                .Where(x => 
-                    x.Attribute("outcome").Value.Equals("Passed") 
-                    || x.Attribute("outcome").Value.Equals("Aborted") 
-                    || x.Attribute("outcome").Value.Equals("timeout"))
-                .Count();
+			// run-info & environment values -> RunInfo
+			var runInfo = CreateRunInfo(doc, report).Info;
+			report.AddRunInfo(runInfo);
 
-            // report duration
-            XElement times = doc.Descendants(xns + "Times").First();
-            report.StartTime = times.Attribute("start").Value;
-            report.EndTime = times.Attribute("finish").Value;
+			// report counts
+			var resultNodes = doc.Descendants(_xns + "UnitTestResult");
+			var xElements = resultNodes as XElement[] ?? resultNodes.ToArray();
+			report.Total = xElements.Count();
+			report.Passed = xElements.Count(x => x.Attribute("outcome").Value.Equals("Passed"));
+			report.Failed = xElements.Count(x => x.Attribute("outcome").Value.Equals("Failed"));
+			report.Inconclusive = xElements.Count(x => x.Attribute("outcome").Value.Equals("Inconclusive")
+													   || x.Attribute("outcome").Value.Equals("passedButRunAborted")
+													   || x.Attribute("outcome").Value.Equals("disconnected")
+													   || x.Attribute("outcome").Value.Equals("notRunnable")
+													   || x.Attribute("outcome").Value.Equals("warning")
+													   || x.Attribute("outcome").Value.Equals("pending"));
+			report.Skipped = xElements.Count(x => x.Attribute("outcome").Value.Equals("NotExecuted"));
+			report.Errors = xElements.Count(x => x.Attribute("outcome").Value.Equals("Passed")
+												 || x.Attribute("outcome").Value.Equals("Aborted")
+												 || x.Attribute("outcome").Value.Equals("timeout"));
 
-            // ToDo: add fixtures + tests
+			// report duration
+			var times = doc.Descendants(_xns + "Times").First();
+			report.StartTime = times.Attribute("start").Value;
+			report.EndTime = times.Attribute("finish").Value;
 
-            return report;
-        }
+			// ToDo: add fixtures + tests
 
-        private RunInfo CreateRunInfo(XDocument doc, Report report)
-        {
-            // run-info & environment values -> RunInfo
-            RunInfo runInfo = new RunInfo();
+			return report;
+		}
 
-            runInfo.TestRunner = report.TestRunner;
-            runInfo.Info.Add("TestRunner Version", "");
-            runInfo.Info.Add("File", report.FileName);
+		private RunInfo CreateRunInfo(XContainer doc, Report report)
+		{
+			// run-info & environment values -> RunInfo
+			var runInfo = new RunInfo { TestRunner = report.TestRunner };
 
-            runInfo.Info.Add("Machine Name", doc.Descendants(xns + "UnitTestResult").First().Attribute("computerName").Value);
-                        
-            return runInfo;
-        }
-    }
+			runInfo.Info.Add("TestRunner Version", "");
+			runInfo.Info.Add("File", report.FileName);
+
+			runInfo.Info.Add("Machine Name", doc.Descendants(_xns + "UnitTestResult").First().Attribute("computerName").Value);
+
+			return runInfo;
+		}
+	}
 }

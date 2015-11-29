@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ReportUnit.Templates
+﻿namespace ReportUnit.Templates
 {
-    internal class Summary
+	internal class Summary
     {
         public static string GetSource()
         {
@@ -186,7 +181,7 @@ namespace ReportUnit.Templates
                 <script src='file:///C:/Users/Anshoo/Documents/Visual Studio 2013/Projects/reportunit/resources/reportunit.js'></script>
                 <script src='http://cdn.rawgit.com/reportunit/reportunit/master/resources/reportunit.js' type='text/javascript'></script>
             </html>
-            ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); ;
+            ".Replace("\r\n", "").Replace("\t", "").Replace("    ", "");
         }
     }
 }
