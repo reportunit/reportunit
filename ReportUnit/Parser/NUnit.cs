@@ -181,7 +181,12 @@ namespace ReportUnit.Parser
                                 : "" 
                             : "";
 
-                    testSuite.TestList.Add(test);
+                   // add NUnit console output to the status message
+                   test.StatusMessage += tc.Element( "output" ) != null
+                     ? tc.Element( "output" ).Value
+                     : "";
+
+                   testSuite.TestList.Add(test);
                 });
 
                 testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
