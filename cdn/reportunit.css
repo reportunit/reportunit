@@ -18,10 +18,12 @@ pre {
 	white-space: -o-pre-wrap;  
 	word-wrap: break-word;     
 }
-td:first-child {
-	max-width: 60%;
+td.test-name {
 	min-width: 30%;
 	vertical-align: top;
+}
+td.test-status {
+	min-width: 40%;
 }
 th, td {
 	padding: 10px;
@@ -162,12 +164,19 @@ nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i, nav li,
 	height: 50px;
 	line-height: 50px;
 }
-.side-nav li {
+.side-nav > li {
 	display: block;
+}
+.side-nav > li.report-item {
+	height: auto;
 }
 .side-nav > li.report-item > a {
 	color: #444 !important;    
 	font-size: 13px;
+	height: auto;
+	line-height: 20px;
+	padding: 15px;
+	word-break: break-all;
 }
 .side-nav > li.report-item i {
 	margin-right: 15px;
@@ -382,6 +391,12 @@ td > .label {
 }
 
 /* -- [ progress bar ] -- */
+.progress {
+    background-color: #49ecff;
+}
+.progress .determinate {
+    background-color: #1fc2ed;
+}
 .progress2 {
 	background-color: #f5f5f5;
 	border-radius: 4px;

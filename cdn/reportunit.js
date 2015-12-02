@@ -14,7 +14,6 @@ $(document).ready(function() {
 	$('select').material_select();
 	$('.modal-trigger').leanModal();
 	$('.tooltipped').tooltip({delay: 10});
-	$('.button-collapse').sideNav({ menuWidth: 260 });
 
 	/* control content container position for vertical scroll */
 	$(window).scroll(function() {
@@ -38,7 +37,7 @@ $(document).ready(function() {
 		if (pinWidth == '55%') { pinWidth = '49%'; }
 		else { pinWidth = '55%'; }
 		
-		$('.logo .left, .side-nav input, .side-nav label').toggleClass('hide');
+		$('.logo .left, .side-nav input, .side-nav label, span.sidenav-filename').toggleClass('hide');
 		
 		$('.side-nav').animate({
 			width: menuWidth + 'px'
@@ -136,25 +135,6 @@ $(document).ready(function() {
 		resetFilters(); selectVisSuite()
 	});
 
-	/* auto-filter based on URL */
-	if (document.location.href.indexOf('?') > -1) {
-		var evt = window.location.search.split('?')[1];
-		
-		switch (evt.toLowerCase()) {
-			case 'passedtests': clickListItem('tests-toggle', 1); break;
-			case 'failedtests': clickListItem('tests-toggle', 2); break;
-			case 'errortests': clickListItem('tests-toggle', 3); break;
-			case 'inconclusivetests': clickListItem('tests-toggle', 4); break;
-			case 'skippedtests': clickListItem('tests-toggle', 5); break;
-			case 'passedsuites': clickListItem('suite-toggle', 1); break;
-			case 'failedsuites': clickListItem('suite-toggle', 2); break;
-			case 'errorsuites': clickListItem('suite-toggle', 3); break;
-			case 'inconclusivesuites': clickListItem('suite-toggle', 4); break;
-			case 'skippedsuites': clickListItem('suite-toggle', 5); break;
-			default: break;
-		}
-	}
-
 	function filterByCategory(cat) {
 		resetFilters();
 
@@ -187,7 +167,7 @@ $(document).ready(function() {
 	}
 
 	function clickListItem(listClass, index) {
-		$('.' + listClass).find('li').get(index).click();
+		$('#' + listClass).find('li').get(index).click();
 	}
 
 	var passedPercentage = Math.round(((passed / total) * 100)) + '%';
@@ -210,6 +190,11 @@ var options = {
 
 /* suites chart */
 function suitesChart() {
+	console.log($('#suite-analysis').length);
+	if (!$('#suite-analysis').length) {
+		return false;
+	}
+	
 	var passed = $('.suite-result.passed').length;
 	var failed = $('.suite-result.failed').length;
 	var others = $('.suite-result.error, .suite-result.inconclusive, .suite-result.skipped').length;
@@ -233,6 +218,10 @@ function suitesChart() {
 
 /* tests chart */
 function testsChart() {
+	if (!$('#test-analysis').length) {
+		return false;
+	}
+	
 	$('.test-pass-count').text(passed);
 	$('.test-fail-count').text(failed);
 	$('.test-others-count').text(errors + inconclusive + skipped);
