@@ -1,8 +1,8 @@
-html { 
-	background-color: #f1f4f8;  
+html, body { 
+	background-color: #eceff5;  
 }
 body {
-	font-size: 13px;
+	font-size: 14px;
 }
 pre {
 	background-color: #f8f9fa;
@@ -19,8 +19,8 @@ pre {
 	word-wrap: break-word;     
 }
 td:first-child {
-	max-width: 45%;
-	min-width: 150px;
+	max-width: 60%;
+	min-width: 30%;
 	vertical-align: top;
 }
 th, td {
@@ -62,6 +62,9 @@ thead tr {
 	line-height: 1.2rem;
 	padding: 0.5rem 1rem;
 }
+.card-panel {
+	margin: .5rem 0;
+}
 
 /* ---- [ global ] ---- */
 .card-head {
@@ -95,6 +98,17 @@ thead tr {
 .weight-bold {
 	font-weight: 700;
 }
+.no-margin {
+	margin: 0 !important;
+}
+.no-margin-h {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+.no-margin-v {
+	margin-bottom: 0 !important;
+	margin-top: 0 !important;
+}
 .no-padding {
 	padding: 0 !important;
 }
@@ -108,12 +122,12 @@ thead tr {
 }
 	/* ---- [ icon ] ---- */
 	.icon {
-		border: 2px solid #7e757d;
-		color: #7e757d;
-		cursor: default !important;
+		border: 1px solid #888888;
 		border-radius: 100%;
-		font-size: 1rem !important;
-		padding: 1px 6px;
+		color: #888888;
+		cursor: default;
+		font-size: 0.9rem !important;
+		padding: 1px 5px;
 	}
 	.icon.active {
 		border-color: #00BCD4;
@@ -129,6 +143,9 @@ nav {
 	background: #29ccf7;
 	padding-left: 270px;
 	padding-right: 20px;
+}
+.nav-right a {
+	padding: 0;
 }
 .side-nav {
 	box-shadow: 0 6px 5px 0 rgba(0, 0, 0, 0.16);
@@ -161,8 +178,10 @@ nav a.button-collapse {
 .nav-item {
 	border-left: 1px solid #40e3fc;
 	display: inline-block;
-	height: 50px;
 	padding: 0 10px;
+}
+.nav-item:last-child {
+	border-right: 1px solid #40e3fc;
 }
 .logo, .logo:hover, .logo a:hover {
 	background: #21c4ee !important;
@@ -188,7 +207,7 @@ nav a.button-collapse {
 
 /* ---- [ dashboard ] ---- */
 .dashboard .card-panel {
-	height: 260px;
+	height: 270px;
 }
 #test-analysis, #suite-analysis {
 	height: 115px;
@@ -238,8 +257,9 @@ nav a.button-collapse {
 
 /* ---- [ filters ] ---- */
 .filters {
-	padding-left: 10px;
-	padding-top: 20px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 0;
+	padding: 25px 20px;
 }
 .filters > div {
 	display: inline-block;
@@ -254,10 +274,13 @@ nav a.button-collapse {
 /* ---- [ fixture / suites ] ---- */
 .suite {
 	border-bottom: 1px solid #eee;
-	padding: 0 15px;
+	font-size: 15px;
+	list-style: none;
+	padding: 0 20px;
 }
 .suite.active {
-	border-left: 3px solid #777;
+	background: #f7f7f7;
+	font-weight: 600;
 }
 .suite:last-child {
 	border-bottom: none;
@@ -274,7 +297,6 @@ nav a.button-collapse {
 }
 .suite-name {
 	display: inline-block;
-	font-size: 14px;
 	max-width: 75%;
 	word-break: break-all;
 }
@@ -409,12 +431,12 @@ td > .label {
 }
 
 /* ---- [ media queries ] ---- */
-@@media (max-width: 1600px) {
+@media (max-width: 1600px) {
 	.main-wrap .col.s4 {
 		padding-right: 0;
 	}
 }
-@@media (max-width: 992px) {
+@media (max-width: 992px) {
 	.main {
 		padding-left: 0;
 	}
@@ -440,7 +462,7 @@ td > .label {
 		width: 40%;
 	}
 }
-@@media (min-width: 992px) and (max-width: 1300px) {
+@media (min-width: 992px) and (max-width: 1300px) {
 	/* fix for pie charts going out of bounds */
 	.main-wrap .row:first-child .col.s12 {
 		width: 33.33% !important;

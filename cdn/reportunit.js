@@ -57,7 +57,7 @@ $(document).ready(function() {
 	if ($('.report-item').length <= 1) {
 		$('#slide-out').addClass('hide');
 		
-		pinWidth = '56%';
+		pinWidth = '56.5%';
 		
 		$('.pin').css('width', pinWidth);
 		$('.main-wrap, nav').css('padding-left', '20px');
@@ -202,14 +202,9 @@ $(document).ready(function() {
 });
 
 var options = {
-	segmentShowStroke : true, 
-	segmentStrokeColor : '#fff', 
-	segmentStrokeWidth : 1, 
+	segmentShowStroke : false, 
 	percentageInnerCutout : 55, 
-	animationSteps : 30, 
-	animationEasing : 'easeOutBounce', 
-	animateRotate : true, 
-	animateScale : false,
+	animationSteps : 1,
 	legendTemplate : '<ul class=\'<%=name.toLowerCase()%>-legend\'><% for (var i=0; i<segments.length; i++){%><li><span style=\'background-color:<%=segments[i].fillColor%>\'></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>'
 };
 
