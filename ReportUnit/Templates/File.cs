@@ -33,8 +33,7 @@ namespace ReportUnit.Templates
                     <meta name='author' content=''>
                     <title>ReportUnit TestRunner Report</title>
                     <link href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css' rel='stylesheet' type='text/css'>
-                    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
-                    <link href='http://cdn.rawgit.com/reportunit/reportunit/33bb5105b409d72169373ddca2b58f2ae20c36cd/cdn/reportunit.css' type='text/css' rel='stylesheet' />
+                    <link href='http://cdn.rawgit.com/reportunit/reportunit/d839bbb461a0e873b471330fb13aa5fd694ccd60/cdn/reportunit.css' type='text/css' rel='stylesheet' />
 
                 </head>
                 <body>    
@@ -118,7 +117,7 @@ namespace ReportUnit.Templates
 	                                            </ul>
                                             </div> 
                                             <div>
-	                                                <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='tests-toggle' alt='Filter tests' title='Filter tests'><i class='mdi-action-subject icon'></i></a><ul class='dropdown-content' id='tests-toggle'> 
+	                                            <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='tests-toggle' alt='Filter tests' title='Filter tests'><i class='mdi-action-subject icon'></i></a><ul class='dropdown-content' id='tests-toggle'> 
 	                                            <ul>
 		                                            @foreach (var status in Model.StatusList.Distinct().ToList())
 									                {
@@ -185,15 +184,17 @@ namespace ReportUnit.Templates
                                                                     @foreach (var test in Model.TestSuiteList[ix].TestList)
                                                                     {
                                                                         <tr class='@test.Status.ToString().ToLower() test-status'>
-                                                                            <td class='test-name'>@test.Name</td>
-                                                                            <td class='test-status @test.Status.ToString().ToLower()'>
-                                                                                <span class='label @test.Status.ToString().ToLower()'>@test.Status.ToString()</span>
+                                                                            <td class='test-name'>
+                                                                                @test.Name
                                                                                 <div class='category-list'>
                                                                                     @foreach (var cat in test.CategoryList)
                                                                                     {
                                                                                         <span class='label category'>@cat</span>
                                                                                     }
                                                                                 </div>
+                                                                            </td>
+                                                                            <td class='test-status @test.Status.ToString().ToLower()'>
+                                                                                <span class='label @test.Status.ToString().ToLower()'>@test.Status.ToString()</span>
                                                                                 @if (!String.IsNullOrEmpty(@test.Description))
                                                                                 {
                                                                                     <p class='description'>@test.Description</p>
@@ -270,7 +271,8 @@ namespace ReportUnit.Templates
                 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
-                <script src='http://cdn.rawgit.com/reportunit/reportunit/33bb5105b409d72169373ddca2b58f2ae20c36cd/cdn/reportunit.js' type='text/javascript'></script>
+                <script src='http://cdn.rawgit.com/reportunit/reportunit/d839bbb461a0e873b471330fb13aa5fd694ccd60/cdn/reportunit.js' type='text/javascript'></script>
+
             </html>
             ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); 
         }

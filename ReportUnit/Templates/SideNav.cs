@@ -7,7 +7,7 @@
             return @"<li class='waves-effect report-item'>
 	                    <a href='./@Model.GetHtmlFileName()'>
 		                    <i class='mdi-action-assignment'></i>
-		                    @Model.GetHtmlFileName().Replace("".html"", """")
+		                    <span class='sidenav-filename'>@Model.GetHtmlFileName().Replace("".html"", """")</span>
 	                    </a>
                     </li>".Replace("\r\n", "").Replace("\t", "").Replace("    ", "");
         }
@@ -17,7 +17,7 @@
             return @"<li class='waves-effect report-item'>
 	                    <a href='./Index.html'>
 		                    <i class='mdi-action-assignment'></i>
-		                    Index
+		                    <span class='sidenav-filename'>Index</span>
 	                    </a>
                     </li>".Replace("\r\n", "").Replace("\t", "").Replace("    ", "");
         }

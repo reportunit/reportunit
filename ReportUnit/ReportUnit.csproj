@@ -70,9 +70,7 @@
     <Compile Include="ReportUnitService.cs" />
     <Compile Include="Templates\File.cs" />
     <Compile Include="Templates\SideNav.cs" />
-    <Compile Include="Templates\Suite.cs" />
     <Compile Include="Templates\Summary.cs" />
-    <Compile Include="Templates\Test.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
     <Compile Include="Utils\ReportUtil.cs" />
   </ItemGroup>
