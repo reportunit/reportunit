@@ -34,7 +34,8 @@ namespace ReportUnit.Templates
                     <title>ReportUnit TestRunner Report</title>
                     <link href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css' rel='stylesheet' type='text/css'>
                     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
-                    <link href='http://cdn.rawgit.com/reportunit/reportunit/master/resources/reportunit.css' rel='stylesheet' type='text/css'>
+                    <link href='http://cdn.rawgit.com/reportunit/reportunit/33bb5105b409d72169373ddca2b58f2ae20c36cd/cdn/reportunit.css' type='text/css' rel='stylesheet' />
+
                 </head>
                 <body>    
                     <div class='header'>
@@ -47,17 +48,17 @@ namespace ReportUnit.Templates
                                 <!--%SIDENAV%-->
                             </ul>
                             <span class='file-name'>@Model.FileName</span>
-                            <div class='right hide-on-med-and-down nav-right'>
-                                <div class='nav-item'>
+                            <ul class='right hide-on-med-and-down nav-right'>
+                                <li class='nav-item'>
                                     <a class='modal-trigger waves-effect waves-light run-info-icon tooltipped' data-position='bottom' data-tooltip='Run Info' href='#modal1'><i class='mdi-action-info-outline'></i></a>
-                                </div>
+                                </li>
                                 <!-- <div class='nav-item'>
                                     <a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='bottom' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-assignment'></i></a>
                                 </div> -->
-                                <div class='nav-item'>
+                                <li class='nav-item'>
                                     v1.50.0
-                                </div>
-                            </div>
+                                </li>
+                            </ul>
                         </nav>
                     </div>
                     <div class='main'>
@@ -148,66 +149,68 @@ namespace ReportUnit.Templates
                                                 <a title='Enable Dashboard' alt='Enable Dashboard' id='enableDashboard' class='enabled'><i class='mdi-action-track-changes icon active'></i></a> 
                                             </div>
                                         </div>
-                                        <div class='card-panel no-padding'>
-                                            @for (var ix = 0; ix < Model.TestSuiteList.Count; ix++)
-                                            {
-                                                <div class='suite @Model.TestSuiteList[ix].Status.ToString().ToLower()'>
-	                                                <div class='suite-head'>
-		                                                <div class='suite-name'>@Model.TestSuiteList[ix].Name</div>
-		                                                <div class='suite-result @Model.TestSuiteList[ix].Status.ToString().ToLower() right label'>@Model.TestSuiteList[ix].Status.ToString()</div>
-	                                                </div>
-	                                                <div class='suite-content hide'>
-		                                                <span alt='Suite started at time' title='Suite started at time' class='startedAt label green lighten-2 text-white'>@Model.TestSuiteList[ix].StartTime</span>
-		                                                @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].EndTime))
-		                                                {
-			                                                <span alt='Suite ended at time' title='Suite ended at time' class='endedAt label label red lighten-2 text-white'>@Model.TestSuiteList[ix].EndTime</span>
-		                                                }
-		                                                <div class='fixture-status-message'>
-			                                                @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].Description)) 
-			                                                {
-				                                                <div class='suite-desc'>@Model.TestSuiteList[ix].Description</div>
-			                                                }
-			                                                @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].StatusMessage)) 
-			                                                {
-				                                                <div class='suite-desc'>@Model.TestSuiteList[ix].StatusMessage</div>
-			                                                }
-		                                                </div>
-		                                                <table class='bordered'>
-			                                                <thead>
-				                                                <tr>
-					                                                <th>TestName</th>
-					                                                <th>Status</th>
-				                                                </tr>
-			                                                </thead>
-			                                                <tbody>
-                                                                @foreach (var test in Model.TestSuiteList[ix].TestList)
-                                                                {
-                                                                    <tr class='@test.Status.ToString().ToLower() test-status'>
-                                                                        <td class='test-name'>@test.Name</td>
-                                                                        <td class='test-status @test.Status.ToString().ToLower()'>
-                                                                            <span class='label @test.Status.ToString().ToLower()'>@test.Status.ToString()</span>
-                                                                            <div class='category-list'>
-                                                                                @foreach (var cat in test.CategoryList)
+                                        <div class='card-panel no-padding no-margin-v'>
+                                            <ul id='suite-collection' class='no-margin-v'>
+                                                @for (var ix = 0; ix < Model.TestSuiteList.Count; ix++)
+                                                {
+                                                    <li class='suite @Model.TestSuiteList[ix].Status.ToString().ToLower()'>
+	                                                    <div class='suite-head'>
+		                                                    <div class='suite-name'>@Model.TestSuiteList[ix].Name</div>
+		                                                    <div class='suite-result @Model.TestSuiteList[ix].Status.ToString().ToLower() right label'>@Model.TestSuiteList[ix].Status.ToString()</div>
+	                                                    </div>
+	                                                    <div class='suite-content hide'>
+		                                                    <span alt='Suite started at time' title='Suite started at time' class='startedAt label green lighten-2 text-white'>@Model.TestSuiteList[ix].StartTime</span>
+		                                                    @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].EndTime))
+		                                                    {
+			                                                    <span alt='Suite ended at time' title='Suite ended at time' class='endedAt label label red lighten-2 text-white'>@Model.TestSuiteList[ix].EndTime</span>
+		                                                    }
+		                                                    <div class='fixture-status-message'>
+			                                                    @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].Description)) 
+			                                                    {
+				                                                    <div class='suite-desc'>@Model.TestSuiteList[ix].Description</div>
+			                                                    }
+			                                                    @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].StatusMessage)) 
+			                                                    {
+				                                                    <div class='suite-desc'>@Model.TestSuiteList[ix].StatusMessage</div>
+			                                                    }
+		                                                    </div>
+		                                                    <table class='bordered'>
+			                                                    <thead>
+				                                                    <tr>
+					                                                    <th>TestName</th>
+					                                                    <th>Status</th>
+				                                                    </tr>
+			                                                    </thead>
+			                                                    <tbody>
+                                                                    @foreach (var test in Model.TestSuiteList[ix].TestList)
+                                                                    {
+                                                                        <tr class='@test.Status.ToString().ToLower() test-status'>
+                                                                            <td class='test-name'>@test.Name</td>
+                                                                            <td class='test-status @test.Status.ToString().ToLower()'>
+                                                                                <span class='label @test.Status.ToString().ToLower()'>@test.Status.ToString()</span>
+                                                                                <div class='category-list'>
+                                                                                    @foreach (var cat in test.CategoryList)
+                                                                                    {
+                                                                                        <span class='label category'>@cat</span>
+                                                                                    }
+                                                                                </div>
+                                                                                @if (!String.IsNullOrEmpty(@test.Description))
                                                                                 {
-                                                                                    <span class='label category'>@cat</span>
+                                                                                    <p class='description'>@test.Description</p>
                                                                                 }
-                                                                            </div>
-                                                                            @if (!String.IsNullOrEmpty(@test.Description))
-                                                                            {
-                                                                                <p class='description'>@test.Description</p>
-                                                                            }
-                                                                            @if (!String.IsNullOrEmpty(@test.StatusMessage)) {
-                                                                                <pre>@test.StatusMessage</pre>
-                                                                            }
-                                                                        </td>
-                                                                        <td class='test-features @test.GetCategories()'></td>
-                                                                    </tr>
-                                                                }
-			                                                </tbody>
-		                                                </table>
-	                                                </div>
-                                                </div>
-                                            }
+                                                                                @if (!String.IsNullOrEmpty(@test.StatusMessage)) {
+                                                                                    <pre>@test.StatusMessage</pre>
+                                                                                }
+                                                                            </td>
+                                                                            <td class='test-features @test.GetCategories()'></td>
+                                                                        </tr>
+                                                                    }
+			                                                    </tbody>
+		                                                    </table>
+	                                                    </div>
+                                                    </li>
+                                                }
+                                            </ul>
                                         </div>
                                     </div>
                                     <div class='col s7 suite-details'>
@@ -267,7 +270,7 @@ namespace ReportUnit.Templates
                 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
-                <script src='http://cdn.rawgit.com/reportunit/reportunit/master/resources/reportunit.js' type='text/javascript'></script>
+                <script src='http://cdn.rawgit.com/reportunit/reportunit/33bb5105b409d72169373ddca2b58f2ae20c36cd/cdn/reportunit.js' type='text/javascript'></script>
             </html>
             ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); 
         }
