@@ -111,11 +111,24 @@ namespace ReportUnit.Parser
                         ? ts.Attribute("end-time").Value 
                         : "";
 
-                // any error messages or stack-trace
-                testSuite.StatusMessage = 
-                    ts.Element("failure") != null 
-                        ? ts.Element("failure").Element("message").Value 
-                        : "";
+                // any error messages and/or stack-trace
+                var failure = ts.Element("failure");
+                if (failure != null)
+                {
+                    var message = failure.Element("message");
+                    if (message != null)
+                    {
+                        testSuite.StatusMessage = message.Value;
+                    }
+
+                    var stackTrace = failure.Element("stack-trace");
+                    if (stackTrace != null && !string.IsNullOrWhiteSpace(stackTrace.Value))
+                    {
+                        testSuite.StatusMessage = string.Format(
+                            "{0}\n\nStack trace:\n{1}", testSuite.StatusMessage, stackTrace.Value);
+                    }
+                }
+
 
                 // Test Cases
                 ts.Descendants("test-case").AsParallel().ToList().ForEach(tc =>
