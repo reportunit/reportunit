@@ -304,6 +304,9 @@ nav a.button-collapse {
 .suite-status-message {
 	background-color: #f7f8fa;
 }
+.fixture-status-message {
+	white-space: pre-wrap; /* show line breaks to make stack-traces more readable */
+}
 .suite-name {
 	display: inline-block;
 	max-width: 75%;
