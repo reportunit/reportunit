@@ -36,7 +36,7 @@ namespace ReportUnit.Templates
                     <link href='http://cdn.rawgit.com/reportunit/reportunit/d839bbb461a0e873b471330fb13aa5fd694ccd60/cdn/reportunit.css' type='text/css' rel='stylesheet' />
 
                 </head>
-                <body>    
+                <body>
                     <div class='header'>
                         <nav>
                             <ul id='slide-out' class='side-nav fixed'>
@@ -62,6 +62,16 @@ namespace ReportUnit.Templates
                     </div>
                     <div class='main'>
                         <div class='main-wrap'>
+                            @if (Model.Total == 0)
+                            {
+                                <div class='no-tests-message card-panel'>
+                                    <p>
+                                        No tests were found in @Model.FileName.
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
                             <div class='row dashboard'>
                                 <div class='col s12 m6 l4'>
                                     <div class='card-panel'>
@@ -222,6 +232,7 @@ namespace ReportUnit.Templates
                                     </div>
                                 </div>
                             </div>
+                            }
                         </div>
                     </div>
                     <div id='modal1' class='modal'>
@@ -238,13 +249,16 @@ namespace ReportUnit.Templates
 							            <td>TestRunner</td>
 							            <td>@Model.TestRunner.ToString()</td>
 						            </tr>
-						            @foreach (var key in Model.RunInfo.Keys)
-						            {
-							            <tr>
-								            <td>@key</td>
-								            <td>@Model.RunInfo[key]</td>
-							            </tr>
-						            }
+                                    @if (Model.RunInfo != null)
+                                    {
+						                foreach (var key in Model.RunInfo.Keys)
+						                {
+							                <tr>
+								                <td>@key</td>
+								                <td>@Model.RunInfo[key]</td>
+							                </tr>
+						                }
+                                    }
 					            </tbody>
                             </table>
                         </div>

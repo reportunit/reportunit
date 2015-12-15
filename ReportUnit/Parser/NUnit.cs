@@ -37,7 +37,10 @@ namespace ReportUnit.Parser
 
             // run-info & environment values -> RunInfo
             var runInfo = CreateRunInfo(doc, report);
-            report.AddRunInfo(runInfo.Info);
+            if (runInfo != null) 
+            { 
+                report.AddRunInfo(runInfo.Info); 
+            }
 
             // report counts
             report.Total = doc.Descendants("test-case").Count();
@@ -199,6 +202,9 @@ namespace ReportUnit.Parser
 
         private RunInfo CreateRunInfo(XDocument doc, Report report)
         {
+            if (doc.Element("environment") == null)
+                return null;
+
             RunInfo runInfo = new RunInfo();
             runInfo.TestRunner = report.TestRunner;
 
