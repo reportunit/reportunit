@@ -20,6 +20,11 @@ namespace ReportUnit.Model
         public string EndTime { get; set; }
 
         /// <summary>
+        /// Error or other status messages
+        /// </summary>
+        public string StatusMessage { get; set; }
+
+        /// <summary>
         /// File name generated that this data is for
         /// </summary>
         public string FileName { get; set; }

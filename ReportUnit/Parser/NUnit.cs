@@ -86,6 +86,13 @@ namespace ReportUnit.Parser
                     ? doc.Root.Attribute("end-time").Value 
                     : "";
 
+            // report status messages
+            var testSuiteTypeAssembly = doc.Descendants("test-suite")
+                .Where(x => x.Attribute("result").Value.Equals("Failed") && x.Attribute("type").Value.Equals("Assembly"));
+            report.StatusMessage = testSuiteTypeAssembly != null && testSuiteTypeAssembly.Count() > 0
+                ? testSuiteTypeAssembly.First().Value
+                : "";
+
             IEnumerable<XElement> suites = doc
                 .Descendants("test-suite")
                 .Where(x => x.Attribute("type").Value.Equals("TestFixture", StringComparison.CurrentCultureIgnoreCase));

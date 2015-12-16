@@ -68,6 +68,12 @@ namespace ReportUnit.Templates
                                     <p>
                                         No tests were found in @Model.FileName.
                                     </p>
+                                    @if (!String.IsNullOrEmpty(@Model.StatusMessage))
+                                    {
+                                        <pre>
+                                            @Model.StatusMessage
+                                        </pre>
+                                    }
                                 </div>
                             }
                             else
