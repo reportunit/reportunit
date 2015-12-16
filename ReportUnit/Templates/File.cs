@@ -44,7 +44,7 @@ namespace ReportUnit.Templates
                                     <a class='left' href='http://reportunit.relevantcodes.com/'><span>ReportUnit</span></a>
                                     <a class='menu-toggle right'><i class='mdi-navigation-menu small'></i></a>
                                 </li>
-                                <!--%SIDENAV%-->
+                                @Model.SideNavLinks
                             </ul>
                             <span class='file-name'>@Model.FileName</span>
                             <ul class='right hide-on-med-and-down nav-right'>

@@ -73,6 +73,8 @@ namespace ReportUnit.Model
 
         public double Errors { get; set; }
 
+        public string SideNavLinks { get; set; }
+
         public Report()
         {
             TestSuiteList = new List<TestSuite>();

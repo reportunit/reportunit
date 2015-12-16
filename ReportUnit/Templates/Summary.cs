@@ -43,7 +43,7 @@ namespace ReportUnit.Templates
 					                <a class='left' href='http://reportunit.relevantcodes.com/'><span>ReportUnit</span></a>
 					                <a class='menu-toggle right'><i class='mdi-navigation-menu small'></i></a>
 				                </li>
-				                <!--%SIDENAV%-->
+				                @Model.SideNavLinks
 			                </ul>
 			                <span class='file-name'>Executive Summary</span>
 			                <div class='right hide-on-med-and-down nav-right'>
@@ -116,22 +116,22 @@ namespace ReportUnit.Templates
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @for (int ix = 0; ix < Model.Count; ix++)
+                                                @for (int ix = 0; ix < Model.ReportList.Count; ix++)
                                                 {
                                                     <tr>
-                                                        <td><a href='./@Model[ix].GetHtmlFileName()'>@Model[ix].FileName</a></td>
-                                                        <td>@Model[ix].TestRunner</td>
-                                                        <td>@Model[ix].Total</td>
-                                                        <td>@Model[ix].Passed</td>
-                                                        <td>@Model[ix].Failed</td>
-                                                        <td>@(Model[ix].Inconclusive + Model[ix].Skipped + Model[ix].Errors)</td>
+                                                        <td><a href='./@Model.ReportList[ix].GetHtmlFileName()'>@Model.ReportList[ix].FileName</a></td>
+                                                        <td>@Model.ReportList[ix].TestRunner</td>
+                                                        <td>@Model.ReportList[ix].Total</td>
+                                                        <td>@Model.ReportList[ix].Passed</td>
+                                                        <td>@Model.ReportList[ix].Failed</td>
+                                                        <td>@(Model.ReportList[ix].Inconclusive + Model.ReportList[ix].Skipped + Model.ReportList[ix].Errors)</td>
                                                         <td>
-                                                            @{var total = Model[ix].Total;
-                                                                var passed = Model[ix].Passed;
-                                                                var failed = Model[ix].Failed;
-                                                                var others = Model[ix].Total - (Model[ix].Passed + Model[ix].Failed);
+                                                            @{var total = Model.ReportList[ix].Total;
+                                                                var passed = Model.ReportList[ix].Passed;
+                                                                var failed = Model.ReportList[ix].Failed;
+                                                                var others = Model.ReportList[ix].Total - (Model.ReportList[ix].Passed + Model.ReportList[ix].Failed);
                                                             }
-                                                            @if (Model[ix].Total != 0) 
+                                                            @if (Model.ReportList[ix].Total != 0) 
                                                             {
                                                                 <div class='progress2'>
                                                                     @if (passed != 0)
