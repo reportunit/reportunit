@@ -19,7 +19,7 @@ namespace ReportUnit.Parser
 {
     internal class MSTest2010 : IParser
     {
-        private string resultsFile;
+        //private string resultsFile;
         private XNamespace xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
         private Logger logger = Logger.GetLogger();
 
@@ -64,6 +64,53 @@ namespace ReportUnit.Parser
             report.EndTime = times.Attribute("finish").Value;
 
             // ToDo: add fixtures + tests
+            doc.Descendants(xns + "UnitTestResult").AsParallel().ToList().ForEach(tc =>
+            {
+                var test = new Model.Test();
+
+                test.Name = tc.Attribute("testName").Value;
+                test.Status = StatusExtensions.ToStatus(tc.Attribute("outcome").Value);
+
+                // main a master list of all status
+                // used to build the status filter in the view
+                report.StatusList.Add(test.Status);
+
+                // TestCase Time Info
+                test.StartTime =
+                    tc.Attribute("startTime") != null
+                        ? tc.Attribute("startTime").Value
+                        : "";
+                test.EndTime =
+                    tc.Attribute("endTime") != null
+                        ? tc.Attribute("endTime").Value
+                        : "";
+                test.Duration = TimeSpan.Parse(tc.Attribute("duration").Value).TotalMilliseconds;
+
+                // error and other status messages
+                test.StatusMessage =
+                    tc.Element(xns + "Output") != null
+                        ? tc.Element(xns + "Output").Value.Trim()
+                        : "";
+
+                var unitTestElement = doc.Descendants(xns + "UnitTest").Where(x => x.Attribute("name").Value.Equals(test.Name));
+                if (unitTestElement != null && unitTestElement.Count() > 0)
+                {
+                    var className = unitTestElement.First().Element(xns + "TestMethod").Attribute("className").Value;
+                    var testSuite = report.TestSuiteList.SingleOrDefault(t => t.Name.Equals(className));
+
+                    if (testSuite == null)
+                    {
+                        testSuite = new TestSuite();
+                        testSuite.Name = className;
+
+                        report.TestSuiteList.Add(testSuite);
+                    }
+
+                    testSuite.TestList.Add(test);
+                    testSuite.Duration += test.Duration;
+                    testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
+                }
+            });
 
             return report;
         }
