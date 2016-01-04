@@ -55,18 +55,20 @@ namespace ReportUnit
                 }
             }
 
+            if (compositeTemplate.ReportList.Count > 1)
+            {
+                compositeTemplate.SideNavLinks = compositeTemplate.SideNavLinks.Insert(0, Templates.SideNav.IndexLink);
+
+                string summary = Engine.Razor.RunCompile(Templates.Summary.GetSource(), "summary", typeof(Model.CompositeTemplate), compositeTemplate, null);
+                File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summary);
+            }
+
             foreach (var report in compositeTemplate.ReportList)
             {
                 report.SideNavLinks = compositeTemplate.SideNavLinks;
 
-                var html = Engine.Razor.RunCompile(Templates.File.GetSource(), "reportKey", typeof(Model.Report), report, null);
-                File.WriteAllText(Path.Combine(outputDirectory, report.GetHtmlFileName()), html);
-            }
-
-            if (compositeTemplate.ReportList.Count > 1)
-            {
-                string summary = Engine.Razor.RunCompile(Templates.Summary.GetSource(), "summaryKey", typeof(Model.CompositeTemplate), compositeTemplate, null);
-                File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summary);
+                var html = Engine.Razor.RunCompile(Templates.File.GetSource(), "report", typeof(Model.Report), report, null);
+                File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }
         }
 

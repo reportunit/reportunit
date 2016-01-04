@@ -42,7 +42,7 @@ namespace ReportUnit.Templates
 				                <li class='logo'>
 					                <a class='left' href='http://reportunit.relevantcodes.com/'><span>ReportUnit</span></a>
 					                <a class='menu-toggle right'><i class='mdi-navigation-menu small'></i></a>
-				                </li>
+                                </li>
 				                @Model.SideNavLinks
 			                </ul>
 			                <span class='file-name'>Executive Summary</span>
@@ -119,7 +119,7 @@ namespace ReportUnit.Templates
                                                 @for (int ix = 0; ix < Model.ReportList.Count; ix++)
                                                 {
                                                     <tr>
-                                                        <td><a href='./@Model.ReportList[ix].GetHtmlFileName()'>@Model.ReportList[ix].FileName</a></td>
+                                                        <td><a href='./@(Model.ReportList[ix].FileName).html'>@Model.ReportList[ix].FileName</a></td>
                                                         <td>@Model.ReportList[ix].TestRunner</td>
                                                         <td>@Model.ReportList[ix].Total</td>
                                                         <td>@Model.ReportList[ix].Passed</td>

@@ -97,7 +97,7 @@ namespace ReportUnit
                 return;
             }
 
-            if (Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx"))
+            if (File.Exists(args[0]) && (Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")))
             {
                 new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[0]).FullName);
                 return;
@@ -105,7 +105,7 @@ namespace ReportUnit
 
             if (!Directory.Exists(args[0]))
             {
-                _logger.Error("The path of directory you have specified does not exist.\n" + USAGE);
+                _logger.Error("The path of file or directory you have specified does not exist.\n" + USAGE);
                 return;
             }
 

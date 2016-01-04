@@ -29,11 +29,6 @@ namespace ReportUnit.Model
         /// </summary>
         public string FileName { get; set; }
 
-        public string GetHtmlFileName()
-        {
-            return Path.ChangeExtension(FileName, "html");
-        }
-
         public TestRunner TestRunner { get; set; }
 
         public Dictionary<string, string> RunInfo { get; private set; }

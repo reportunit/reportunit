@@ -22,7 +22,7 @@ namespace ReportUnit.Model
 
             _reportList.Add(report);
 
-            SideNavLinks += Engine.Razor.RunCompile(Templates.SideNav.GetSource(), "sidenavKey", typeof(Report), report, null);
+            SideNavLinks += Engine.Razor.RunCompile(Templates.SideNav.Link, "sidenav", typeof(Report), report, null);
         }
 
         public List<Report> ReportList
@@ -33,6 +33,6 @@ namespace ReportUnit.Model
             }
         }
 
-        public string SideNavLinks { get; private set; }
+        public string SideNavLinks { get; internal set; }
     }
 }
