@@ -195,18 +195,22 @@ namespace ReportUnit.Parser
                     // error and other status messages
                     test.StatusMessage = 
                         tc.Element("failure") != null 
-                            ? tc.Element("failure").Element("message").Value 
+                            ? tc.Element("failure").Element("message").Value.Trim()
                             : "";
                     test.StatusMessage += 
                         tc.Element("failure") != null 
                             ? tc.Element("failure").Element("stack-trace") != null 
-                                ? tc.Element("failure").Element("stack-trace").Value 
+                                ? tc.Element("failure").Element("stack-trace").Value.Trim()
                                 : "" 
                             : "";
 
+                    test.StatusMessage += tc.Element("reason") != null && tc.Element("reason").Element("message") != null
+                        ? tc.Element("reason").Element("message").Value.Trim()
+                        : "";
+
                    // add NUnit console output to the status message
                    test.StatusMessage += tc.Element( "output" ) != null
-                     ? tc.Element( "output" ).Value
+                     ? tc.Element( "output" ).Value.Trim()
                      : "";
 
                    testSuite.TestList.Add(test);
