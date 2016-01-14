@@ -32,7 +32,7 @@ namespace ReportUnit.Templates
 	                <title>ReportUnit TestRunner Report</title>
 	                <link href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css' rel='stylesheet' type='text/css'>
 	                <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
-	                <link href='http://cdn.rawgit.com/reportunit/reportunit/70f5e4660d0b66c6a6a652a516c15db9544e24cf/cdn/reportunit.css' type='text/css' rel='stylesheet' />
+	                <link href='https://cdn.rawgit.com/reportunit/reportunit/70f5e4660d0b66c6a6a652a516c15db9544e24cf/cdn/reportunit.css' type='text/css' rel='stylesheet' />
 
                 </head>
                 <body>    
@@ -184,7 +184,7 @@ namespace ReportUnit.Templates
                 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
-                <script src='http://cdn.rawgit.com/reportunit/reportunit/d839bbb461a0e873b471330fb13aa5fd694ccd60/cdn/reportunit.js' type='text/javascript'></script>
+                <script src='https://cdn.rawgit.com/reportunit/reportunit/d839bbb461a0e873b471330fb13aa5fd694ccd60/cdn/reportunit.js' type='text/javascript'></script>
 
             </html>
             ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); ;
