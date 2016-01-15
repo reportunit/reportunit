@@ -84,7 +84,11 @@ namespace ReportUnit.Parser
                     tc.Attribute("endTime") != null
                         ? tc.Attribute("endTime").Value
                         : "";
-                test.Duration = TimeSpan.Parse(tc.Attribute("duration").Value).TotalMilliseconds;
+             
+              var timespan = Convert.ToDateTime(test.StartTime) - Convert.ToDateTime(test.EndTime);
+                test.Duration = timespan.Milliseconds;   
+                
+           //     test.Duration = TimeSpan.Parse(tc.Attribute("duration").Value).TotalMilliseconds;
 
                 // error and other status messages
                 test.StatusMessage =
