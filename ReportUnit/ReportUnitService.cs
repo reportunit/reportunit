@@ -26,16 +26,16 @@ namespace ReportUnit
         public void CreateReport(string input, string outputDirectory)
         {
             var attributes = File.GetAttributes(input);
-            List<string> filePathList;
+			IEnumerable<FileInfo> filePathList;
 
             if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
             {
-                filePathList = Directory.GetFiles(input, "*.*", SearchOption.TopDirectoryOnly).ToList();
+				filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
+					.OrderByDescending(f => f.CreationTime);
             }
             else
             {
-                filePathList = new List<string>();
-                filePathList.Add(input);
+				filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
             }
 
             InitializeRazor();
@@ -44,12 +44,12 @@ namespace ReportUnit
 
             foreach (var filePath in filePathList)
             {
-                var testRunner = GetTestRunner(filePath);
+                var testRunner = GetTestRunner(filePath.FullName);
 
                 if (!(testRunner.Equals(TestRunner.Unknown)))
                 {
                     IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
-                    var report = parser.Parse(filePath);
+                    var report = parser.Parse(filePath.FullName);
 
                     compositeTemplate.AddReport(report);
                 }
