@@ -42,19 +42,19 @@ namespace ReportUnit.Parser
             report.Passed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Passed")).Count();
             report.Failed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Failed")).Count();
             report.Inconclusive = resultNodes
-                .Where(x => 
-                    x.Attribute("outcome").Value.Equals("Inconclusive") 
-                    || x.Attribute("outcome").Value.Equals("passedButRunAborted") 
-                    || x.Attribute("outcome").Value.Equals("disconnected") 
-                    || x.Attribute("outcome").Value.Equals("notRunnable") 
-                    || x.Attribute("outcome").Value.Equals("warning") 
+                .Where(x =>
+                    x.Attribute("outcome").Value.Equals("Inconclusive")
+                    || x.Attribute("outcome").Value.Equals("passedButRunAborted")
+                    || x.Attribute("outcome").Value.Equals("disconnected")
+                    || x.Attribute("outcome").Value.Equals("notRunnable")
+                    || x.Attribute("outcome").Value.Equals("warning")
                     || x.Attribute("outcome").Value.Equals("pending"))
                 .Count();
             report.Skipped = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("NotExecuted")).Count();
             report.Errors = resultNodes
-                .Where(x => 
-                    x.Attribute("outcome").Value.Equals("Passed") 
-                    || x.Attribute("outcome").Value.Equals("Aborted") 
+                .Where(x =>
+                    x.Attribute("outcome").Value.Equals("Passed")
+                    || x.Attribute("outcome").Value.Equals("Aborted")
                     || x.Attribute("outcome").Value.Equals("timeout"))
                 .Count();
 
@@ -84,39 +84,63 @@ namespace ReportUnit.Parser
                     tc.Attribute("endTime") != null
                         ? tc.Attribute("endTime").Value
                         : "";
-             
-              var timespan = Convert.ToDateTime(test.StartTime) - Convert.ToDateTime(test.EndTime);
-                test.Duration = timespan.Milliseconds;   
-                
-           //     test.Duration = TimeSpan.Parse(tc.Attribute("duration").Value).TotalMilliseconds;
+
+                var timespan = Convert.ToDateTime(test.StartTime) - Convert.ToDateTime(test.EndTime);
+                test.Duration = timespan.Milliseconds;
 
                 // error and other status messages
-                test.StatusMessage =
-                    tc.Element(xns + "Output") != null
-                        ? tc.Element(xns + "Output").Value.Trim()
-                        : "";
+                test.StatusMessage = tc.Element(xns + "Output") != null ? tc.Element(xns + "Output").Value.Trim() : "";
 
-                var unitTestElement = doc.Descendants(xns + "UnitTest").Where(x => x.Attribute("name").Value.Equals(test.Name));
-                if (unitTestElement != null && unitTestElement.Count() > 0)
+                var unitTestElement = doc.Descendants(xns + "UnitTest").FirstOrDefault(x => x.Attribute("name").Value.Equals(test.Name));
+
+                if (unitTestElement != null)
                 {
-                    var className = unitTestElement.First().Element(xns + "TestMethod").Attribute("className").Value;
-                    var testSuite = report.TestSuiteList.SingleOrDefault(t => t.Name.Equals(className));
-
-                    if (testSuite == null)
+                    
+                    var descriptionElement = unitTestElement.Element(xns + "Description");
+                    if (descriptionElement != null)
                     {
-                        testSuite = new TestSuite();
-                        testSuite.Name = className;
-
-                        report.TestSuiteList.Add(testSuite);
+                        test.Description = descriptionElement.Value;
                     }
 
-                    testSuite.TestList.Add(test);
-                    testSuite.Duration += test.Duration;
-                    testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
+                    var categories = (from testCategory in unitTestElement.Descendants(xns + "TestCategoryItem")
+                                          select testCategory.Attributes("TestCategory").Select(x => x.Value).FirstOrDefault()).ToList();
+                    
+                    test.CategoryList = categories;
+                    
+                    
+                    if (categories.Any())
+                    {
+                        foreach (var suiteName in categories)
+                        {
+                            AddTestToSuite(report, test, suiteName);
+                        }
+                    }
+                    else
+                    {
+                        var suiteName = unitTestElement.Element(xns + "TestMethod").Attribute("className").Value;
+                        AddTestToSuite(report, test, suiteName);
+                    }
                 }
             });
 
+            report.TestSuiteList = report.TestSuiteList.OrderBy(x => x.Name).ToList();
+
             return report;
+        }
+
+        private static void AddTestToSuite(Report report, Test test, string suiteName)
+        {
+            var testSuite = report.TestSuiteList.SingleOrDefault(t => t.Name.Equals(suiteName));
+
+            if (testSuite == null)
+            {
+                testSuite = new TestSuite { Name = suiteName };
+                report.TestSuiteList.Add(testSuite);
+            }
+
+            testSuite.TestList.Add(test);
+            testSuite.Duration += test.Duration;
+            testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
         }
 
         private RunInfo CreateRunInfo(XDocument doc, Report report)
@@ -129,7 +153,7 @@ namespace ReportUnit.Parser
             runInfo.Info.Add("File", report.FileName);
 
             runInfo.Info.Add("Machine Name", doc.Descendants(xns + "UnitTestResult").First().Attribute("computerName").Value);
-                        
+
             return runInfo;
         }
     }
