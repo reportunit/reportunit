@@ -14,6 +14,7 @@ namespace ReportUnit
 
     using Design;
     using Logging;
+    using System.Reflection;
 
     class Program
     {
@@ -113,7 +114,12 @@ namespace ReportUnit
 
         private static void CopyrightMessage()
         {
-            Console.WriteLine("\n--\nReportUnit v1.1. Report generator for the test-runner family.");
+            AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
+            string name = asm.Name;
+            string version = "v" + asm.Version.ToString();
+
+            Console.WriteLine("\n--\n");
+            Console.WriteLine(name + " " + version + " Report generator for the test-runner family.");
             Console.WriteLine("http://reportunit.relevantcodes.com/");
             Console.WriteLine("Copyright (c) 2015 Anshoo Arora (Relevant Codes)");
             Console.WriteLine("Developers:  Anshoo Arora, Sandra Greenhalgh\n--\n");
