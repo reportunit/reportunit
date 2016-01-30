@@ -10,7 +10,6 @@ namespace ReportUnit
 {
     using System;
     using System.IO;
-    using System.Linq;
 
     using Design;
     using Logging;
