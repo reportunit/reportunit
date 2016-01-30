@@ -117,7 +117,7 @@ namespace ReportUnit
             string name = asm.Name;
             string version = "v" + asm.Version.ToString();
 
-            Console.WriteLine("\n--\n");
+            Console.WriteLine("\n--");
             Console.WriteLine(name + " " + version + " Report generator for the test-runner family.");
             Console.WriteLine("http://reportunit.relevantcodes.com/");
             Console.WriteLine("Copyright (c) 2015 Anshoo Arora (Relevant Codes)");
