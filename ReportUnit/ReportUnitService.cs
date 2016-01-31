@@ -26,17 +26,17 @@ namespace ReportUnit
         public void CreateReport(string input, string outputDirectory)
         {
     		var attributes = File.GetAttributes(input);
-		IEnumerable<FileInfo> filePathList;
+		    List<string> filePathList;
 
         	 if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
         	{
-				filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
-					.OrderByDescending(f => f.CreationTime);
-	        }
+                filePathList = Directory.GetFiles(input, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            }
 	        else
 	        {
-				filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
-	        }
+                filePathList = new List<string>();
+                filePathList.Add(input);
+            }
 
         	InitializeRazor();
 
@@ -44,12 +44,12 @@ namespace ReportUnit
 	
         	foreach (var filePath in filePathList)
         	{
-            	var testRunner = GetTestRunner(filePath.FullName);
+            	var testRunner = GetTestRunner(filePath);
 
             	if (!(testRunner.Equals(TestRunner.Unknown)))
             	{
                     IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
-                    var report = parser.Parse(filePath.FullName);
+                    var report = parser.Parse(filePath);
 
                     compositeTemplate.AddReport(report);
                 }
@@ -66,7 +66,7 @@ namespace ReportUnit
 			foreach (var report in compositeTemplate.ReportList)
             {
                 report.SideNavLinks = compositeTemplate.SideNavLinks;
-
+                
                 var html = Engine.Razor.RunCompile(Templates.File.GetSource(), "report", typeof(Model.Report), report, null);
                 File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }
