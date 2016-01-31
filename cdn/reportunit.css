@@ -255,6 +255,9 @@ nav a.button-collapse {
 .v-spacer {
     top: 298px;
 }
+.h-spacer-single {
+    width: 750px;
+}
 
 /* ---- [ dashboard ] ---- */
 .dashboard .col {
