@@ -136,6 +136,8 @@ namespace ReportUnit.Parser
                     }
                 }
 
+                // get test suite level categories
+                var suiteCategories = this.GetCategories(ts, false);
 
                 // Test Cases
                 ts.Descendants("test-case").AsParallel().ToList().ForEach(tc =>
@@ -172,26 +174,27 @@ namespace ReportUnit.Parser
                             ? description.ToArray()[0].Attribute("value").Value 
                             : "";
 
-                    bool hasCategories = 
-                        tc.Descendants("property")
-                        .Where(c => c.Attribute("name").Value.Equals("Category", StringComparison.CurrentCultureIgnoreCase)).Count() > 0;
+                    // get test case level categories
+                    var categories = this.GetCategories(tc, true);
 
-                    if (hasCategories) 
+                    // if this is a parameterized test, get the categories from the parent test-suite
+                    var parameterizedTestElement = tc
+                        .Ancestors("test-suite").ToList()
+                        .Where(x => x.Attribute("type").Value.Equals("ParameterizedTest", StringComparison.CurrentCultureIgnoreCase))
+                        .FirstOrDefault();
+
+                    if (null != parameterizedTestElement)
                     {
-                        List<XElement> cats = tc
-                            .Descendants("property")
-                            .Where(c => c.Attribute("name").Value.Equals("Category", StringComparison.CurrentCultureIgnoreCase))
-                            .ToList();
-                                    
-                        cats.ForEach(x => 
-                        {
-                            string cat = x.Attribute("value").Value;
-
-                            test.CategoryList.Add(cat);
-                            report.CategoryList.Add(cat);
-                        });
+                        var paramCategories = this.GetCategories(parameterizedTestElement, false);
+                        categories.UnionWith(paramCategories);
                     }
-                    
+
+                    //Merge test level categories with suite level categories and add to test and report
+                    categories.UnionWith(suiteCategories);
+                    test.CategoryList.AddRange(categories);
+                    report.CategoryList.AddRange(categories);
+
+
                     // error and other status messages
                     test.StatusMessage = 
                         tc.Element("failure") != null 
@@ -221,7 +224,40 @@ namespace ReportUnit.Parser
                 report.TestSuiteList.Add(testSuite);
             });
 
+            //Sort category list so it's in alphabetical order
+            report.CategoryList.Sort();
+
             return report;
+        }
+
+        /// <summary>
+        /// Returns categories for the direct children or all descendents of an XElement
+        /// </summary>
+        /// <param name="elem">XElement to parse</param>
+        /// <param name="allDescendents">If true, return all descendent categories.  If false, only direct children</param>
+        /// <returns></returns>
+        private HashSet<string> GetCategories(XElement elem, bool allDescendents)
+        {
+            //Define which function to use
+            var parser = allDescendents
+                ? new Func<XElement, string, IEnumerable<XElement>>((e, s) => e.Descendants(s))
+                : new Func<XElement, string, IEnumerable<XElement>>((e, s) => e.Elements(s));
+
+            //Grab unique categories
+            HashSet<string> categories = new HashSet<string>();
+            bool hasCategories = parser(elem, "categories").Any();
+            if (hasCategories)
+            {
+                List<XElement> cats = parser(elem, "categories").Elements("category").ToList();
+
+                cats.ForEach(x =>
+                {
+                    string cat = x.Attribute("name").Value;
+                    categories.Add(cat);
+                });
+            }
+
+            return categories;
         }
 
         private RunInfo CreateRunInfo(XDocument doc, Report report)

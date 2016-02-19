@@ -246,10 +246,10 @@ nav a.button-collapse {
 }
 .suite-list {
     overflow-y: scroll;
-    width: 500px;
+    width: 20%;
 }
 .suite-details {
-    left: 762px;
+    left: 21%;
     right: 1%;
 }
 .v-spacer {
