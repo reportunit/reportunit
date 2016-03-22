@@ -23,8 +23,10 @@ namespace ReportUnit
 
         public ReportUnitService() { }
 
-        public void CreateReport(string input, string outputDirectory)
+        public ExitCode CreateReport(string input, string outputDirectory)
         {
+            // by default, return true for runstatus
+            var runStatus = ExitCode.Success;
     		var attributes = File.GetAttributes(input);
 		    List<string> filePathList;
 
@@ -51,6 +53,13 @@ namespace ReportUnit
                     IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
                     var report = parser.Parse(filePath);
 
+                    if (runStatus == ExitCode.Success)
+                    {
+                        if (report.Failed > 0) runStatus = ExitCode.Failure;
+                        else if (report.Errors > 0) runStatus = ExitCode.Error;
+                        else if (report.Inconclusive > 0) runStatus = ExitCode.Inconclusive;
+                    }
+
                     compositeTemplate.AddReport(report);
                 }
             }
@@ -70,6 +79,10 @@ namespace ReportUnit
                 var html = Engine.Razor.RunCompile(Templates.File.GetSource(), "report", typeof(Model.Report), report, null);
                 File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }
+
+            Console.WriteLine("Program ExitCode: " + runStatus);
+
+            return runStatus;
         }
 
         private TestRunner GetTestRunner(string inputFile)

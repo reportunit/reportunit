@@ -41,14 +41,14 @@ namespace ReportUnit
         ///     Type 3: reportunit "input.xml" "output.html"
         ///         args.length = 2 && args[0] is xml-input && args[1] is html-output
         /// </param>
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             CopyrightMessage();
 
             if (args.Length == 0 || args.Length > 2)
             {
                 _logger.Error("Invalid number of arguments specified.\n" + USAGE);
-                return;
+                return ((int) ExitCode.BadInput);
             }
 
             foreach (string arg in args)
@@ -56,7 +56,7 @@ namespace ReportUnit
                 if (arg.Trim() == "" || arg == "\\\\")
                 {
                     _logger.Error("Invalid argument(s) specified.\n" + USAGE);
-                    return;
+                    return ((int)ExitCode.BadInput);
                 }
             }
 
@@ -65,6 +65,8 @@ namespace ReportUnit
                 args[ix] = args[ix].Replace('"', '\\');
             }
 
+            var exitCode = ExitCode.Success;
+
             if (args.Length == 2)
             {
                 if ((Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")) && (Path.GetExtension(args[1]).ToLower().Contains("htm")))
@@ -72,14 +74,14 @@ namespace ReportUnit
                     if (!Directory.GetParent(args[1]).Exists)
                         Directory.CreateDirectory(Directory.GetParent(args[1]).FullName);
 
-                    new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[1]).FullName);
-                    return;
+                    exitCode = new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[1]).FullName);
+                    return ((int) exitCode);
                 }
 
                 if (!Directory.Exists(args[0]))
                 {
                     _logger.Error("Input directory " + args[0] + " not found.");
-                    return;
+                    return ((int)ExitCode.BadInput);
                 }
 
                 if (!Directory.Exists(args[1]))
@@ -87,29 +89,30 @@ namespace ReportUnit
 
                 if (Directory.Exists(args[0]) && Directory.Exists(args[1]))
                 {
-                    new ReportUnitService().CreateReport(args[0], args[1]);
+                    exitCode = new ReportUnitService().CreateReport(args[0], args[1]);
+                    return ((int)exitCode);
                 }
                 else
                 {
                     _logger.Error("Invalid files specified.\n" + USAGE);
+                    return ((int)ExitCode.BadInput);
                 }
-
-                return;
             }
 
             if (File.Exists(args[0]) && (Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")))
             {
-                new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[0]).FullName);
-                return;
+                exitCode = new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[0]).FullName);
+                return ((int)exitCode);
             }
 
             if (!Directory.Exists(args[0]))
             {
                 _logger.Error("The path of file or directory you have specified does not exist.\n" + USAGE);
-                return;
+                return ((int)ExitCode.BadInput);
             }
 
-            new ReportUnitService().CreateReport(args[0], args[0]);
+            exitCode = new ReportUnitService().CreateReport(args[0], args[0]);
+            return ((int)exitCode);
         }
 
         private static void CopyrightMessage()
