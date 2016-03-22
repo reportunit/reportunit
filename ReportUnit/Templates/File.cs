@@ -252,7 +252,7 @@ namespace ReportUnit.Templates
                                                                                     <td>
                                                                                     
                                                                                         <div class='badge showStatusMessage error'><i class='mdi-alert-warning'></i></div>
-                                                                                        <pre class='hide'>@test.StatusMessage</pre>
+                                                                                        <pre class='hide'>@test.StatusMessage.Replace(""<"", ""&lt;"").Replace("">"", ""&gt;"")</pre>
                                                                                     </td>
                                                                                 }
                                                                                 else 
