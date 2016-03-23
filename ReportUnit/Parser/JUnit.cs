@@ -15,7 +15,7 @@
     {
         public Report Parse(string filePath)
         {
-            if (!System.IO.File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException(string.Format("File {0} does not exist.", filePath));
             }
@@ -23,9 +23,9 @@
 
             XDocument doc = XDocument.Load(filePath);
 
-            var docroot = doc.Root;
+            var docRoot = doc.Root;
 
-            if (docroot == null)
+            if (docRoot == null)
             {
                 throw new NullReferenceException(@"Could not read document root.");
             }
@@ -40,101 +40,18 @@
                 report.AddRunInfo(runInfo);
             }
 
-            IEnumerable<XElement> suites = docroot.Descendants("testsuite");
-
+            IEnumerable<XElement> suites = docRoot.Descendants("testsuite");
+            
+            // Lets avoid multiple enumerations of the collection.
             var suitesList = suites as XElement[] ?? suites.ToArray();
             if (suitesList.Any())
             {
                 suitesList.AsParallel().ToList().ForEach(
                     ts =>
-                        {
-                            var testSuite = new TestSuite();
-                            testSuite.Name = ts.GetNullableAttribute("name");
-                            testSuite.StartTime = ts.GetNullableAttribute("timestamp");
-
-                            // we will add host and test suite ID to description.
-                            var hostName = ts.GetNullableAttribute("hostname");
-                            var id = ts.GetNullableAttribute("id");
-                            if (hostName != string.Empty)
-                            {
-                                testSuite.Description = "Hostname: " + hostName;
-                            }
-
-                            if (id != string.Empty)
-                            {
-                                testSuite.Description += " Id: " + id;
-                            }
-
-                            var duration = ts.GetNullableAttribute("time");
-                            if (duration != string.Empty)
-                            {
-                                var parseResult = Regex.Replace(duration, @"[^0-9.]", "");
-                                testSuite.Duration = double.Parse(parseResult);
-                            }
-                            
-                            ts.Descendants("testcase").AsParallel().ToList().ForEach(
-                                tc =>
-                                    {
-                                        var test = new Test();
-                                        test.Name = tc.GetNullableAttribute("name");
-
-                                        var classCategory = tc.GetNullableAttribute("classname");
-                                        if (classCategory != string.Empty)
-                                        {
-                                            test.CategoryList.Add(classCategory);
-                                        }
-
-                                        var failureElement = tc.Descendants("failure").FirstOrDefault();
-                                        if (failureElement == null)
-                                        {
-                                            test.Status = Status.Passed;
-                                        }
-                                        else
-                                        {
-                                            test.Status = Status.Failed;
-                                            test.StatusMessage = failureElement.Value;
-                                            var typeAttribute = failureElement.GetNullableAttribute("type");
-                                            if (typeAttribute != string.Empty)
-                                                // we add the type attribute to the failure if it's present.
-                                            {
-                                                test.StatusMessage += " Type: " + typeAttribute;
-                                            }
-                                        }
-
-                                        var errorElement = tc.Descendants("error").FirstOrDefault();
-
-                                        if (errorElement != null)
-                                        {
-                                            // we overwrite the status because it means that there was an error.
-                                            test.Status = Status.Error;
-                                            test.StatusMessage += errorElement.Value;
-                                            // we add the type attribute if it's there.
-                                            var typeAttribute = errorElement.GetNullableAttribute("type");
-                                            if (typeAttribute != string.Empty)
-                                            {
-                                                test.StatusMessage += " Type: " + typeAttribute;
-                                            }
-                                        }
-
-                                        var systemOutElement = tc.Descendants("system-out").FirstOrDefault();
-                                        if (systemOutElement != null)
-                                        {
-                                            test.StatusMessage += " System-Out: " + systemOutElement.Value;
-                                        }
-
-                                        var systemErrElement = tc.Descendants("system-err").FirstOrDefault();
-                                        if (systemErrElement != null)
-                                        {
-                                            test.StatusMessage += " System-Err: " + systemErrElement.Value;
-                                        }
-
-                                        testSuite.TestList.Add(test);
-                                    });
-
-                            testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
-
-                            report.TestSuiteList.Add(testSuite);
-                        });
+                    {
+                        TestSuite testSuite = CreateTestSuite(ts);
+                        report.TestSuiteList.Add(testSuite);
+                    });
             }
             else
             {
@@ -147,92 +64,13 @@
                     testSuites.AsParallel().ToList().ForEach(
                         ts =>
                         {
-                            var testSuite = new TestSuite();
-                            testSuite.Name = ts.GetNullableAttribute("name");
-                            testSuite.StartTime = ts.GetNullableAttribute("timestamp");
-
-                            // we will add host and test suite ID to description.
-                            var hostName = ts.GetNullableAttribute("hostname");
-                            var id = ts.GetNullableAttribute("id");
-                            if (hostName != string.Empty)
-                            {
-                                testSuite.Description = "Hostname: " + hostName;
-                            }
-
-                            if (id != string.Empty)
-                            {
-                                testSuite.Description += " Id: " + id;
-                            }
-
-                            var duration = ts.GetNullableAttribute("time");
-                            testSuite.Duration = duration == string.Empty ? 0 : double.Parse(duration);
-
-                            ts.Descendants("testcase").AsParallel().ToList().ForEach(
-                                tc =>
-                                {
-                                    var test = new Test();
-                                    test.Name = tc.GetNullableAttribute("name");
-
-                                    var classCategory = tc.GetNullableAttribute("classname");
-                                    if (classCategory != string.Empty)
-                                    {
-                                        test.CategoryList.Add(classCategory);
-                                    }
-
-                                    var failureElement = tc.Descendants("failure").FirstOrDefault();
-                                    if (failureElement == null)
-                                    {
-                                        test.Status = Status.Passed;
-                                    }
-                                    else
-                                    {
-                                        test.Status = Status.Failed;
-                                        test.StatusMessage = failureElement.Value;
-                                        var typeAttribute = failureElement.GetNullableAttribute("type");
-                                        if (typeAttribute != string.Empty)
-                                        // we add the type attribute to the failure if it's present to get more info.
-                                        {
-                                            test.StatusMessage += " Type: " + typeAttribute;
-                                        }
-                                    }
-
-                                    var errorElement = tc.Descendants("error").FirstOrDefault();
-
-                                    if (errorElement != null)
-                                    {
-                                        // we overwrite the status because it means that there was an error.
-                                        test.Status = Status.Error;
-                                        test.StatusMessage += errorElement.Value;
-                                        // we add the type attribute if it's there.
-                                        var typeAttribute = errorElement.GetNullableAttribute("type");
-                                        if (typeAttribute != string.Empty)
-                                        {
-                                            test.StatusMessage += " Type: " + typeAttribute;
-                                        }
-                                    }
-
-                                    var systemOutElement = tc.Descendants("system-out").FirstOrDefault();
-                                    if (systemOutElement != null)
-                                    {
-                                        test.StatusMessage += " System-Out: " + systemOutElement.Value;
-                                    }
-
-                                    var systemErrElement = tc.Descendants("system-err").FirstOrDefault();
-                                    if (systemErrElement != null)
-                                    {
-                                        test.StatusMessage += " System-Err: " + systemErrElement.Value;
-                                    }
-
-                                    testSuite.TestList.Add(test);
-                                });
-
-                            testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
-
+                            var testSuite = CreateTestSuite(ts);
                             report.TestSuiteList.Add(testSuite);
                         });
                 }
             }
 
+            // instead of filling this info with stuff from XML, let's just use the data we already have.
             report.Total = report.TestSuiteList.Sum(testSuite => testSuite.TestList.Count);
 
             report.Failed =
@@ -244,10 +82,10 @@
 
             report.Duration = report.TestSuiteList.Sum(testSuite => testSuite.TestList.Sum(x => x.Duration));
 
-            if (singleSuite)
+            if (singleSuite) // if there's no <testsuites> root node this should be true.
             {
-                report.StartTime = docroot.Attribute("timestamp") != null
-                                       ? docroot.Attribute("timestamp").Value
+                report.StartTime = docRoot.Attribute("timestamp") != null
+                                       ? docRoot.Attribute("timestamp").Value
                                        : string.Empty;
             }
             else
@@ -266,6 +104,113 @@
             report.CategoryList.Sort();
 
             return report;
+        }
+
+        /// <summary>
+        /// Creates the test suite element. 
+        /// </summary>
+        /// <param name="testSuiteElement"></param>
+        /// <returns>The TestSuite object</returns>
+        private static TestSuite CreateTestSuite(XElement testSuiteElement)
+        {
+            var testSuite = new TestSuite();
+            testSuite.Name = testSuiteElement.GetNullableAttribute("name");
+            testSuite.StartTime = testSuiteElement.GetNullableAttribute("timestamp");
+
+            // we will add host and test suite ID to description.
+            var hostName = testSuiteElement.GetNullableAttribute("hostname");
+            var id = testSuiteElement.GetNullableAttribute("id");
+            if (hostName != string.Empty)
+            {
+                testSuite.Description = "Hostname: " + hostName;
+            }
+
+            if (id != string.Empty)
+            {
+                testSuite.Description += " Id: " + id;
+            }
+
+            var duration = testSuiteElement.GetNullableAttribute("time");
+            if (duration != string.Empty)
+            {
+                var parseResult = Regex.Replace(duration, @"[^0-9.]", "");
+                testSuite.Duration = double.Parse(parseResult);
+            }
+
+            testSuiteElement.Descendants("testcase").AsParallel().ToList().ForEach(
+                tc =>
+                {
+                    Test test = CreateTestCase(tc);
+
+                    testSuite.TestList.Add(test);
+                });
+
+            testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
+            return testSuite;
+        }
+
+        /// <summary>
+        /// The create test case method.
+        /// </summary>
+        /// <param name="testCaseElement">The test case.</param>
+        /// <returns>The Tests</returns>
+        private static Test CreateTestCase(XElement testCaseElement)
+        {
+            var test = new Test();
+            test.Name = testCaseElement.GetNullableAttribute("name");
+
+            var classCategory = testCaseElement.GetNullableAttribute("classname");
+            if (classCategory != string.Empty)
+            {
+                test.CategoryList.Add(classCategory);
+            }
+
+            var failureElement = testCaseElement.Descendants("failure").FirstOrDefault();
+            if (failureElement == null)
+            {
+                test.Status = Status.Passed;
+            }
+            else
+            {
+                test.Status = Status.Failed;
+                test.StatusMessage = failureElement.Value;
+                var typeAttribute = failureElement.GetNullableAttribute("type");
+                if (typeAttribute != string.Empty)
+                {
+                    // we add the type attribute to the failure if it's present.
+                    test.StatusMessage += " Type: " + typeAttribute;
+                }
+            }
+
+            var errorElement = testCaseElement.Descendants("error").FirstOrDefault();
+
+            if (errorElement != null)
+            {
+                // we overwrite the status because it means that there was an error.
+                test.Status = Status.Error;
+                test.StatusMessage += errorElement.Value;
+                // we add the type attribute if it's there.
+                var typeAttribute = errorElement.GetNullableAttribute("type");
+                if (typeAttribute != string.Empty)
+                {
+                    test.StatusMessage += " Type: " + typeAttribute;
+                }
+            }
+
+            // additional info that could come in XML file, we'll store it in the StatusMessage.
+            var systemOutElement = testCaseElement.Descendants("system-out").FirstOrDefault();
+            if (systemOutElement != null)
+            {
+                test.StatusMessage += " System-Out: " + systemOutElement.Value;
+            }
+
+            var systemErrElement = testCaseElement.Descendants("system-err").FirstOrDefault();
+            if (systemErrElement != null)
+            {
+                test.StatusMessage += " System-Err: " + systemErrElement.Value;
+            }
+
+            return test;
         }
 
         /// <summary>
