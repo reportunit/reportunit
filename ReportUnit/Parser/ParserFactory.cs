@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-
+using System.Xml.Linq;
+using System.Xml.Schema;
 using ReportUnit.Logging;
 using ReportUnit.Model;
+using ReportUnit.Utils;
 
 namespace ReportUnit.Parser
 {
@@ -16,9 +18,12 @@ namespace ReportUnit.Parser
 
         private string filePath;
 
+        private bool validJunitSchema;
+
         public ParserFactory(string filePath)
         {
             this.filePath = filePath;
+            this.validJunitSchema = true;
         }
 
         public TestRunner GetTestRunnerType()
@@ -81,6 +86,11 @@ namespace ReportUnit.Parser
                         }
                     }
 
+                    if (ValidateJUnitXsd(doc))
+                    {
+                        return TestRunner.JUnit;
+                    }
+
                     // NUnit
                     // NOTE: not all nunit test files (ie when have nunit output format from other test runners) will contain the environment node
                     //            but if it does exist - then it should have the nunit-version attribute
@@ -95,6 +105,23 @@ namespace ReportUnit.Parser
             catch { }
 
             return TestRunner.Unknown;
+        }
+
+        private bool ValidateJUnitXsd(XmlDocument doc)
+        {
+            XmlSchemaSet schema = new XmlSchemaSet();
+            var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open);
+            
+            schema.Add("", XmlReader.Create(file));
+            
+            doc.Schemas.Add(schema);
+            doc.Schemas.Compile();
+            doc.Validate((s, o) =>
+            {
+                this.validJunitSchema = false;
+            });
+
+            return this.validJunitSchema;
         }
     }
 }

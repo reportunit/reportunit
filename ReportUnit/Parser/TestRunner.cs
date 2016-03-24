@@ -7,6 +7,7 @@
         NUnit,
 		XUnitV1,
 		XUnitV2,
+        JUnit,
         Unknown
     }
 }
