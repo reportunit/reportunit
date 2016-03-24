@@ -7,9 +7,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
-
-    using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
-
+    
     using ReportUnit.Extensions;
     using ReportUnit.Model;
     using ReportUnit.Utils;
@@ -80,11 +78,9 @@
             report.Duration = report.TestSuiteList.Sum(testSuite => testSuite.TestList.Sum(x => x.Duration));
 
             // if there's no <testsuites> root node this should be true.
-            if (singleSuite) 
+            if (singleSuite)
             {
-                report.StartTime = docRoot.Attribute("timestamp") != null
-                                       ? docRoot.Attribute("timestamp").Value
-                                       : string.Empty;
+                report.StartTime = docRoot.GetNullableAttribute("timestamp");
             }
             else
             {
