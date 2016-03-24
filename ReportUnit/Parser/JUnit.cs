@@ -4,8 +4,11 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
+
+    using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
 
     using ReportUnit.Extensions;
     using ReportUnit.Model;
@@ -33,12 +36,6 @@
             var report = new Report();
             report.FileName = Path.GetFileNameWithoutExtension(filePath);
             report.TestRunner = TestRunner.JUnit;
-
-            var runInfo = this.CreateRunInfo(doc, report);
-            if (runInfo != null)
-            {
-                report.AddRunInfo(runInfo);
-            }
 
             IEnumerable<XElement> suites = docRoot.Descendants("testsuite");
             
@@ -82,7 +79,8 @@
 
             report.Duration = report.TestSuiteList.Sum(testSuite => testSuite.TestList.Sum(x => x.Duration));
 
-            if (singleSuite) // if there's no <testsuites> root node this should be true.
+            // if there's no <testsuites> root node this should be true.
+            if (singleSuite) 
             {
                 report.StartTime = docRoot.Attribute("timestamp") != null
                                        ? docRoot.Attribute("timestamp").Value
@@ -111,12 +109,12 @@
         /// </summary>
         /// <param name="testSuiteElement"></param>
         /// <returns>The TestSuite object</returns>
-        private static TestSuite CreateTestSuite(XElement testSuiteElement)
+        private TestSuite CreateTestSuite(XElement testSuiteElement)
         {
             var testSuite = new TestSuite();
             testSuite.Name = testSuiteElement.GetNullableAttribute("name");
             testSuite.StartTime = testSuiteElement.GetNullableAttribute("timestamp");
-
+            
             // we will add host and test suite ID to description.
             var hostName = testSuiteElement.GetNullableAttribute("hostname");
             var id = testSuiteElement.GetNullableAttribute("id");
@@ -129,6 +127,8 @@
             {
                 testSuite.Description += " Id: " + id;
             }
+
+            testSuite.Description += this.GetTestSuiteProperties(testSuiteElement);
 
             var duration = testSuiteElement.GetNullableAttribute("time");
             if (duration != string.Empty)
@@ -154,7 +154,7 @@
         /// </summary>
         /// <param name="testCaseElement">The test case.</param>
         /// <returns>The Tests</returns>
-        private static Test CreateTestCase(XElement testCaseElement)
+        private Test CreateTestCase(XElement testCaseElement)
         {
             var test = new Test();
             test.Name = testCaseElement.GetNullableAttribute("name");
@@ -216,19 +216,43 @@
         /// <summary>
         /// The create run info.
         /// </summary>
-        /// <param name="doc">
-        /// The doc.
-        /// </param>
-        /// <param name="report">
-        /// The report.
+        /// <param name="testSuite">
+        /// The test Suite.
         /// </param>
         /// <returns>
-        /// The <see cref="Dictionary"/>.
+        /// A string with all the properties in the test suite.
         /// </returns>
-        private Dictionary<string, string> CreateRunInfo(XDocument doc, Report report)
+        private string GetTestSuiteProperties(XElement testSuite)
         {
-            return null;
-            //            throw new System.NotImplementedException();
+            var stringBuilder = new StringBuilder();
+            var properties = testSuite.Descendants("properties");
+
+            if (properties != null)
+            {
+                var propertyList = properties.Descendants("property");
+
+                // cast to array to avoid multiple enumerations of collection.
+                var xElements = propertyList as XElement[] ?? propertyList.ToArray();
+                
+                if (xElements.Any())
+                {
+                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine("Test Suite Properties:");
+                    
+                    foreach (var prop in xElements)
+                    {
+                        var propertyName = prop.GetNullableAttribute("name");
+                        var propertyValue = prop.GetNullableAttribute("value");
+
+                        if (propertyName != string.Empty && propertyValue != string.Empty)
+                        {
+                            stringBuilder.AppendLine(string.Format("{0}: {1}", propertyName, propertyValue));
+                        }
+                    }
+                }
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }
