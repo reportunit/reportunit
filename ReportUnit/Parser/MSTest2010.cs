@@ -63,13 +63,18 @@ namespace ReportUnit.Parser
                 // main a master list of all status
                 // used to build the status filter in the view
                 report.StatusList.Add(test.Status);
-                if (test.Status != Status.Skipped)
+                if (TestHasResult(test))
                     ParseTestResult(test, tc, doc, report);
             });
 
             report.TestSuiteList = report.TestSuiteList.OrderBy(x => x.Name).ToList();
 
             return report;
+        }
+
+        private static bool TestHasResult(Test test)
+        {
+            return test.Status == Status.Passed || test.Status == Status.Failed;
         }
 
         private void ParseTestResult(Test test, XElement tc, XDocument doc, Report report)
