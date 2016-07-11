@@ -49,12 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\XElementExtensions.cs" />
     <Compile Include="Logging\Level.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Model\CompositeTemplate.cs" />
     <Compile Include="Parser\Gallio.cs" />
     <Compile Include="Parser\IParser.cs" />
+    <Compile Include="Parser\JUnit.cs" />
     <Compile Include="Parser\MSTest2010.cs" />
     <Compile Include="Parser\NUnit.cs" />
     <Compile Include="Parser\ParserFactory.cs" />
@@ -79,6 +81,10 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Readme.md" />
+    <Content Include="Schemas\junit.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
