@@ -76,6 +76,7 @@
     <Compile Include="Templates\File.cs" />
     <Compile Include="Templates\SideNav.cs" />
     <Compile Include="Templates\Summary.cs" />
+    <Compile Include="Templates\TemplateManager.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
     <Compile Include="Utils\ReportUtil.cs" />
   </ItemGroup>

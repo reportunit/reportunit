@@ -59,7 +59,7 @@ namespace ReportUnit
             {
                 compositeTemplate.SideNavLinks = compositeTemplate.SideNavLinks.Insert(0, Templates.SideNav.IndexLink);
 
-                string summary = Engine.Razor.RunCompile(Templates.Summary.GetSource(), "summary", typeof(Model.CompositeTemplate), compositeTemplate, null);
+                string summary = Engine.Razor.RunCompile(Templates.TemplateManager.GetSummaryTemplate(), "summary", typeof(Model.CompositeTemplate), compositeTemplate, null);
                 File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summary);
             }
 
@@ -67,7 +67,7 @@ namespace ReportUnit
             {
                 report.SideNavLinks = compositeTemplate.SideNavLinks;
 
-                var html = Engine.Razor.RunCompile(Templates.File.GetSource(), "report", typeof(Model.Report), report, null);
+                var html = Engine.Razor.RunCompile(Templates.TemplateManager.GetFileTemplate(), "report", typeof(Model.Report), report, null);
                 File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }
         }
