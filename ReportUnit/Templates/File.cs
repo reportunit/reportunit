@@ -320,18 +320,20 @@ namespace ReportUnit.Templates
                         <div class='hidden total-errors'><!--%ERRORS%--></div>
                         <div class='hidden total-skipped'><!--%SKIPPED%--></div>
                     </div>
-                    <div id='dynamicModal' class='modal modal-trigger' in_duration='0' induration='0'>
+                    <div id='dynamicModal' class='modal' in_duration='0' induration='0'>
                         <div class='modal-content'>
                             <h4></h4>
                             <pre></pre>
                         </div>
-                    </div>
+                        <div class='modal-footer'>
+                            <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
+                        </div>
+                     </div>
                 </body>
                 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
                 <script src='https://cdn.rawgit.com/reportunit/reportunit/005dcf934c5a53e60b9ec88a2a118930b433c453/cdn/reportunit.js' type='text/javascript'></script>
-
             </html>
             ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); 
         }
