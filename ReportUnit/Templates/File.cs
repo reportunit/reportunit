@@ -34,7 +34,6 @@ namespace ReportUnit.Templates
                     <title>ReportUnit TestRunner Report</title>
                     <link href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css' rel='stylesheet' type='text/css'>
                     <link href='https://cdn.rawgit.com/reportunit/reportunit/005dcf934c5a53e60b9ec88a2a118930b433c453/cdn/reportunit.css' type='text/css' rel='stylesheet' />
-                    
                 </head>
                 <body>
                     <div class='header'>
@@ -185,16 +184,18 @@ namespace ReportUnit.Templates
                                                             <span alt='Suite started at time' title='Suite started at time' class='startedAt label green lighten-2 text-white'>@Model.TestSuiteList[ix].StartTime</span>
                                                             @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].EndTime))
                                                             {
-                                                                <span alt='Suite ended at time' title='Suite ended at time' class='endedAt label label red lighten-2 text-white'>@Model.TestSuiteList[ix].EndTime</span>
+                                                                <span alt='Suite ended at time' title='Suite ended at time' class='endedAt label label brown lighten-2 text-white'>@Model.TestSuiteList[ix].EndTime</span>
                                                             }
                                                             <div class='fixture-status-message'>
                                                                 @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].Description)) 
                                                                 {
                                                                     <div class='suite-desc'>@Model.TestSuiteList[ix].Description</div>
                                                                 }
+                                                                @{var suiteStatusClass = Model.TestSuiteList[ix].Status.ToString() == ""Passed"" ? ""info"" : ""error"";}
                                                                 @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].StatusMessage)) 
                                                                 {
-                                                                    <div class='suite-desc'>@Model.TestSuiteList[ix].StatusMessage</div>
+                                                                    <div class='badge showStatusMessage @suiteStatusClass' ><i class='mdi-alert-warning'></i></div>
+                                                                    <pre class='hide'>@Model.TestSuiteList[ix].StatusMessage.Replace(""<"", ""&lt;"").Replace("">"", ""&gt;"")</pre>
                                                                 }
                                                             </div>
                                                             <table class='bordered'>
@@ -246,12 +247,12 @@ namespace ReportUnit.Templates
                                                                                 </td>
                                                                             }
                                                                             @if (Model.TestSuiteList.Count > 0 && Model.TestSuiteList[ix].TestList.Where(x => !String.IsNullOrEmpty(x.StatusMessage)).Count() > 0) 
-                                                                            {
+                                                                            {    
+                                                                                var statusClass = test.Status.ToString() == ""Passed"" ? ""info"" : ""error"";
                                                                                 if (!String.IsNullOrEmpty(@test.StatusMessage)) 
                                                                                 {
-                                                                                    <td>
-                                                                                    
-                                                                                        <div class='badge showStatusMessage error'><i class='mdi-alert-warning'></i></div>
+                                                                                    <td>                                                                                    
+                                                                                        <div class='badge showStatusMessage @statusClass' ><i class='mdi-alert-warning'></i></div>
                                                                                         <pre class='hide'>@test.StatusMessage.Replace(""<"", ""&lt;"").Replace("">"", ""&gt;"")</pre>
                                                                                     </td>
                                                                                 }
@@ -319,18 +320,20 @@ namespace ReportUnit.Templates
                         <div class='hidden total-errors'><!--%ERRORS%--></div>
                         <div class='hidden total-skipped'><!--%SKIPPED%--></div>
                     </div>
-                    <div id='dynamicModal' class='modal modal-trigger' in_duration='0' induration='0'>
+                    <div id='dynamicModal' class='modal' in_duration='0' induration='0'>
                         <div class='modal-content'>
                             <h4></h4>
                             <pre></pre>
                         </div>
-                    </div>
+                        <div class='modal-footer'>
+                            <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
+                        </div>
+                     </div>
                 </body>
                 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js'></script> 
                 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
                 <script src='https://cdn.rawgit.com/reportunit/reportunit/005dcf934c5a53e60b9ec88a2a118930b433c453/cdn/reportunit.js' type='text/javascript'></script>
-
             </html>
             ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); 
         }

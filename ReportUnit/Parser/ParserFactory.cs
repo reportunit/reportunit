@@ -50,7 +50,8 @@ namespace ReportUnit.Parser
                     // check if its a mstest 2010 xml file 
                     // will need to check the "//TestRun/@xmlns" attribute - value = http://microsoft.com/schemas/VisualStudio/TeamTest/2010
                     XmlNode testRunNode = doc.SelectSingleNode("ns:TestRun", nsmgr);
-                    if (testRunNode != null && testRunNode.Attributes != null && testRunNode.Attributes["xmlns"] != null && testRunNode.Attributes["xmlns"].InnerText.Contains("2010"))
+                    if (testRunNode != null && testRunNode.Attributes != null && testRunNode.Attributes["xmlns"] != null &&
+                        testRunNode.Attributes["xmlns"].InnerText.Contains("2010"))
                     {
                         return TestRunner.MSTest2010;
                     }
@@ -95,14 +96,18 @@ namespace ReportUnit.Parser
                     // NOTE: not all nunit test files (ie when have nunit output format from other test runners) will contain the environment node
                     //            but if it does exist - then it should have the nunit-version attribute
                     XmlNode envNode = doc.SelectSingleNode("//environment");
-                    if (envNode != null && envNode.Attributes != null && envNode.Attributes["nunit-version"] != null) return TestRunner.NUnit;
+                    if (envNode != null && envNode.Attributes != null && envNode.Attributes["nunit-version"] != null)
+                        return TestRunner.NUnit;
 
                     // check for test-suite nodes - if it has those - its probably nunit tests
                     var testSuiteNodes = doc.SelectNodes("//test-suite");
                     if (testSuiteNodes != null && testSuiteNodes.Count > 0) return TestRunner.NUnit;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                logger.Warning($"Error when trying to determine testrunner for file {filePath}: {ex.Message}");
+            }
 
             return TestRunner.Unknown;
         }
@@ -110,10 +115,10 @@ namespace ReportUnit.Parser
         private bool ValidateJUnitXsd(XmlDocument doc)
         {
             XmlSchemaSet schema = new XmlSchemaSet();
-            var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open);
-            
+            var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open); //TODO: Embed that as a resource in the .exe so we do not rely on extra files in the folder...
+
             schema.Add("", XmlReader.Create(file));
-            
+
             doc.Schemas.Add(schema);
             doc.Schemas.Compile();
             doc.Validate((s, o) =>

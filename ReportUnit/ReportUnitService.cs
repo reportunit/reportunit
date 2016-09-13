@@ -25,36 +25,40 @@ namespace ReportUnit
 
         public void CreateReport(string input, string outputDirectory)
         {
-    		var attributes = File.GetAttributes(input);
-		IEnumerable<FileInfo> filePathList;
+            var attributes = File.GetAttributes(input);
+            IEnumerable<FileInfo> filePathList;
 
-        	 if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
-        	{
-				filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
-					.OrderByDescending(f => f.CreationTime);
-	        }
-	        else
-	        {
-				filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
-	        }
+            if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
+            {
+                filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
+                    .OrderByDescending(f => f.CreationTime);
+            }
+            else
+            {
+                filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
+            }
 
-        	InitializeRazor();
+            InitializeRazor();
 
-        	var compositeTemplate = new CompositeTemplate();
-	
-        	foreach (var filePath in filePathList)
-        	{
-            	var testRunner = GetTestRunner(filePath.FullName);
+            var compositeTemplate = new CompositeTemplate();
 
-            	if (!(testRunner.Equals(TestRunner.Unknown)))
-            	{
+            foreach (var filePath in filePathList)
+            {
+                var testRunner = GetTestRunner(filePath.FullName);
+
+                if (!(testRunner.Equals(TestRunner.Unknown)))
+                {
                     IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
                     var report = parser.Parse(filePath.FullName);
 
                     compositeTemplate.AddReport(report);
                 }
             }
-
+            if (compositeTemplate.ReportList == null)
+            {
+                Logger.GetLogger().Fatal("No reports added - invalid files?");
+                return;
+            }
             if (compositeTemplate.ReportList.Count > 1)
             {
                 compositeTemplate.SideNavLinks = compositeTemplate.SideNavLinks.Insert(0, Templates.SideNav.IndexLink);
@@ -63,7 +67,7 @@ namespace ReportUnit
                 File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summary);
             }
 
-			foreach (var report in compositeTemplate.ReportList)
+            foreach (var report in compositeTemplate.ReportList)
             {
                 report.SideNavLinks = compositeTemplate.SideNavLinks;
 
