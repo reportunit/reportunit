@@ -115,18 +115,19 @@ namespace ReportUnit.Parser
         private bool ValidateJUnitXsd(XmlDocument doc)
         {
             XmlSchemaSet schema = new XmlSchemaSet();
-            var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open); //TODO: Embed that as a resource in the .exe so we do not rely on extra files in the folder...
-
-            schema.Add("", XmlReader.Create(file));
-
-            doc.Schemas.Add(schema);
-            doc.Schemas.Compile();
-            doc.Validate((s, o) =>
+            using (var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open))
             {
-                this.validJunitSchema = false;
-            });
+                schema.Add("", XmlReader.Create(file));
 
-            return this.validJunitSchema;
+                doc.Schemas.Add(schema);
+                doc.Schemas.Compile();
+                doc.Validate((s, o) =>
+                {
+                    this.validJunitSchema = false;
+                });
+
+                return this.validJunitSchema;
+            }
         }
     }
 }
