@@ -106,7 +106,7 @@ namespace ReportUnit.Parser
             }
             catch (Exception ex)
             {
-                logger.Warning($"Error when trying to determine testrunner for file {filePath}: {ex.Message}");
+                logger.Warning("Error when trying to determine testrunner for file {filePath}: {ex.Message}");
             }
 
             return TestRunner.Unknown;
@@ -114,19 +114,26 @@ namespace ReportUnit.Parser
 
         private bool ValidateJUnitXsd(XmlDocument doc)
         {
-            XmlSchemaSet schema = new XmlSchemaSet();
-            using (var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open))
+            try
             {
-                schema.Add("", XmlReader.Create(file));
-
-                doc.Schemas.Add(schema);
-                doc.Schemas.Compile();
-                doc.Validate((s, o) =>
+                XmlSchemaSet schema = new XmlSchemaSet();
+                using (var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open))
                 {
-                    this.validJunitSchema = false;
-                });
+                    schema.Add("", XmlReader.Create(file));
 
-                return this.validJunitSchema;
+                    doc.Schemas.Add(schema);
+                    doc.Schemas.Compile();
+                    doc.Validate((s, o) =>
+                    {
+                        this.validJunitSchema = false;
+                    });
+
+                    return this.validJunitSchema;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }
