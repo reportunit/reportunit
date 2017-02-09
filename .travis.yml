@@ -5,7 +5,7 @@ branches:
     - master
     
 install:
-  - nuget restore solution-name.sln
+  - nuget restore ReportUnit.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory NUnitRunner
 
 script:
