@@ -1,4 +1,4 @@
-@using ReportUnit.Model
+﻿@using ReportUnit.Model
 @inherits RazorEngine.Templating.TemplateBase<CompositeTemplate>
 <!DOCTYPE html>
 <html lang='en'>
@@ -111,7 +111,7 @@
                                     double totalOthers = 0;
                                 }
 
-                                @for (int ix = 0; ix < Model.ReportList.Count; ix++)
+                                @for (var ix = 0; ix < Model.ReportList.Count; ix++)
                                 {
                                     <tr>
                                         <td><a href='./@(Model.ReportList[ix].FileName).html'>@Model.ReportList[ix].FileName</a></td>

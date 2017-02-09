@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
@@ -35,7 +33,14 @@ namespace ReportUnit
             }
             else
             {
-                filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
+                if (File.Exists(input))
+                {
+                    filePathList = new[] {new FileInfo(input)};
+                }
+                else
+                {
+                    filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
+                }
             }
 
             InitializeRazor();
@@ -48,7 +53,7 @@ namespace ReportUnit
 
                 if (!(testRunner.Equals(TestRunner.Unknown)))
                 {
-                    IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
+                    var parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
                     var report = parser.Parse(filePath.FullName);
 
                     compositeTemplate.AddReport(report);
@@ -63,7 +68,7 @@ namespace ReportUnit
             {
                 compositeTemplate.SideNavLinks = compositeTemplate.SideNavLinks.Insert(0, Templates.SideNav.IndexLink);
 
-                string summary = Engine.Razor.RunCompile(Templates.TemplateManager.GetSummaryTemplate(), "summary", typeof(Model.CompositeTemplate), compositeTemplate, null);
+                var summary = Engine.Razor.RunCompile(Templates.TemplateManager.GetSummaryTemplate(), "summary", typeof(Model.CompositeTemplate), compositeTemplate, null);
                 File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summary);
             }
 
@@ -87,7 +92,7 @@ namespace ReportUnit
 
         private void InitializeRazor()
         {
-            TemplateServiceConfiguration templateConfig = new TemplateServiceConfiguration();
+            var templateConfig = new TemplateServiceConfiguration();
             templateConfig.DisableTempFileLocking = true;
             templateConfig.EncodedStringFactory = new RawStringFactory();
             templateConfig.CachingProvider = new DefaultCachingProvider(x => { });
