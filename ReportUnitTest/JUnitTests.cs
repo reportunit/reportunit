@@ -13,8 +13,14 @@ namespace ReportUnitTest
         [OneTimeSetUp]
         public static void Setup()
         {
-            var assemblyDir = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
-            if (assemblyDir == null)
+            var codebase = Assembly.GetExecutingAssembly().CodeBase;
+            TestContext.Progress.WriteLine("CodeBase: " + codebase);
+
+            var codebaseDir = Path.GetDirectoryName(codebase);
+            TestContext.Progress.WriteLine("CodeBaseDir: " + codebaseDir);
+            
+            var assemblyDir = new Uri(codebaseDir).LocalPath;
+            if (assemblyDir == null || !Directory.Exists(assemblyDir))
             {
                 throw new Exception("Failed to get assembly path");
             }
