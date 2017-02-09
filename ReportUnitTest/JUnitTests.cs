@@ -50,9 +50,10 @@ namespace ReportUnitTest
         [Test]
         public void Test()
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo
+            var filename = Path.Combine(ExecutableDir, "ReportUnit.exe");
+            ProcessStartInfo processInfo = new ProcessStartInfo()
             {
-                FileName = "ReportUnit.exe",
+                FileName = filename,
                 Arguments = Path.Combine(ResourcesDir, "JUnit", "test_junit_01.xml"),
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
@@ -91,7 +92,7 @@ namespace ReportUnitTest
             {
                 throw new Exception("No HTML report");
             }
-            //W3CValidate(htmlFile);
+            W3CValidate(htmlFile);
         }
 
         private bool IsRunningOnMono()
@@ -103,7 +104,7 @@ namespace ReportUnitTest
         public static void W3CValidate(string htmlFile)
         {
             // Create a request using a URL that can receive a post.   
-            WebRequest request = WebRequest.Create("https://validator.w3.org/nu/&out=gnu");
+            WebRequest request = WebRequest.Create("http://validator.nu/&out=gnu");
             
             // Set the Method property of the request to POST.  
             request.Method = "POST";
@@ -111,7 +112,7 @@ namespace ReportUnitTest
             byte[] byteArray = Encoding.UTF8.GetBytes(File.ReadAllText(htmlFile));
 
             // Set the ContentType property of the WebRequest.  
-            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentType = "text/html; charset=utf-8";
 
             // Set the ContentLength property of the WebRequest.  
             request.ContentLength = byteArray.Length;
