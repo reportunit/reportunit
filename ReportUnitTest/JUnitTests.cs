@@ -13,27 +13,37 @@ namespace ReportUnitTest
         [OneTimeSetUp]
         public static void Setup()
         {
+            //
+            // NOTE
+            // ================================================================
+            // Those who are failing to run these tests with ReSharper Unit 
+            // Test Runner, please disable the "shadow copy" of the assembly
+            // in the ReSharper menu.
+            //
+            // More details: 
+            // http://stackoverflow.com/questions/16231084/resharper-runs-unittest-from-different-location
+            //
             var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (assemblyDir == null)
             {
                 throw new Exception("Failed to get assembly path");
             }
 
-            TestContext.Out.WriteLine("Assembly: " + assemblyDir);
+            TestContext.Progress.WriteLine("Assembly: " + assemblyDir);
 
             ResourcesDir = Path.Combine(assemblyDir, "..", "..", "Resources");
             if (!Directory.Exists(ResourcesDir))
             {
                 throw new Exception("Can't find Resources folder");
             }
-            TestContext.Out.WriteLine("Resources: " + ResourcesDir);
+            TestContext.Progress.WriteLine("Resources: " + ResourcesDir);
 
             ExecutableDir = Path.Combine(assemblyDir, "..", "..", "..", "ReportUnit", "bin");
             if (!Directory.Exists(ExecutableDir))
             {
                 throw new Exception("Can't find ReportUnit folder");
             }
-            TestContext.Out.WriteLine("Executable: " + ExecutableDir);
+            TestContext.Progress.WriteLine("Executable: " + ExecutableDir);
         }
 
         [Test]
