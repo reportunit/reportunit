@@ -1,2 +1,3 @@
-﻿language: csharp
+language: csharp
 solution: ReportUnit.sln
+script: xbuild /p:Configuration=Release ReportUnit.sln
