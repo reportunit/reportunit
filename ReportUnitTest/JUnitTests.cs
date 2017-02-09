@@ -16,35 +16,23 @@ namespace ReportUnitTest
         [OneTimeSetUp]
         public static void Setup()
         {
-            var codebase = Assembly.GetExecutingAssembly().CodeBase;
-            TestContext.Progress.WriteLine("CodeBase: " + codebase);
-            
-            var assemblyFilePath = new Uri(codebase).LocalPath;
-            TestContext.Progress.WriteLine("AssemblyFilePath: " + assemblyFilePath);
-
-            var assemblyDir = Path.GetDirectoryName(assemblyFilePath);
-            TestContext.Progress.WriteLine("AssemblyDir: " + assemblyDir);
-
+            var assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             if (assemblyDir == null || !Directory.Exists(assemblyDir))
             {
                 throw new Exception("Failed to get assembly path");
             }
-
-            TestContext.Progress.WriteLine("Assembly: " + assemblyDir);
-
+            
             ResourcesDir = Path.Combine(assemblyDir, "..", "..", "Resources");
             if (!Directory.Exists(ResourcesDir))
             {
                 throw new Exception("Can't find Resources folder");
             }
-            TestContext.Progress.WriteLine("Resources: " + ResourcesDir);
 
             ExecutableDir = Path.Combine(assemblyDir, "..", "..", "..", "ReportUnit", "bin");
             if (!Directory.Exists(ExecutableDir))
             {
                 throw new Exception("Can't find ReportUnit folder");
             }
-            TestContext.Progress.WriteLine("Executable: " + ExecutableDir);
         }
 
         [Test]
@@ -65,7 +53,9 @@ namespace ReportUnitTest
 
             if (IsRunningOnMono())
             {
-                processInfo.FileName = "mono " + processInfo.FileName;
+                processInfo.FileName = "mono";
+                processInfo.Arguments = filename + " " + processInfo.Arguments;
+
             }
 
             var proc = Process.Start(processInfo);
