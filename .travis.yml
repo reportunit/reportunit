@@ -1,3 +1,7 @@
 language: csharp
 solution: ReportUnit.sln
 script: xbuild /p:Configuration=Release ReportUnit.sln
+before_install:
+  - sudo apt-get install nunit-console
+after_script:
+  - nunit-console ReportUnitTest/bin/Release/ReportUnitTest.dll
