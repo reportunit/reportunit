@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace ReportUnitTest
@@ -12,17 +13,27 @@ namespace ReportUnitTest
         [OneTimeSetUp]
         public static void Setup()
         {
-            ResourcesDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Resources");
+            var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (assemblyDir == null)
+            {
+                throw new Exception("Failed to get assembly path");
+            }
+
+            TestContext.Out.WriteLine("Assembly: " + assemblyDir);
+
+            ResourcesDir = Path.Combine(assemblyDir, "..", "..", "Resources");
             if (!Directory.Exists(ResourcesDir))
             {
                 throw new Exception("Can't find Resources folder");
             }
+            TestContext.Out.WriteLine("Resources: " + ResourcesDir);
 
-            ExecutableDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "ReportUnit", "bin");
+            ExecutableDir = Path.Combine(assemblyDir, "..", "..", "..", "ReportUnit", "bin");
             if (!Directory.Exists(ExecutableDir))
             {
                 throw new Exception("Can't find ReportUnit folder");
             }
+            TestContext.Out.WriteLine("Executable: " + ExecutableDir);
         }
 
         [Test]
