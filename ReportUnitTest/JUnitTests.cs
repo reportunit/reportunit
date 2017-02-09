@@ -62,7 +62,12 @@ namespace ReportUnitTest
                 UseShellExecute = false,
                 WorkingDirectory = ExecutableDir
             };
-            
+
+            if (IsRunningOnMono())
+            {
+                processInfo.FileName = "mono " + processInfo.FileName;
+            }
+
             var proc = Process.Start(processInfo);
             if (proc == null)
             {
@@ -88,6 +93,11 @@ namespace ReportUnitTest
                 throw new Exception("No HTML report");
             }
             //W3CValidate(htmlFile);
+        }
+
+        private bool IsRunningOnMono()
+        {
+            return Type.GetType("Mono.Runtime") != null;
         }
 
 
