@@ -16,7 +16,12 @@ namespace ReportUnitTest
             var codebase = Assembly.GetExecutingAssembly().CodeBase;
             TestContext.Progress.WriteLine("CodeBase: " + codebase);
 
-            var codebaseDir = Path.GetDirectoryName(codebase);
+            codebase = Path.GetDirectoryName(codebase);
+            if (codebase == null)
+            {
+                throw new Exception("Failed to get assembly path");
+            }
+            var codebaseDir = codebase.Replace("file:/","");
             TestContext.Progress.WriteLine("CodeBaseDir: " + codebaseDir);
             
             var assemblyDir = new Uri(codebaseDir).LocalPath;
