@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportUnit", "ReportUnit\ReportUnit.csproj", "{12B65E5C-465A-4EB5-BCDB-0F79224A9BCF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60A25F52-0AB8-4A8F-A175-FA1FE2E0FA61}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportUnitTest", "ReportUnitTest\ReportUnitTest.csproj", "{E99B267C-DA6E-4FDE-9FE9-979D6D52A966}"
 EndProject
 Global
