@@ -37,7 +37,10 @@ namespace ReportUnitTest
                 throw new Exception("Can't find ReportUnit folder");
             }
 
-
+            if (!File.Exists(Path.Combine(ExecutableDir, "ReportUnit.exe")))
+            {
+                throw new Exception("Can't find ReportUnit.exe");
+            }
         }
 
         [Test]
