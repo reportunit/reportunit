@@ -83,6 +83,12 @@ namespace ReportUnitTest
             {
                 TestContext.Progress.Write(proc.StandardOutput.ReadLine());
             }
+
+            while (!proc.StandardError.EndOfStream)
+            {
+                TestContext.Progress.Write(proc.StandardError.ReadLine());
+            }
+
             if (proc.ExitCode != 0)
             {
                 throw new Exception("Exit code " + proc.ExitCode);
