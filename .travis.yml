@@ -10,5 +10,4 @@ install:
 
 script:
   - xbuild /p:Configuration=Release ReportUnit.sln
-  - ./ReportUnit/copy_binaries.sh
   - mono ./NUnitRunner/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe ./ReportUnitTest/bin/Release/ReportUnitTest.dll
