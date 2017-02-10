@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
 using ReportUnit.Logging;
@@ -109,10 +110,13 @@ namespace ReportUnit.Parser
         {
             try
             {
-                var schema = new XmlSchemaSet();
-                using (var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open))
+                var assembly = Assembly.GetExecutingAssembly();
+                using (var stream = assembly.GetManifestResourceStream("ReportUnit.Schemas.JUnit.xsd"))
+                using (var reader = new StreamReader(stream))
                 {
-                    schema.Add("", XmlReader.Create(file));
+                    var schema = new XmlSchemaSet();
+                
+                    schema.Add("", XmlReader.Create(reader));
 
                     doc.Schemas.Add(schema);
                     doc.Schemas.Compile();
@@ -122,7 +126,7 @@ namespace ReportUnit.Parser
                     });
 
                     return _validJunitSchema;
-                }
+                }                
             }
             catch (Exception)
             {

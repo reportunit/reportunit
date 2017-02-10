@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace ReportUnit.Templates
 {
@@ -6,17 +10,22 @@ namespace ReportUnit.Templates
     {
         public static string GetSummaryTemplate()
         {
-            return GetEncodedResource(@"..\Templates\Summary.cshtml");
+            return GetEmbeddedResourceAsUtf8String("ReportUnit.Templates.Summary.cshtml");
         }
 
         public static string GetFileTemplate()
         {
-            return GetEncodedResource(@"..\Templates\File.cshtml");
+            return GetEmbeddedResourceAsUtf8String("ReportUnit.Templates.File.cshtml");
         }
 
-        private static string GetEncodedResource(string path)
+        private static string GetEmbeddedResourceAsUtf8String(string embeddedResourceName)
         {
-            return Encoding.UTF8.GetString(System.IO.File.ReadAllBytes(path));
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream(embeddedResourceName))
+            using (var reader = new StreamReader(stream))
+            {
+                return Encoding.UTF8.GetString(Encoding.Default.GetBytes(reader.ReadToEnd()));
+            }
         }
     }
 }

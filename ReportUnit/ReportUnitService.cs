@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,8 +17,8 @@ namespace ReportUnit
 {
     class ReportUnitService
     {
-        private const string _ns = "ReportUnit.Parser";
-        private Logger _logger = Logger.GetLogger();
+        private const string Ns = "ReportUnit.Parser";
+        private readonly Logger _logger = Logger.GetLogger();
 
         public ReportUnitService() { }
 
@@ -53,7 +54,7 @@ namespace ReportUnit
 
                 if (!(testRunner.Equals(TestRunner.Unknown)))
                 {
-                    var parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
+                    var parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(Ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
                     var report = parser.Parse(filePath.FullName);
 
                     compositeTemplate.AddReport(report);
