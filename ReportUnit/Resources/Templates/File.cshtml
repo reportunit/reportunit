@@ -44,9 +44,6 @@
                     <li class='nav-item'>
                         <a class='modal-trigger waves-effect waves-light run-info-icon tooltipped' data-position='bottom' data-tooltip='Run Info' href='#modal1'><i class='mdi-action-info-outline'></i></a>
                     </li>
-                    <!-- <div class='nav-item'>
-                        <a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='bottom' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-assignment'></i></a>
-                    </div> -->
                     <li class='nav-item'>
                         v1.50.0
                     </li>
@@ -234,7 +231,7 @@
                                                                         }
                                                                     </td>
                                                                 }
-                                                                @if (Model.TestSuiteList.Count > 0 && Model.TestSuiteList[ix].TestList.Where(x => !String.IsNullOrEmpty(x.Description) || !String.IsNullOrEmpty(x.StatusMessage)).Count() > 0) 
+                                                                @if (Model.TestSuiteList.Count > 0 && Model.TestSuiteList[ix].TestList.Where(x => !String.IsNullOrEmpty(x.StatusMessage)).Count() > 0) 
                                                                 {
                                                                     if (!String.IsNullOrEmpty(@test.StatusMessage)) 
                                                                     {
@@ -249,7 +246,6 @@
                                                                         <td class='grey lighten-4'></td>
                                                                     }
                                                                 }
-                                                                <td class='test-features hide @test.GetCategories()'></td>
                                                             </tr>
                                                         }
                                                     </tbody>
