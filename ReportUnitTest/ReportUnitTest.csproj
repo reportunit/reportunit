@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Resources\JUnit\test_junit_01.xml" />
+    <Content Include="Resources\JUnit\test_junit_one_testsuite_multiple_testcases.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
