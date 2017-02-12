@@ -3,7 +3,12 @@ solution: ReportUnit.sln
 branches:
   only:
     - master
-    
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
+
 install:
   - nuget restore ReportUnit.sln
   - nuget install NUnit.Runners -Version 3.6.0 -OutputDirectory NUnitRunner
