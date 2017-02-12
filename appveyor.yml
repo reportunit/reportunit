@@ -8,6 +8,8 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 
+skip_tags: true
+
 before_build:
   - nuget restore
 
@@ -32,7 +34,7 @@ artifacts:
   
 deploy:
 - provider: GitHub
-  tag: v$(appveyor_build_version)
+  tag: latest-build
   release: reportunit-latest-build
   auth_token:
     secure: aF0fLLmz97WNRikUBXRnLxJVJIn7sb7+h0uUH21d4S6zdAB0lfv3JGE5xPbcmUl6
