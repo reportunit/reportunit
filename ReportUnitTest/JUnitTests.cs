@@ -86,10 +86,6 @@ namespace ReportUnitTest
             {
                 throw new Exception("Failed to start");
             }
-            if (!proc.WaitForExit(milliseconds))
-            {
-                throw new Exception("Timeout");
-            }
 
             if (redirect)
             {
@@ -103,6 +99,12 @@ namespace ReportUnitTest
                     TestContext.Progress.WriteLine(proc.StandardError.ReadLine());
                 }
             }
+
+            if (!proc.WaitForExit(milliseconds))
+            {
+                throw new Exception("Timeout");
+            }
+
             if (proc.ExitCode != 0)
             {
                 throw new Exception("Exit code " + proc.ExitCode);

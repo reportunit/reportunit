@@ -88,10 +88,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportUnitService.cs" />
-    <Compile Include="Templates\File.cs" />
-    <Compile Include="Templates\SideNav.cs" />
-    <Compile Include="Templates\Summary.cs" />
-    <Compile Include="Templates\TemplateManager.cs" />
+    <Compile Include="Resources\Templates\File.cs" />
+    <Compile Include="Resources\Templates\SideNav.cs" />
+    <Compile Include="Resources\Templates\Summary.cs" />
+    <Compile Include="Resources\Templates\TemplateManager.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
     <Compile Include="Utils\ReportUtil.cs" />
   </ItemGroup>
@@ -100,11 +100,11 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <EmbeddedResource Include="Schemas\JUnit.xsd">
+    <EmbeddedResource Include="Resources\Schemas\JUnit.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Templates\File.cshtml" />
-    <EmbeddedResource Include="Templates\Summary.cshtml">
+    <EmbeddedResource Include="Resources\Templates\File.cshtml" />
+    <EmbeddedResource Include="Resources\Templates\Summary.cshtml">
       <SubType>Code</SubType>
     </EmbeddedResource>
   </ItemGroup>

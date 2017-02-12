@@ -111,7 +111,7 @@ namespace ReportUnit.Parser
             try
             {
                 var assembly = Assembly.GetExecutingAssembly();
-                using (var stream = assembly.GetManifestResourceStream("ReportUnit.Schemas.JUnit.xsd"))
+                using (var stream = assembly.GetManifestResourceStream("ReportUnit.Resources.Schemas.JUnit.xsd"))
                 using (var reader = new StreamReader(stream))
                 {
                     var schema = new XmlSchemaSet();

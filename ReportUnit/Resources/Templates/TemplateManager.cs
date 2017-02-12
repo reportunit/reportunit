@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Xml;
-using System.Xml.Schema;
 
 namespace ReportUnit.Templates
 {
@@ -10,12 +8,12 @@ namespace ReportUnit.Templates
     {
         public static string GetSummaryTemplate()
         {
-            return GetEmbeddedResourceAsUtf8String("ReportUnit.Templates.Summary.cshtml");
+            return GetEmbeddedResourceAsUtf8String("ReportUnit.Resources.Templates.Summary.cshtml");
         }
 
         public static string GetFileTemplate()
         {
-            return GetEmbeddedResourceAsUtf8String("ReportUnit.Templates.File.cshtml");
+            return GetEmbeddedResourceAsUtf8String("ReportUnit.Resources.Templates.File.cshtml");
         }
 
         private static string GetEmbeddedResourceAsUtf8String(string embeddedResourceName)

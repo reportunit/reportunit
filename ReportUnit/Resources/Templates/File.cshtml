@@ -1,4 +1,4 @@
-@using ReportUnit.Model
+﻿@using ReportUnit.Model
 @inherits RazorEngine.Templating.TemplateBase<Report>
 <!DOCTYPE html>
 <html lang='en'>
@@ -76,7 +76,7 @@
                 <div class='row dashboard'>
                     <div class='col s12 m6 l4'>
                         <div class='card-panel'>
-                            <div alt='Count of all passed tests' title='Count of all passed tests'>Suite Summary</div>    
+                            <div title='Count of all passed tests'>Suite Summary</div>    
                             <div class='chart-box'>
                                 <canvas class='text-centered' id='suite-analysis'></canvas>
                             </div>
@@ -90,7 +90,7 @@
                     </div>
                     <div class='col s12 m6 l4'>
                         <div class='card-panel'>
-                            <div alt='Count of all failed tests' title='Count of all failed tests'>Tests Summary</div>
+                            <div title='Count of all failed tests'>Tests Summary</div>
                             <div class='chart-box'>
                                 <canvas class='text-centered' id='test-analysis'></canvas>
                             </div>
@@ -104,7 +104,7 @@
                     </div>
                     <div class='col s12 m12 l4'>
                         <div class='card-panel'>
-                            <div alt='Count of all inconclusive tests' title='Count of all inconclusive tests'>Pass Percentage</div>
+                            <div title='Count of all inconclusive tests'>Pass Percentage</div>
                             <div class='panel-lead pass-percentage'></div>
                             <div class='progress'>
                                 <div class='determinate'></div>
@@ -118,7 +118,7 @@
                             <div class='card-panel no-padding no-margin-v suite-list v-spacer'>
                                 <div class='filters card-panel'>
                                     <div>
-                                        <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='suite-toggle' alt='Filter suites' title='Filter suites'><i class='mdi-file-folder-open icon'></i></a><ul class='dropdown-content' id='suite-toggle'> 
+                                        <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='suite-toggle' title='Filter suites'><i class='mdi-file-folder-open icon'></i></a><ul class='dropdown-content' id='suite-toggle'> 
                                         <ul>
                                             @foreach (var status in Model.StatusList.Distinct().ToList())
                                             {
@@ -129,7 +129,7 @@
                                         </ul>
                                     </div> 
                                     <div>
-                                        <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='tests-toggle' alt='Filter tests' title='Filter tests'><i class='mdi-action-subject icon'></i></a><ul class='dropdown-content' id='tests-toggle'> 
+                                        <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='tests-toggle' title='Filter tests'><i class='mdi-action-subject icon'></i></a><ul class='dropdown-content' id='tests-toggle'> 
                                         <ul>
                                             @foreach (var status in Model.StatusList.Distinct().ToList())
                                             {
@@ -142,7 +142,7 @@
                                     @if (Model.CategoryList.Count > 0) 
                                     {
                                         <div> 
-                                            <a class='category-toggle dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='false' data-activates='category-toggle' alt='Filter categories' title='Filter categories'><i class='mdi-image-style icon'></i></a><ul class='dropdown-content' id='category-toggle'>
+                                            <a class='category-toggle dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='false' data-activates='category-toggle' title='Filter categories'><i class='mdi-image-style icon'></i></a><ul class='dropdown-content' id='category-toggle'>
                                             <ul>
                                                 @foreach (var cat in Model.CategoryList.Distinct().ToList())
                                                 {
@@ -154,10 +154,10 @@
                                         </div> 
                                     }
                                     <div>
-                                        <a title='Clear Filters' alt='Clear Filters' id='clear-filters' class='clear'><i class='mdi-navigation-close icon'></i></a> 
+                                        <a title='Clear Filters' id='clear-filters' class='clear'><i class='mdi-navigation-close icon'></i></a> 
                                     </div> &nbsp;
                                     <div> 
-                                        <a title='Enable Dashboard' alt='Enable Dashboard' id='enableDashboard' class='enabled'><i class='mdi-action-track-changes icon active'></i></a> 
+                                        <a title='Enable Dashboard' id='enableDashboard' class='enabled'><i class='mdi-action-track-changes icon active'></i></a> 
                                     </div>
                                 </div>
                                 <ul id='suite-collection' class='no-margin-v'>
@@ -169,10 +169,10 @@
                                                 <div class='suite-result @Model.TestSuiteList[ix].Status.ToString().ToLower() right label'>@Model.TestSuiteList[ix].Status.ToString()</div>
                                             </div>
                                             <div class='suite-content hide'>
-                                                <span alt='Suite started at time' title='Suite started at time' class='startedAt label green lighten-2 text-white'>@Model.TestSuiteList[ix].StartTime</span>
+                                                <span title='Suite started at time' class='startedAt label green lighten-2 text-white'>@Model.TestSuiteList[ix].StartTime</span>
                                                 @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].EndTime))
                                                 {
-                                                    <span alt='Suite ended at time' title='Suite ended at time' class='endedAt label label red lighten-2 text-white'>@Model.TestSuiteList[ix].EndTime</span>
+                                                    <span title='Suite ended at time' class='endedAt label label red lighten-2 text-white'>@Model.TestSuiteList[ix].EndTime</span>
                                                 }
                                                 <div class='fixture-status-message'>
                                                     @if (!String.IsNullOrEmpty(@Model.TestSuiteList[ix].Description)) 
