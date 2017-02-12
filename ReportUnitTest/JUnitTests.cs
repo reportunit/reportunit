@@ -63,7 +63,7 @@ namespace ReportUnitTest
             var processInfo = new ProcessStartInfo()
             {
                 FileName = "java",
-                Arguments = "-Xss512k -jar vnu.jar " + htmlFile,
+                Arguments = "-Xss8m -jar vnu.jar " + htmlFile,
                 RedirectStandardError = false,
                 RedirectStandardOutput = false,
                 RedirectStandardInput = false,
