@@ -41,13 +41,22 @@ namespace ReportUnitTest
                 throw new Exception("Can't find ReportUnit.exe");
             }
         }
-        
+
         [Test]
         public void test_junit_one_testsuite_multiple_testcases()
         {
             TestContext.Progress.WriteLine("*** Test ***");
             GenerateHtmlReport("test_junit_one_testsuite_multiple_testcases.xml");
             ValidateHtmlReport("test_junit_one_testsuite_multiple_testcases.html");
+            TestContext.Progress.WriteLine("*** Test - PASS ***");
+        }
+
+        [Test]
+        public void test_junit_multiple_testsuite_multiple_testcases()
+        {
+            TestContext.Progress.WriteLine("*** Test ***");
+            GenerateHtmlReport("test_junit_multiple_testsuite_multiple_testcases.xml");
+            ValidateHtmlReport("test_junit_multiple_testsuite_multiple_testcases.html");
             TestContext.Progress.WriteLine("*** Test - PASS ***");
         }
 
