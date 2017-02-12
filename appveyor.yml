@@ -9,6 +9,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 
 skip_tags: true
+test: off
 
 before_build:
   - nuget restore
