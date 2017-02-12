@@ -41,5 +41,5 @@ deploy:
     secure: aF0fLLmz97WNRikUBXRnLxJVJIn7sb7+h0uUH21d4S6zdAB0lfv3JGE5xPbcmUl6
   artifact: ReportUnit-0.2.x
   draft: false
-  prerelease: false
+  prerelease: true
   force_update: true
