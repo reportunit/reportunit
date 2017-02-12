@@ -124,7 +124,7 @@
                                         <div class='card-panel no-padding no-margin-v suite-list v-spacer'>
                                             <div class='filters card-panel'>
                                                 <div>
-                                                    <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='suite-toggle' title='Filter suites'><i class='mdi-file-folder-open icon'></i></a><ul class='dropdown-content' id='suite-toggle'> 
+                                                    <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='suite-toggle' title='Filter suites'><i class='mdi-file-folder-open icon'></i></a><ul class='dropdown-content' id='suite-toggle'></ul>
                                                     <ul>
                                                         @foreach (var status in Model.StatusList.Distinct().ToList())
                                                         {
@@ -135,7 +135,7 @@
                                                     </ul>
                                                 </div> 
                                                 <div>
-                                                    <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='tests-toggle' title='Filter tests'><i class='mdi-action-subject icon'></i></a><ul class='dropdown-content' id='tests-toggle'> 
+                                                    <a class='dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='true' data-activates='tests-toggle' title='Filter tests'><i class='mdi-action-subject icon'></i></a><ul class='dropdown-content' id='tests-toggle'></ul>
                                                     <ul>
                                                         @foreach (var status in Model.StatusList.Distinct().ToList())
                                                         {
@@ -148,7 +148,7 @@
                                                 @if (Model.CategoryList.Count > 0) 
                                                 {
                                                     <div> 
-                                                        <a class='category-toggle dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='false' data-activates='category-toggle' title='Filter categories'><i class='mdi-image-style icon'></i></a><ul class='dropdown-content' id='category-toggle'>
+                                                        <a class='category-toggle dropdown-button button' href='#' data-hover='true' data-beloworigin='true' data-constrainwidth='false' data-activates='category-toggle' title='Filter categories'><i class='mdi-image-style icon'></i></a><ul class='dropdown-content' id='category-toggle'></ul>
                                                         <ul>
                                                             @foreach (var cat in Model.CategoryList.Distinct().ToList())
                                                             {
