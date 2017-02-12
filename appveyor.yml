@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 0.2.{build}
 pull_requests:
   do_not_increment_build_number: true
 assembly_info:
@@ -21,5 +21,26 @@ build:
   project: ReportUnit.sln
   parallel: true
   verbosity: quiet
+
 after_build:
   - nunit3-console .\ReportUnitTest\bin\Release\ReportUnitTest.dll --result=ReportUnitTestResults.xml;format=AppVeyor
+
+artifacts:
+- path: ReportUnit\bin\Release\*.exe
+  name: App
+- path: ReportUnit\bin\Release\*.dll
+  name: Libraries
+- path: ReportUnit\bin\Release\*.xml
+  name: Libraries Config
+- path: ReportUnit\bin\Release\*.config
+  name: App Config
+deploy:
+- provider: GitHub
+  tag: v$(appveyor_build_version)
+  release: reportunit-v$(appveyor_build_version)
+  auth_token:
+    secure: aF0fLLmz97WNRikUBXRnLxJVJIn7sb7+h0uUH21d4S6zdAB0lfv3JGE5xPbcmUl6
+  artifact: ReportUnit\bin\Release\ReportUnit.exe
+  draft: true
+  prerelease: true
+  force_update: true
