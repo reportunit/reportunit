@@ -23,7 +23,7 @@ build:
   verbosity: quiet
 
 after_build:
-  - nunit3-console .\ReportUnitTest\bin\$(configuration)\ReportUnitTest.dll --result=ReportUnitTestResults.xml;format=AppVeyor
+  - nunit3-console .\ReportUnitTest\bin\$(CONFIGURATION)\ReportUnitTest.dll --result=ReportUnitTestResults.xml;format=AppVeyor
 
 deploy:
 - provider: GitHub
@@ -31,7 +31,7 @@ deploy:
   release: reportunit-latest-build
   auth_token:
     secure: aF0fLLmz97WNRikUBXRnLxJVJIn7sb7+h0uUH21d4S6zdAB0lfv3JGE5xPbcmUl6
-  artifact: ReportUnit\bin\$(configuration)
+  artifact: ReportUnit\bin\$(CONFIGURATION)
   draft: true
   prerelease: true
   force_update: true
