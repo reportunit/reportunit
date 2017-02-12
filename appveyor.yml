@@ -31,7 +31,7 @@ deploy:
   release: reportunit-latest-build
   auth_token:
     secure: aF0fLLmz97WNRikUBXRnLxJVJIn7sb7+h0uUH21d4S6zdAB0lfv3JGE5xPbcmUl6
-  artifact: ReportUnit\bin\Release
-  draft: true
-  prerelease: true
+  artifact: ReportUnit\bin\Release\*
+  draft: false
+  prerelease: false
   force_update: true
