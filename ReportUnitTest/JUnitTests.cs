@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Reflection;
-using System.Text;
 using NUnit.Framework;
 
 namespace ReportUnitTest
@@ -48,7 +46,7 @@ namespace ReportUnitTest
         {
             var processInfo = PrepareProcess("ReportUnit.exe", "test_junit_one_testsuite_multiple_testcases.xml");
 
-            RunProcess(processInfo, 5000);
+            RunProcess(processInfo, 5000, true);
 
             ValidateHtmlReport("test_junit_one_testsuite_multiple_testcases.html");
         }
@@ -62,22 +60,22 @@ namespace ReportUnitTest
             }
 
             var vNuJarDirectory = Path.Combine(ResourcesDir, "vnu.jar_17.2.1");
-            ProcessStartInfo processInfo = new ProcessStartInfo()
+            var processInfo = new ProcessStartInfo()
             {
                 FileName = "java",
                 Arguments = "-Xss512k -jar vnu.jar " + htmlFile,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
+                RedirectStandardError = false,
+                RedirectStandardOutput = false,
                 RedirectStandardInput = false,
                 CreateNoWindow = true,
                 UseShellExecute = false,
-                WorkingDirectory = vNuJarDirectory
+                WorkingDirectory = vNuJarDirectory,
             };
 
-            RunProcess(processInfo, 10000);
+            RunProcess(processInfo, 60000, false);
         }
 
-        private static void RunProcess(ProcessStartInfo processInfo, int milliseconds)
+        private static void RunProcess(ProcessStartInfo processInfo, int milliseconds, bool redirect)
         {
             TestContext.Progress.WriteLine("Start Process...");
             TestContext.Progress.WriteLine("Filename: " + processInfo.FileName);
@@ -93,16 +91,18 @@ namespace ReportUnitTest
                 throw new Exception("Timeout");
             }
 
-            while (!proc.StandardOutput.EndOfStream)
+            if (redirect)
             {
-                TestContext.Progress.WriteLine(proc.StandardOutput.ReadLine());
-            }
+                while (!proc.StandardOutput.EndOfStream)
+                {
+                    TestContext.Progress.WriteLine(proc.StandardOutput.ReadLine());
+                }
 
-            while (!proc.StandardError.EndOfStream)
-            {
-                TestContext.Progress.WriteLine(proc.StandardError.ReadLine());
+                while (!proc.StandardError.EndOfStream)
+                {
+                    TestContext.Progress.WriteLine(proc.StandardError.ReadLine());
+                }
             }
-
             if (proc.ExitCode != 0)
             {
                 throw new Exception("Exit code " + proc.ExitCode);
@@ -112,7 +112,7 @@ namespace ReportUnitTest
         private ProcessStartInfo PrepareProcess(string reportUnitFileName, string junitXmlFileName)
         {
             var filename = Path.Combine(ExecutableDir, reportUnitFileName);
-            ProcessStartInfo processInfo = new ProcessStartInfo()
+            var processInfo = new ProcessStartInfo()
             {
                 FileName = filename,
                 Arguments = Path.Combine(ResourcesDir, "JUnit", junitXmlFileName),
