@@ -1,5 +1,8 @@
-![Build Status](https://travis-ci.org/Artum/reportunit.svg?branch=master)
-![Build Status](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)
+![Build Status][travis_status] ![Build Status][appveyor_status]
+
+[travis_status]: https://travis-ci.org/Artum/reportunit.svg?branch=master
+[appveyor_status]: https://ci.appveyor.com/api/projects/status/q4cmp3mw32e31oy7?branch=master&svg=true
+
 
 # ReportUnit
 ReportUnit is a report generator for the test-runner family. It uses stock reports from NUnit, MSTest and Gallio and converts them into attractive HTML reports with dashboards.
