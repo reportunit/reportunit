@@ -11,6 +11,7 @@ namespace ReportUnitTest
     {
         public static string ExecutableDir;
         public static string ResourcesDir;
+
         [OneTimeSetUp]
         public static void Setup()
         {
@@ -44,15 +45,17 @@ namespace ReportUnitTest
         [Test]
         public void test_junit_one_testsuite_multiple_testcases()
         {
-            var processInfo = PrepareProcess("ReportUnit.exe", "test_junit_one_testsuite_multiple_testcases.xml");
-
-            RunProcess(processInfo, 5000, true);
-
+            TestContext.Progress.WriteLine("*** Test ***");
+            GenerateHtmlReport("test_junit_one_testsuite_multiple_testcases.xml");
             ValidateHtmlReport("test_junit_one_testsuite_multiple_testcases.html");
+            TestContext.Progress.WriteLine("*** Test - PASS ***");
         }
+
+        #region Private
 
         private static void ValidateHtmlReport(string htmlReportFileName)
         {
+            TestContext.Progress.WriteLine("*** Validating HTML Report ***");
             var htmlFile = Path.Combine(ResourcesDir, "JUnit", htmlReportFileName);
             if (!File.Exists(htmlFile))
             {
@@ -73,6 +76,35 @@ namespace ReportUnitTest
             };
 
             RunProcess(processInfo, 60000, false);
+
+            TestContext.Progress.WriteLine("*** Validating HTML Report - PASS ***");
+        }
+
+        private static void GenerateHtmlReport(string junitXmlFileName)
+        {
+            TestContext.Progress.WriteLine("*** Generating HTML Report ***");
+            var filename = Path.Combine(ExecutableDir, "ReportUnit.exe");
+            var processInfo = new ProcessStartInfo()
+            {
+                FileName = filename,
+                Arguments = Path.Combine(ResourcesDir, "JUnit", junitXmlFileName),
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = false,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                WorkingDirectory = ExecutableDir
+            };
+
+            if (IsRunningOnMono())
+            {
+                processInfo.FileName = "mono";
+                processInfo.Arguments = filename + " " + processInfo.Arguments;
+            }
+            
+            RunProcess(processInfo, 5000, true);
+
+            TestContext.Progress.WriteLine("*** Generating HTML Report - PASS ***");
         }
 
         private static void RunProcess(ProcessStartInfo processInfo, int milliseconds, bool redirect)
@@ -111,34 +143,11 @@ namespace ReportUnitTest
             }
         }
 
-        private ProcessStartInfo PrepareProcess(string reportUnitFileName, string junitXmlFileName)
-        {
-            var filename = Path.Combine(ExecutableDir, reportUnitFileName);
-            var processInfo = new ProcessStartInfo()
-            {
-                FileName = filename,
-                Arguments = Path.Combine(ResourcesDir, "JUnit", junitXmlFileName),
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                RedirectStandardInput = false,
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                WorkingDirectory = ExecutableDir
-            };
-
-            if (IsRunningOnMono())
-            {
-                processInfo.FileName = "mono";
-                processInfo.Arguments = filename + " " + processInfo.Arguments;
-            }
-
-            return processInfo;
-        }
-
         private static bool IsRunningOnMono()
         {
             return Type.GetType("Mono.Runtime") != null;
         }
-        
+
+        #endregion
     }
 }

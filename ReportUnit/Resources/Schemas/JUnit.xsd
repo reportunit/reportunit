@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- http://llg.cubic.org/docs/junit/ -->
+
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:element name="failure">
