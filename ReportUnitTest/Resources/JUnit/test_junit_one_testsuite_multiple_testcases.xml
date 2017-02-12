@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites tests="7" failures="0" disabled="0" errors="0" time="0.300s" name="AllTestSuite">
-  <testsuite name="TestSuite" tests="7" failures="0" disabled="0" errors="0" time="0.210s">
+  <testsuite name="TestSuite" tests="7" failures="0" disabled="0" errors="0" timestamp="2020-01-01T12:00:00" time="10">
     <testcase name="Test1" status="run" time="10ms" classname="TestSuite" />
     <testcase name="Test2" status="run" time="20ms" classname="TestSuite" />
     <testcase name="Test3" status="run" time="30ms" classname="TestSuite" />
