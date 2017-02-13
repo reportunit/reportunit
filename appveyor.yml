@@ -28,7 +28,7 @@ build:
 after_build:
   - nunit3-console .\ReportUnitTest\bin\Release\ReportUnitTest.dll --result=ReportUnitTestResults.xml;format=AppVeyor
 
-  artifacts:
+artifacts:
   - path: ReportUnit\bin\ReportUnit.exe
     name: ReportUnitBinary
   
