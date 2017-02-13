@@ -36,7 +36,7 @@ deploy:
 - provider: GitHub
   tag: latest-build
   release: reportunit-latest-build
-  description: 'This release is triggered by any commitand will containt the latest build artifacts.'
+  description: 'This release is a result of CI run after a repo change (commit). Might contain a not working version of the executable.'
   auth_token:
     secure: aF0fLLmz97WNRikUBXRnLxJVJIn7sb7+h0uUH21d4S6zdAB0lfv3JGE5xPbcmUl6
   artifact: ReportUnitBinary
