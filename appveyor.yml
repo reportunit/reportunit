@@ -28,6 +28,10 @@ build:
 after_build:
   - nunit3-console .\ReportUnitTest\bin\Release\ReportUnitTest.dll --result=ReportUnitTestResults.xml;format=AppVeyor
 
+  artifacts:
+  - path: ReportUnit\bin\ReportUnit.exe
+    name: ReportUnitBinary
+  
 deploy:
 - provider: GitHub
   tag: latest-build
@@ -35,7 +39,7 @@ deploy:
   description: 'This release is triggered by any commitand will containt the latest build artifacts.'
   auth_token:
     secure: aF0fLLmz97WNRikUBXRnLxJVJIn7sb7+h0uUH21d4S6zdAB0lfv3JGE5xPbcmUl6
-  artifact: ReportUnit\bin\ReportUnit.exe
+  artifact: ReportUnitBinary
   draft: false
   prerelease: true
   force_update: true
