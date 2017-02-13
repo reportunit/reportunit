@@ -1,7 +1,5 @@
-[![Build Status][travis_status]][travis_link] [![Build Status][appveyor_status]][appveyor_link]
+[![Build Status][appveyor_status]][appveyor_link]
 
-[travis_status]: https://travis-ci.org/Artum/reportunit.svg?branch=master
-[travis_link]: https://travis-ci.org/Artum/reportunit
 [appveyor_status]: https://ci.appveyor.com/api/projects/status/q4cmp3mw32e31oy7?branch=master&svg=true
 [appveyor_link]: https://ci.appveyor.com/project/Artum/reportunit
 
