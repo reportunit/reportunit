@@ -29,7 +29,7 @@ after_build:
   - nunit3-console .\ReportUnitTest\bin\Release\ReportUnitTest.dll --result=ReportUnitTestResults.xml;format=AppVeyor
 
 artifacts:
-  - path: ReportUnit\bin\Release
+  - path: ReportUnit\bin\ReportUnit.exe
     name: ReportUnit-0.2.x
     type: zip
   

@@ -49,6 +49,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ILMerge">
+      <HintPath>..\packages\ILMerge.2.14.1208\tools\ILMerge.exe</HintPath>
+    </Reference>
     <Reference Include="RazorEngine, Version=3.7.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.7.3\lib\net40\RazorEngine.dll</HintPath>
       <Private>True</Private>
@@ -127,6 +130,10 @@
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -a $(TargetDir). $(TargetDir)../</PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy $(TargetDir)* $(TargetDir)..\ /Y /S</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>ilmerge.exe /out:$(TargetFileName) /ndebug $(TargetFileName) RazorEngine.dll System.Web.Razor.dll
+xcopy $(TargetPath) $(ProjectDir)bin\ /Y /S</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

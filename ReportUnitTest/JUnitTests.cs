@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -11,6 +12,8 @@ namespace ReportUnitTest
     {
         public static string ExecutableDir;
         public static string ResourcesDir;
+
+        public static string[] JUnitFiles;
 
         [OneTimeSetUp]
         public static void Setup()
@@ -40,32 +43,62 @@ namespace ReportUnitTest
             {
                 throw new Exception("Can't find ReportUnit.exe");
             }
+
+            JUnitFiles = GetAllXmlFilesInSubDirectories(Path.Combine(ResourcesDir, "JUnit")).ToArray();
+            
+        }
+
+        private static List<string> GetAllXmlFilesInSubDirectories(string basedDir)
+        {
+            // get all files in current directory
+            var list = new List<string>(Directory.GetFiles(basedDir, "*.xml"));
+            
+            // get all files recursively in subdirectories
+            foreach (var dir in Directory.GetDirectories(basedDir))
+            {
+                list.AddRange(GetAllXmlFilesInSubDirectories(dir));
+            }
+
+            return list;
         }
 
         [Test]
-        public void test_junit_one_testsuite_multiple_testcases()
+        public void TestFileReport()
+        {
+            foreach (var filename in JUnitFiles)
+            {
+                TestContext.Progress.WriteLine("*** Test ***");
+                GenerateHtmlReport(filename);
+                ValidateHtmlReport(filename.Replace(".xml", ".html"));
+                TestContext.Progress.WriteLine("*** Test - PASS ***");
+            }
+        }
+
+
+        [Test]
+        public void TestSummaryReport()
         {
             TestContext.Progress.WriteLine("*** Test ***");
-            GenerateHtmlReport("test_junit_one_testsuite_multiple_testcases.xml");
-            ValidateHtmlReport("test_junit_one_testsuite_multiple_testcases.html");
+
+            var junitFolder = Path.Combine(ResourcesDir, "JUnit");
+            GenerateHtmlReport(junitFolder);
+
+            var htmlFiles = Directory.GetFiles(junitFolder, "*.html");
+            foreach (var html in htmlFiles)
+            {
+                ValidateHtmlReport(html);
+            }
+            
             TestContext.Progress.WriteLine("*** Test - PASS ***");
         }
 
-        [Test]
-        public void test_junit_multiple_testsuite_multiple_testcases()
-        {
-            TestContext.Progress.WriteLine("*** Test ***");
-            GenerateHtmlReport("test_junit_multiple_testsuite_multiple_testcases.xml");
-            ValidateHtmlReport("test_junit_multiple_testsuite_multiple_testcases.html");
-            TestContext.Progress.WriteLine("*** Test - PASS ***");
-        }
+
 
         #region Private
 
-        private static void ValidateHtmlReport(string htmlReportFileName)
+        private static void ValidateHtmlReport(string htmlFile)
         {
             TestContext.Progress.WriteLine("*** Validating HTML Report ***");
-            var htmlFile = Path.Combine(ResourcesDir, "JUnit", htmlReportFileName);
             if (!File.Exists(htmlFile))
             {
                 throw new Exception("No HTML report");
@@ -96,7 +129,7 @@ namespace ReportUnitTest
             var processInfo = new ProcessStartInfo()
             {
                 FileName = filename,
-                Arguments = Path.Combine(ResourcesDir, "JUnit", junitXmlFileName),
+                Arguments = junitXmlFileName,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 RedirectStandardInput = false,
