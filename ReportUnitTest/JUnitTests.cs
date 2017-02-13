@@ -16,21 +16,21 @@ namespace ReportUnitTest
         public static void Setup()
         {
             var assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            TestContext.Progress.WriteLine("AssemblyDir: " + assemblyDir);
+            //TestContext.Progress.WriteLine("AssemblyDir: " + assemblyDir);
             if (assemblyDir == null || !Directory.Exists(assemblyDir))
             {
                 throw new Exception("Failed to get assembly path");
             }
             
             ResourcesDir = Path.Combine(assemblyDir, "..", "..", "Resources");
-            TestContext.Progress.WriteLine("ResourcesDir: " + ResourcesDir);
+            //TestContext.Progress.WriteLine("ResourcesDir: " + ResourcesDir);
             if (!Directory.Exists(ResourcesDir))
             {
                 throw new Exception("Can't find Resources folder");
             }
 
             ExecutableDir = Path.Combine(assemblyDir, "..", "..", "..", "ReportUnit", "bin");
-            TestContext.Progress.WriteLine("ExecutableDir: " + ExecutableDir);
+            //TestContext.Progress.WriteLine("ExecutableDir: " + ExecutableDir);
             if (!Directory.Exists(ExecutableDir))
             {
                 throw new Exception("Can't find ReportUnit folder");
@@ -118,9 +118,9 @@ namespace ReportUnitTest
 
         private static void RunProcess(ProcessStartInfo processInfo, int milliseconds, bool redirect)
         {
-            TestContext.Progress.WriteLine("Start Process...");
-            TestContext.Progress.WriteLine("Filename: " + processInfo.FileName);
-            TestContext.Progress.WriteLine("Arguments: " + processInfo.Arguments);
+            //TestContext.Progress.WriteLine("Start Process...");
+            //TestContext.Progress.WriteLine("Filename: " + processInfo.FileName);
+            //TestContext.Progress.WriteLine("Arguments: " + processInfo.Arguments);
 
             var proc = Process.Start(processInfo);
             if (proc == null)
