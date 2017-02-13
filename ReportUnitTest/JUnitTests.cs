@@ -75,16 +75,16 @@ namespace ReportUnitTest
             var processInfo = new ProcessStartInfo()
             {
                 FileName = "java",
-                Arguments = "-Xss8m -jar vnu.jar " + htmlFile,
-                RedirectStandardError = false,
-                RedirectStandardOutput = false,
+                Arguments = "-Xss8m -jar vnu.jar --asciiquotes " + htmlFile,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
                 RedirectStandardInput = false,
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 WorkingDirectory = vNuJarDirectory,
             };
 
-            RunProcess(processInfo, 60000, false);
+            RunProcess(processInfo, 60000, true);
 
             TestContext.Progress.WriteLine("*** Validating HTML Report - PASS ***");
         }
