@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ReportUnit.Parser
+﻿namespace ReportUnit.Parser
 {
-    class XUnitV2
+    internal class XUnitV2
     {
     }
 }

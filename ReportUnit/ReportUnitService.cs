@@ -3,25 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Text;
-
 using ReportUnit.Logging;
 using ReportUnit.Model;
 using ReportUnit.Parser;
+using ReportUnit.Templates;
+using File = System.IO.File;
 
 namespace ReportUnit
 {
-    class ReportUnitService
+    internal class ReportUnitService
     {
         private const string _ns = "ReportUnit.Parser";
-        private Logger _logger = Logger.GetLogger();
-
-        public ReportUnitService() { }
+        private readonly Logger _logger = Logger.GetLogger();
 
         public void CreateReport(string input, string outputDirectory)
         {
@@ -29,14 +26,10 @@ namespace ReportUnit
             IEnumerable<FileInfo> filePathList;
 
             if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
-            {
                 filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
                     .OrderByDescending(f => f.CreationTime);
-            }
             else
-            {
                 filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
-            }
 
             InitializeRazor();
 
@@ -46,9 +39,12 @@ namespace ReportUnit
             {
                 var testRunner = GetTestRunner(filePath.FullName);
 
-                if (!(testRunner.Equals(TestRunner.Unknown)))
+                if (!testRunner.Equals(TestRunner.Unknown))
                 {
-                    IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
+                    var parser =
+                        (IParser)
+                        Assembly.GetExecutingAssembly()
+                            .CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
                     var report = parser.Parse(filePath.FullName);
 
                     compositeTemplate.AddReport(report);
@@ -61,9 +57,10 @@ namespace ReportUnit
             }
             if (compositeTemplate.ReportList.Count > 1)
             {
-                compositeTemplate.SideNavLinks = compositeTemplate.SideNavLinks.Insert(0, Templates.SideNav.IndexLink);
+                compositeTemplate.SideNavLinks = compositeTemplate.SideNavLinks.Insert(0, SideNav.IndexLink);
 
-                string summary = Engine.Razor.RunCompile(Templates.TemplateManager.GetSummaryTemplate(), "summary", typeof(Model.CompositeTemplate), compositeTemplate, null);
+                var summary = Engine.Razor.RunCompile(TemplateManager.GetSummaryTemplate(), "summary",
+                    typeof(CompositeTemplate), compositeTemplate, null);
                 File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summary);
             }
 
@@ -71,7 +68,8 @@ namespace ReportUnit
             {
                 report.SideNavLinks = compositeTemplate.SideNavLinks;
 
-                var html = Engine.Razor.RunCompile(Templates.TemplateManager.GetFileTemplate(), "report", typeof(Model.Report), report, null);
+                var html = Engine.Razor.RunCompile(TemplateManager.GetFileTemplate(), "report", typeof(Report), report,
+                    null);
                 File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }
         }
@@ -80,14 +78,15 @@ namespace ReportUnit
         {
             var testRunner = new ParserFactory(inputFile).GetTestRunnerType();
 
-            _logger.Info("The file " + inputFile + " contains " + Enum.GetName(typeof(TestRunner), testRunner) + " test results");
+            _logger.Info("The file " + inputFile + " contains " + Enum.GetName(typeof(TestRunner), testRunner) +
+                         " test results");
 
             return testRunner;
         }
 
         private void InitializeRazor()
         {
-            TemplateServiceConfiguration templateConfig = new TemplateServiceConfiguration();
+            var templateConfig = new TemplateServiceConfiguration();
             templateConfig.DisableTempFileLocking = true;
             templateConfig.EncodedStringFactory = new RawStringFactory();
             templateConfig.CachingProvider = new DefaultCachingProvider(x => { });
