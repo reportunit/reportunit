@@ -12,7 +12,7 @@ Samples:
 
 ### Download Exe
 
-Download using <a href='http://relevantcodes.com/reportunit'>this</a> link.
+Download using <a href='https://goo.gl/OEewFS'>this</a> link.
 
 ### Usage: Building Folder-Level Summary
 You can either generate a report for all files in a folder, or simply convert a given file. Both methods are shown below.
@@ -59,7 +59,7 @@ reportunit "C:\my-folder\result.xml" reportunit "C:\output-folder\report.html"
 
 ### License
 
-Copyright (c) 2015 Anshoo Arora (Relevant Codes)
+Copyright (c) 2015 Anshoo Arora (Relevant Codes) - Update by Rudra
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
