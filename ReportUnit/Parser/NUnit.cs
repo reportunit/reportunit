@@ -2,88 +2,81 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
-
+using ReportUnit.Logging;
 using ReportUnit.Model;
 using ReportUnit.Utils;
-using ReportUnit.Logging;
 
 namespace ReportUnit.Parser
 {
     internal class NUnit : IParser
     {
-        private string resultsFile;
-
         private Logger logger = Logger.GetLogger();
+        private string resultsFile;
 
         public Report Parse(string resultsFile)
         {
             this.resultsFile = resultsFile;
 
-            XDocument doc = XDocument.Load(resultsFile);
+            var doc = XDocument.Load(resultsFile);
 
-            Report report = new Report();
+            var report = new Report();
 
             report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
-            report.AssemblyName = doc.Root.Attribute( "name" ) != null ? doc.Root.Attribute("name").Value : null;
+            report.AssemblyName = doc.Root.Attribute("name") != null ? doc.Root.Attribute("name").Value : null;
             report.TestRunner = TestRunner.NUnit;
 
             // run-info & environment values -> RunInfo
             var runInfo = CreateRunInfo(doc, report);
-            if (runInfo != null) 
-            { 
-                report.AddRunInfo(runInfo.Info); 
-            }
+            if (runInfo != null)
+                report.AddRunInfo(runInfo.Info);
 
             // report counts
             report.Total = doc.Descendants("test-case").Count();
 
-            report.Passed = 
-                doc.Root.Attribute("passed") != null 
-                    ? Int32.Parse(doc.Root.Attribute("passed").Value) 
-                    : doc.Descendants("test-case").Where(x => x.Attribute("result").Value.Equals("success", StringComparison.CurrentCultureIgnoreCase)).Count();
+            report.Passed =
+                doc.Root.Attribute("passed") != null
+                    ? int.Parse(doc.Root.Attribute("passed").Value)
+                    : doc.Descendants("test-case")
+                        .Where(
+                            x =>
+                                x.Attribute("result").Value.Equals("success", StringComparison.CurrentCultureIgnoreCase))
+                        .Count();
 
-            report.Failed = 
-                doc.Root.Attribute("failed") != null 
-                    ? Int32.Parse(doc.Root.Attribute("failed").Value) 
-                    : Int32.Parse(doc.Root.Attribute("failures").Value);
-            
-            report.Errors = 
-                doc.Root.Attribute("errors") != null 
-                    ? Int32.Parse(doc.Root.Attribute("errors").Value) 
+            report.Failed =
+                doc.Root.Attribute("failed") != null
+                    ? int.Parse(doc.Root.Attribute("failed").Value)
+                    : int.Parse(doc.Root.Attribute("failures").Value);
+
+            report.Errors =
+                doc.Root.Attribute("errors") != null
+                    ? int.Parse(doc.Root.Attribute("errors").Value)
                     : 0;
-            
-            report.Inconclusive = 
-                doc.Root.Attribute("inconclusive") != null 
-                    ? Int32.Parse(doc.Root.Attribute("inconclusive").Value) 
-                    : Int32.Parse(doc.Root.Attribute("inconclusive").Value);
-            
-            report.Skipped = 
-                doc.Root.Attribute("skipped") != null 
-                    ? Int32.Parse(doc.Root.Attribute("skipped").Value) 
-                    : Int32.Parse(doc.Root.Attribute("skipped").Value);
-            
-            report.Skipped += 
-                doc.Root.Attribute("ignored") != null 
-                    ? Int32.Parse(doc.Root.Attribute("ignored").Value) 
+
+            report.Inconclusive =
+                doc.Root.Attribute("inconclusive") != null
+                    ? int.Parse(doc.Root.Attribute("inconclusive").Value)
+                    : int.Parse(doc.Root.Attribute("inconclusive").Value);
+
+            report.Skipped =
+                doc.Root.Attribute("skipped") != null
+                    ? int.Parse(doc.Root.Attribute("skipped").Value)
+                    : int.Parse(doc.Root.Attribute("skipped").Value);
+
+            report.Skipped +=
+                doc.Root.Attribute("ignored") != null
+                    ? int.Parse(doc.Root.Attribute("ignored").Value)
                     : 0;
 
             // report duration
-            report.StartTime = 
-                doc.Root.Attribute("start-time") != null 
-                    ? doc.Root.Attribute("start-time").Value 
+            report.StartTime =
+                doc.Root.Attribute("start-time") != null
+                    ? doc.Root.Attribute("start-time").Value
                     : doc.Root.Attribute("date").Value + " " + doc.Root.Attribute("time").Value;
 
-            report.EndTime = 
-                doc.Root.Attribute("end-time") != null 
-                    ? doc.Root.Attribute("end-time").Value 
+            report.EndTime =
+                doc.Root.Attribute("end-time") != null
+                    ? doc.Root.Attribute("end-time").Value
                     : "";
 
             // report status messages
@@ -93,29 +86,29 @@ namespace ReportUnit.Parser
                 ? testSuiteTypeAssembly.First().Value
                 : "";
 
-            IEnumerable<XElement> suites = doc
+            var suites = doc
                 .Descendants("test-suite")
                 .Where(x => x.Attribute("type").Value.Equals("TestFixture", StringComparison.CurrentCultureIgnoreCase));
-            
+
             suites.AsParallel().ToList().ForEach(ts =>
             {
                 var testSuite = new TestSuite();
                 testSuite.Name = ts.Attribute("name").Value;
 
                 // Suite Time Info
-                testSuite.StartTime = 
-                    ts.Attribute("start-time") != null 
-                        ? ts.Attribute("start-time").Value 
+                testSuite.StartTime =
+                    ts.Attribute("start-time") != null
+                        ? ts.Attribute("start-time").Value
                         : string.Empty;
 
-                testSuite.StartTime = 
-                    String.IsNullOrEmpty(testSuite.StartTime) && ts.Attribute("time") != null 
-                        ? ts.Attribute("time").Value 
-                        : testSuite.StartTime; 
+                testSuite.StartTime =
+                    string.IsNullOrEmpty(testSuite.StartTime) && ts.Attribute("time") != null
+                        ? ts.Attribute("time").Value
+                        : testSuite.StartTime;
 
-                testSuite.EndTime = 
-                    ts.Attribute("end-time") != null 
-                        ? ts.Attribute("end-time").Value 
+                testSuite.EndTime =
+                    ts.Attribute("end-time") != null
+                        ? ts.Attribute("end-time").Value
                         : "";
 
                 // any error messages and/or stack-trace
@@ -124,74 +117,74 @@ namespace ReportUnit.Parser
                 {
                     var message = failure.Element("message");
                     if (message != null)
-                    {
                         testSuite.StatusMessage = message.Value;
-                    }
 
                     var stackTrace = failure.Element("stack-trace");
                     if (stackTrace != null && !string.IsNullOrWhiteSpace(stackTrace.Value))
-                    {
                         testSuite.StatusMessage = string.Format(
                             "{0}\n\nStack trace:\n{1}", testSuite.StatusMessage, stackTrace.Value);
-                    }
                 }
 
                 var output = ts.Element("output")?.Value;
                 if (!string.IsNullOrWhiteSpace(output))
-                {
-                    testSuite.StatusMessage +=$"\n\nOutput:\n" + output;
-                }
+                    testSuite.StatusMessage += $"\n\nOutput:\n" + output;
 
                 // get test suite level categories
-                var suiteCategories = this.GetCategories(ts, false);
+                var suiteCategories = GetCategories(ts, false);
 
                 // Test Cases
                 ts.Descendants("test-case").AsParallel().ToList().ForEach(tc =>
                 {
-                    var test = new Model.Test();
+                    var test = new Test();
 
                     test.Name = tc.Attribute("name").Value;
-                    test.Status = StatusExtensions.ToStatus(tc.Attribute("result").Value);
-                    
+                    test.Status = tc.Attribute("result").Value.ToStatus();
+
                     // main a master list of all status
                     // used to build the status filter in the view
                     report.StatusList.Add(test.Status);
 
                     // TestCase Time Info
-                    test.StartTime = 
-                        tc.Attribute("start-time") != null 
-                            ? tc.Attribute("start-time").Value 
+                    test.StartTime =
+                        tc.Attribute("start-time") != null
+                            ? tc.Attribute("start-time").Value
                             : "";
-                    test.StartTime = 
-                        String.IsNullOrEmpty(test.StartTime) && (tc.Attribute("time") != null) 
-                            ? tc.Attribute("time").Value 
+                    test.StartTime =
+                        string.IsNullOrEmpty(test.StartTime) && tc.Attribute("time") != null
+                            ? tc.Attribute("time").Value
                             : test.StartTime;
-                    test.EndTime = 
-                        tc.Attribute("end-time") != null 
-                            ? tc.Attribute("end-time").Value 
+                    test.EndTime =
+                        tc.Attribute("end-time") != null
+                            ? tc.Attribute("end-time").Value
                             : "";
 
                     // description
-                    var description = 
+                    var description =
                         tc.Descendants("property")
-                        .Where(c => c.Attribute("name").Value.Equals("Description", StringComparison.CurrentCultureIgnoreCase));
-                    test.Description = 
-                        description.Count() > 0 
-                            ? description.ToArray()[0].Attribute("value").Value 
+                            .Where(
+                                c =>
+                                    c.Attribute("name")
+                                        .Value.Equals("Description", StringComparison.CurrentCultureIgnoreCase));
+                    test.Description =
+                        description.Count() > 0
+                            ? description.ToArray()[0].Attribute("value").Value
                             : "";
 
                     // get test case level categories
-                    var categories = this.GetCategories(tc, true);
+                    var categories = GetCategories(tc, true);
 
                     // if this is a parameterized test, get the categories from the parent test-suite
                     var parameterizedTestElement = tc
                         .Ancestors("test-suite").ToList()
-                        .Where(x => x.Attribute("type").Value.Equals("ParameterizedTest", StringComparison.CurrentCultureIgnoreCase))
+                        .Where(
+                            x =>
+                                x.Attribute("type")
+                                    .Value.Equals("ParameterizedTest", StringComparison.CurrentCultureIgnoreCase))
                         .FirstOrDefault();
 
                     if (null != parameterizedTestElement)
                     {
-                        var paramCategories = this.GetCategories(parameterizedTestElement, false);
+                        var paramCategories = GetCategories(parameterizedTestElement, false);
                         categories.UnionWith(paramCategories);
                     }
 
@@ -202,27 +195,28 @@ namespace ReportUnit.Parser
 
 
                     // error and other status messages
-                    test.StatusMessage = 
-                        tc.Element("failure") != null 
+                    test.StatusMessage =
+                        tc.Element("failure") != null
                             ? tc.Element("failure").Element("message").Value.Trim()
                             : "";
-                    test.StatusMessage += 
-                        tc.Element("failure") != null 
-                            ? tc.Element("failure").Element("stack-trace") != null 
+                    test.StatusMessage +=
+                        tc.Element("failure") != null
+                            ? tc.Element("failure").Element("stack-trace") != null
                                 ? tc.Element("failure").Element("stack-trace").Value.Trim()
-                                : "" 
+                                : ""
                             : "";
 
-                    test.StatusMessage += tc.Element("reason") != null && tc.Element("reason").Element("message") != null
+                    test.StatusMessage += tc.Element("reason") != null &&
+                                          tc.Element("reason").Element("message") != null
                         ? tc.Element("reason").Element("message").Value.Trim()
                         : "";
 
-                   // add NUnit console output to the status message
-                   test.StatusMessage += tc.Element( "output" ) != null
-                     ? tc.Element( "output" ).Value.Trim()
-                     : "";
+                    // add NUnit console output to the status message
+                    test.StatusMessage += tc.Element("output") != null
+                        ? tc.Element("output").Value.Trim()
+                        : "";
 
-                   testSuite.TestList.Add(test);
+                    testSuite.TestList.Add(test);
                 });
 
                 testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
@@ -237,7 +231,7 @@ namespace ReportUnit.Parser
         }
 
         /// <summary>
-        /// Returns categories for the direct children or all descendents of an XElement
+        ///     Returns categories for the direct children or all descendents of an XElement
         /// </summary>
         /// <param name="elem">XElement to parse</param>
         /// <param name="allDescendents">If true, return all descendent categories.  If false, only direct children</param>
@@ -246,19 +240,19 @@ namespace ReportUnit.Parser
         {
             //Define which function to use
             var parser = allDescendents
-                ? new Func<XElement, string, IEnumerable<XElement>>((e, s) => e.Descendants(s))
+                ? ((e, s) => e.Descendants(s))
                 : new Func<XElement, string, IEnumerable<XElement>>((e, s) => e.Elements(s));
 
             //Grab unique categories
-            HashSet<string> categories = new HashSet<string>();
-            bool hasCategories = parser(elem, "categories").Any();
+            var categories = new HashSet<string>();
+            var hasCategories = parser(elem, "categories").Any();
             if (hasCategories)
             {
-                List<XElement> cats = parser(elem, "categories").Elements("category").ToList();
+                var cats = parser(elem, "categories").Elements("category").ToList();
 
                 cats.ForEach(x =>
                 {
-                    string cat = x.Attribute("name").Value;
+                    var cat = x.Attribute("name").Value;
                     categories.Add(cat);
                 });
             }
@@ -271,10 +265,10 @@ namespace ReportUnit.Parser
             if (doc.Element("environment") == null)
                 return null;
 
-            RunInfo runInfo = new RunInfo();
+            var runInfo = new RunInfo();
             runInfo.TestRunner = report.TestRunner;
 
-            XElement env = doc.Descendants("environment").First();
+            var env = doc.Descendants("environment").First();
             runInfo.Info.Add("Test Results File", resultsFile);
             if (env.Attribute("nunit-version") != null)
                 runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);
@@ -288,7 +282,5 @@ namespace ReportUnit.Parser
 
             return runInfo;
         }
-        
-        public NUnit() { }
     }
 }

@@ -1,13 +1,16 @@
-﻿namespace ReportUnit.Logging
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+﻿using System;
+using System.Collections.Generic;
 
+namespace ReportUnit.Logging
+{
     internal class Logger
     {
-        private Queue<Log> queue = new Queue<Log>();
+        private static Logger instance;
+        private readonly Queue<Log> queue = new Queue<Log>();
+
+        private Logger()
+        {
+        }
 
         public void Log(Level level, string message)
         {
@@ -29,12 +32,10 @@
 
         public string GetLogsAsString()
         {
-            string logs = "";
+            var logs = "";
 
-            foreach (Log log in queue)
-            {
-                logs += log.ToString() + "<br />";
-            }
+            foreach (var log in queue)
+                logs += log + "<br />";
 
             return logs;
         }
@@ -64,16 +65,10 @@
             Log(Level.Fatal, message);
         }
 
-        private static Logger instance;
-
-        private Logger() { }
-
         public static Logger GetLogger()
         {
             if (instance == null)
-            {
                 instance = new Logger();
-            }
 
             return instance;
         }

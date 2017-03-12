@@ -1,38 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using System.Collections.Generic;
 using RazorEngine;
 using RazorEngine.Templating;
-using RazorEngine.Text;
+using ReportUnit.Templates;
 
 namespace ReportUnit.Model
 {
     public class CompositeTemplate
     {
-        private List<Report> _reportList;
+        public List<Report> ReportList { get; private set; }
+
+        public string SideNavLinks { get; internal set; }
 
         public void AddReport(Report report)
         {
-            if (_reportList == null)
-            {
-                _reportList = new List<Report>();
-            }
+            if (ReportList == null)
+                ReportList = new List<Report>();
 
-            _reportList.Add(report);
+            ReportList.Add(report);
 
-            SideNavLinks += Engine.Razor.RunCompile(Templates.SideNav.Link, "sidenav", typeof(Report), report, null);
+            SideNavLinks += Engine.Razor.RunCompile(SideNav.Link, "sidenav", typeof(Report), report, null);
         }
-
-        public List<Report> ReportList
-        {
-            get
-            {
-                return _reportList;
-            }
-        }
-
-        public string SideNavLinks { get; internal set; }
     }
 }

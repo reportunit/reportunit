@@ -1,11 +1,11 @@
-﻿namespace ReportUnit.Support
-{
-    using System;
+﻿using System;
 
+namespace ReportUnit.Support
+{
     internal class DateTimeHelper
     {
         /// <summary>
-        /// Work out the difference between two date time strings in milliseconds
+        ///     Work out the difference between two date time strings in milliseconds
         /// </summary>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
@@ -15,9 +15,7 @@
             DateTime s, e;
 
             if (DateTime.TryParse(startTime, out s) && DateTime.TryParse(endTime, out e))
-            {
                 return (e - s).TotalMilliseconds;
-            }
 
             return 0;
         }
