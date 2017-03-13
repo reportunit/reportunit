@@ -5,8 +5,8 @@
         Gallio,
         MSTest2010,
         NUnit,
-		XUnitV1,
-		XUnitV2,
+        XUnitV1,
+        XUnitV2,
         JUnit,
         Unknown
     }

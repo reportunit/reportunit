@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ReportUnit.Templates
+﻿namespace ReportUnit.Templates
 {
     internal class Summary
     {
@@ -23,7 +18,7 @@ namespace ReportUnit.Templates
 		                Documentation: http://extentreports.relevantcodes.com 
                 -->
                 " +
-                @"<head>
+                   @"<head>
 	                <meta charset='utf-8'>
 	                <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 	                <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -206,7 +201,8 @@ namespace ReportUnit.Templates
                 <script src='https://cdn.rawgit.com/reportunit/reportunit/005dcf934c5a53e60b9ec88a2a118930b433c453/cdn/reportunit.js' type='text/javascript'></script>
                 
             </html>
-            ".Replace("\r\n", "").Replace("\t", "").Replace("    ", ""); ;
+            ".Replace("\r\n", "").Replace("\t", "").Replace("    ", "");
+            ;
         }
     }
 }
