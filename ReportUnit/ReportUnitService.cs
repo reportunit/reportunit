@@ -30,12 +30,16 @@ namespace ReportUnit
 
             if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
             {
-                filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
-                    .OrderByDescending(f => f.CreationTime);
+                filePathList =
+                    "*.trx|*.xml".Split('|')
+                        .SelectMany(
+                            filter =>
+                                new DirectoryInfo(input).GetFiles(filter, searchOption: SearchOption.AllDirectories))
+                        .ToList();            
             }
             else
             {
-                filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
+                filePathList = new List<FileInfo>() {new FileInfo(input)};
             }
 
             InitializeRazor();
