@@ -22,7 +22,8 @@
         /// </returns>
         public static string GetNullableAttribute(this XElement element, string attributeName)
         {
-            return element.Attribute(attributeName) != null ? element.Attribute(attributeName).Value : string.Empty;
+            var attr = element.Attribute(attributeName);
+            return attr != null ? attr.Value : string.Empty;
         }
     }
 }

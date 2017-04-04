@@ -9,11 +9,7 @@
 namespace ReportUnit
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-
-    using ReportUnit.Parser;
     using ReportUnit.Logging;
 
     class Program
@@ -21,14 +17,12 @@ namespace ReportUnit
         /// <summary>
         /// ReportUnit usage
         /// </summary>
-        private static string USAGE = "[INFO] Usage 1:  ReportUnit \"path-to-folder\"" +
-                                                "\n[INFO] Usage 2:  ReportUnit \"input-folder\" \"output-folder\"" +
-                                                "\n[INFO] Usage 3:  ReportUnit \"input.xml\" \"output.html\"";
+        private const string Usage = "[INFO] Usage 1:  ReportUnit \"path-to-folder\"" + "\n[INFO] Usage 2:  ReportUnit \"input-folder\" \"output-folder\"" + "\n[INFO] Usage 3:  ReportUnit \"input.xml\" \"output.html\"";
 
         /// <summary>
         /// Logger
         /// </summary>
-        private static Logger _logger = Logger.GetLogger();
+        private static readonly Logger _logger = Logger.GetLogger();
 
         /// <summary>
         /// Entry point
@@ -47,20 +41,20 @@ namespace ReportUnit
 
             if (args.Length == 0 || args.Length > 2)
             {
-                _logger.Error("Invalid number of arguments specified.\n" + USAGE);
+                _logger.Error("Invalid number of arguments specified.\n" + Usage);
                 return;
             }
 
-            foreach (string arg in args)
+            foreach (var arg in args)
             {
                 if (arg.Trim() == "" || arg == "\\\\")
                 {
-                    _logger.Error("Invalid argument(s) specified.\n" + USAGE);
+                    _logger.Error("Invalid argument(s) specified.\n" + Usage);
                     return;
                 }
             }
 
-            for (int ix = 0; ix < args.Length; ix++)
+            for (var ix = 0; ix < args.Length; ix++)
             {
                 args[ix] = args[ix].Replace('"', '\\');
             }
@@ -91,7 +85,7 @@ namespace ReportUnit
                 }
                 else
                 {
-                    _logger.Error("Invalid files specified.\n" + USAGE);
+                    _logger.Error("Invalid files specified.\n" + Usage);
                 }
 
                 return;
@@ -105,7 +99,7 @@ namespace ReportUnit
 
             if (!Directory.Exists(args[0]))
             {
-                _logger.Error("The path of file or directory you have specified does not exist.\n" + USAGE);
+                _logger.Error("The path of file or directory you have specified does not exist.\n" + Usage);
                 return;
             }
 

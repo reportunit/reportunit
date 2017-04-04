@@ -1,17 +1,15 @@
-﻿namespace ReportUnit.Parser
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Xml.Linq;
-    
-    using ReportUnit.Extensions;
-    using ReportUnit.Model;
-    using ReportUnit.Utils;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using ReportUnit.Extensions;
+using ReportUnit.Model;
+using ReportUnit.Utils;
 
+namespace ReportUnit.Parser
+{
     internal class JUnit : IParser
     {
         public Report Parse(string filePath)
@@ -20,22 +18,24 @@
             {
                 throw new FileNotFoundException(string.Format("File {0} does not exist.", filePath));
             }
-            bool singleSuite = false;
+            var singleSuite = false;
 
-            XDocument doc = XDocument.Load(filePath);
+            var doc = XDocument.Load(filePath);
 
             var docRoot = doc.Root;
 
             if (docRoot == null)
             {
-                throw new NullReferenceException(@"Could not read document root.");
+                throw new NullReferenceException("Could not read document root.");
             }
 
-            var report = new Report();
-            report.FileName = Path.GetFileNameWithoutExtension(filePath);
-            report.TestRunner = TestRunner.JUnit;
+            var report = new Report
+            {
+                FileName = Path.GetFileNameWithoutExtension(filePath),
+                TestRunner = TestRunner.JUnit
+            };
 
-            IEnumerable<XElement> suites = docRoot.Descendants("testsuite");
+            var suites = docRoot.Descendants("testsuite");
             
             // Lets avoid multiple enumerations of the collection.
             var suitesList = suites as XElement[] ?? suites.ToArray();
@@ -44,7 +44,7 @@
                 suitesList.AsParallel().ToList().ForEach(
                     ts =>
                     {
-                        TestSuite testSuite = CreateTestSuite(ts);
+                        var testSuite = CreateTestSuite(ts);
                         report.TestSuiteList.Add(testSuite);
                     });
             }
@@ -124,7 +124,7 @@
                 testSuite.Description += " Id: " + id;
             }
 
-            testSuite.Description += this.GetTestSuiteProperties(testSuiteElement);
+            testSuite.Description += GetTestSuiteProperties(testSuiteElement);
 
             var duration = testSuiteElement.GetNullableAttribute("time");
             if (duration != string.Empty)
@@ -136,7 +136,7 @@
             testSuiteElement.Descendants("testcase").AsParallel().ToList().ForEach(
                 tc =>
                 {
-                    Test test = CreateTestCase(tc);
+                    var test = CreateTestCase(tc);
 
                     testSuite.TestList.Add(test);
                 });
@@ -221,33 +221,29 @@
         private string GetTestSuiteProperties(XElement testSuite)
         {
             var stringBuilder = new StringBuilder();
-            var properties = testSuite.Descendants("properties");
+            var propertyList = testSuite.Descendants("properties").Descendants("property");
+            
 
-            if (properties != null)
-            {
-                var propertyList = properties.Descendants("property");
-
-                // cast to array to avoid multiple enumerations of collection.
-                var xElements = propertyList as XElement[] ?? propertyList.ToArray();
+            // cast to array to avoid multiple enumerations of collection.
+            var xElements = propertyList as XElement[] ?? propertyList.ToArray();
                 
-                if (xElements.Any())
-                {
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine("Test Suite Properties:");
+            if (xElements.Any())
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine("Test Suite Properties:");
                     
-                    foreach (var prop in xElements)
-                    {
-                        var propertyName = prop.GetNullableAttribute("name");
-                        var propertyValue = prop.GetNullableAttribute("value");
+                foreach (var prop in xElements)
+                {
+                    var propertyName = prop.GetNullableAttribute("name");
+                    var propertyValue = prop.GetNullableAttribute("value");
 
-                        if (propertyName != string.Empty && propertyValue != string.Empty)
-                        {
-                            stringBuilder.AppendLine(string.Format("{0}: {1}", propertyName, propertyValue));
-                        }
+                    if (propertyName != string.Empty && propertyValue != string.Empty)
+                    {
+                        stringBuilder.AppendLine(string.Format("{0}: {1}", propertyName, propertyValue));
                     }
                 }
             }
-
+            
             return stringBuilder.ToString();
         }
     }

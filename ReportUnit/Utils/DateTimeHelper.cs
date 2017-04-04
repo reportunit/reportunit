@@ -1,7 +1,7 @@
-﻿namespace ReportUnit.Support
-{
-    using System;
+﻿using System;
 
+namespace ReportUnit.Utils
+{
     internal class DateTimeHelper
     {
         /// <summary>
