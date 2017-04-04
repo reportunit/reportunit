@@ -136,10 +136,10 @@ namespace ReportUnit.Parser
                     }
                 }
 
-                var output = ts.Element("output")?.Value;
+                var output = ts.Element("output")!=null?ts.Element("output").Value:null;
                 if (!string.IsNullOrWhiteSpace(output))
                 {
-                    testSuite.StatusMessage +=$"\n\nOutput:\n" + output;
+                    testSuite.StatusMessage +="\n\nOutput:\n" + output;
                 }
 
                 // get test suite level categories
