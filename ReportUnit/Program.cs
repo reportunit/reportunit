@@ -6,6 +6,8 @@
 * See the accompanying LICENSE file for terms.
 */
 
+using System.Runtime.Remoting.Contexts;
+
 namespace ReportUnit
 {
     using System;
@@ -37,81 +39,88 @@ namespace ReportUnit
         /// </param>
         static void Main(string[] args)
         {
+            int exitCode;
             try
             {
 
                 CopyrightMessage();
 
-            if (args.Length == 0 || args.Length > 2)
-            {
-                _logger.Error("Invalid number of arguments specified.\n" + Usage);
-                return;
-            }
-
-            foreach (var arg in args)
-            {
-                if (arg.Trim() == "" || arg == "\\\\")
+                if (args.Length == 0 || args.Length > 2)
                 {
-                    _logger.Error("Invalid argument(s) specified.\n" + Usage);
-                    return;
+                    throw new Exception("Invalid number of arguments specified.\n" + Usage);
                 }
-            }
 
-            for (var ix = 0; ix < args.Length; ix++)
-            {
-                args[ix] = args[ix].Replace('"', '\\');
-            }
-
-                if (args.Length == 2)
+                foreach (var arg in args)
                 {
-                    if ((Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")) && (Path.GetExtension(args[1]).ToLower().Contains("htm")))
+                    if (arg.Trim() == "" || arg == "\\\\")
                     {
-                        if (!Directory.GetParent(args[1]).Exists)
-                            Directory.CreateDirectory(Directory.GetParent(args[1]).FullName);
-
-                        new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[1]).FullName);
-                        return;
+                        throw new Exception("Invalid argument(s) specified.\n" + Usage);
                     }
+                }
 
-                    if (!Directory.Exists(args[0]))
-                    {
-                        _logger.Error("Input directory " + args[0] + " not found.");
-                        return;
-                    }
-
-                    if (!Directory.Exists(args[1]))
-                        Directory.CreateDirectory(args[1]);
-
-                if (Directory.Exists(args[0]) && Directory.Exists(args[1]))
+                for (var ix = 0; ix < args.Length; ix++)
                 {
-                    new ReportUnitService().CreateReport(args[0], args[1]);
+                    args[ix] = args[ix].Replace('"', '\\');
                 }
-                else
+
+                string outputDirectory;
+                string input;
+                switch (args.Length)
                 {
-                    _logger.Error("Invalid files specified.\n" + Usage);
+                    case 2:
+                        if ((Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")) && (Path.GetExtension(args[1]).ToLower().Contains("htm")))
+                        {
+                            if (!Directory.GetParent(args[1]).Exists)
+                                Directory.CreateDirectory(Directory.GetParent(args[1]).FullName);
+
+                            input = args[0];
+                            outputDirectory = Directory.GetParent(args[1]).FullName;    
+                            break;                        
+                        }
+
+                        if (!Directory.Exists(args[0]))
+                        {
+                            throw new Exception("Input directory " + args[0] + " not found.");
+                        }
+
+                        if (!Directory.Exists(args[1]))
+                            Directory.CreateDirectory(args[1]);
+
+                        if (Directory.Exists(args[0]) && Directory.Exists(args[1]))
+                        {
+                            input = args[0];
+                            outputDirectory = args[1];                            
+                        }
+                        else
+                        {
+                            throw new Exception("Invalid files specified.\n" + Usage);
+                        }
+                        break;
+                    default:
+                        if (File.Exists(args[0]) && (Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")))
+                        {
+                            input = args[0];
+                            outputDirectory = Directory.GetParent(args[0]).FullName;
+                            break;
+                        }
+
+                        if (!Directory.Exists(args[0]))
+                        {
+                            throw new Exception("The path of file or directory you have specified does not exist.\n" + Usage);
+                        }
+
+                        input = args[0];
+                        outputDirectory = args[0];                        
+                        break;
                 }
-
-                    return;
-                }
-
-                if (File.Exists(args[0]) && (Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")))
-                {
-                    new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[0]).FullName);
-                    return;
-                }
-
-            if (!Directory.Exists(args[0]))
-            {
-                _logger.Error("The path of file or directory you have specified does not exist.\n" + Usage);
-                return;
-            }
-
-                new ReportUnitService().CreateReport(args[0], args[0]);
+                exitCode = new ReportUnitService().CreateReport(input, outputDirectory) ? 0 : 1;
             }
             catch (Exception exception)
-            {                
-                _logger.Error($"Exception happened while running: {exception}");
-            }
+            {
+                _logger.Error(exception.Message);
+                exitCode = 1;
+            }     
+            Environment.Exit(exitCode);                 
         }
 
         private static void CopyrightMessage()
