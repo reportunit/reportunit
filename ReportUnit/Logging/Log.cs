@@ -1,9 +1,6 @@
 ﻿namespace ReportUnit.Logging
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     internal class Log
     {
@@ -15,7 +12,6 @@
         {
             return String.Format("[{0}][{1}] {2}", Timestamp.ToString("yyyy.MM.dd HH:mm:ss"), Level.ToString(), Message);
         }
-
-        public Log() { }
+        
     }
 }

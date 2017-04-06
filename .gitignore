@@ -16,6 +16,9 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+# ReportUnitTest test output
+ReportUnitTest/Resources/**/*.html
+
 # Roslyn cache directories
 *.ide/
 

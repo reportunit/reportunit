@@ -2,15 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
-
 using ReportUnit.Model;
 using ReportUnit.Utils;
 using ReportUnit.Logging;
@@ -19,32 +11,34 @@ namespace ReportUnit.Parser
 {
     internal class Gallio : IParser
     {
-        private string resultsFile;
-        private XNamespace xns = "http://www.gallio.org/";
-        private Logger logger = Logger.GetLogger();
+        private string _resultsFile;
+        private readonly XNamespace _xns = "http://www.gallio.org/";
+        private Logger _logger = Logger.GetLogger();
 
         public Report Parse(string resultsFile)
         {
-            this.resultsFile = resultsFile;
+            _resultsFile = resultsFile;
 
-            XDocument doc = XDocument.Load(resultsFile);
+            var doc = XDocument.Load(resultsFile);
 
-            Report report = new Report();
+            var report = new Report
+            {
+                FileName = Path.GetFileNameWithoutExtension(resultsFile),
+                AssemblyName = doc.Descendants(_xns + "files").First().Descendants(_xns + "file").First().Value,
+                TestRunner = TestRunner.Gallio
+            };
 
-            report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
-            report.AssemblyName = doc.Descendants(xns + "files").First().Descendants(xns + "file").First().Value;
-            report.TestRunner = TestRunner.Gallio;
 
             // run-info & environment values -> RunInfo
             var runInfo = CreateRunInfo(doc, report).Info;
             report.AddRunInfo(runInfo);
 
             // test cases
-            var tests = doc.Descendants(xns + "testStep")
+            var tests = doc.Descendants(_xns + "testStep")
                 .Where(x => x.Attribute("isTestCase").Value.Equals("true", StringComparison.CurrentCultureIgnoreCase));
 
             // report counts
-            var statistics = doc.Descendants(xns + "statistics").First();
+            var statistics = doc.Descendants(_xns + "statistics").First();
             report.Total = tests.Count();
             report.Passed = Int32.Parse(statistics.Attribute("passedCount").Value);
             report.Failed = Int32.Parse(statistics.Attribute("failedCount").Value);
@@ -53,7 +47,7 @@ namespace ReportUnit.Parser
             report.Errors = 0;
 
             // report duration
-            XElement testPackageRun = doc.Descendants(xns + "testPackageRun").First();
+            var testPackageRun = doc.Descendants(_xns + "testPackageRun").First();
             report.StartTime = testPackageRun.Attribute("startTime").Value;
             report.EndTime = testPackageRun.Attribute("endTime").Value;
 
@@ -79,16 +73,18 @@ namespace ReportUnit.Parser
                     suitesList.Add(testSuiteName);
                 }
 
-                var test = new Model.Test();
+                var test = new Test
+                {
+                    Name = tc.Attribute("name").Value,
+                    Status = tc.Parent.Descendants(_xns + "outcome").First().Attribute("status").Value.ToStatus()
+                };
 
-                test.Name = tc.Attribute("name").Value;
-                test.Status = StatusExtensions.ToStatus(tc.Parent.Descendants(xns + "outcome").First().Attribute("status").Value);
 
                 // main a master list of all status
                 // used to build the status filter in the view
                 report.StatusList.Add(test.Status);
 
-                var entry = tc.Descendants(xns + "entry");
+                var entry = tc.Descendants(_xns + "entry");
 
                 // description
                 var description = entry != null 
@@ -106,7 +102,7 @@ namespace ReportUnit.Parser
                     ? ignoreReason.First().Value 
                     : "";
 
-                var testLog = tc.Parent.Descendants(xns + "testLog");
+                var testLog = tc.Parent.Descendants(_xns + "testLog");
                 test.StatusMessage += testLog != null && testLog.Count() > 0 
                     ? testLog.First().Value 
                     : "";
@@ -119,7 +115,7 @@ namespace ReportUnit.Parser
                 {
                     category.ToList().ForEach(s => 
                     {
-                        string cat = s.Value;
+                        var cat = s.Value;
 
                         test.CategoryList.Add(cat);
                         report.CategoryList.Add(cat);
@@ -136,38 +132,38 @@ namespace ReportUnit.Parser
         private RunInfo CreateRunInfo(XDocument doc, Report report)
         {
             // run-info & environment values -> RunInfo
-            RunInfo runInfo = new RunInfo();
+            var runInfo = new RunInfo();
 
             runInfo.TestRunner = report.TestRunner;
             runInfo.Info.Add("File", report.AssemblyName);
 
-            var children = doc.Descendants(xns + "children").First();
+            var children = doc.Descendants(_xns + "children").First();
 
-            var testKind = children.Descendants(xns + "entry")
+            var testKind = children.Descendants(_xns + "entry")
                 .Where(x => x.Attribute("key").Value.Equals("TestKind", StringComparison.CurrentCultureIgnoreCase));
             var testKindValue = testKind != null && testKind.Count() > 0 
-                ? testKind.First().Descendants(xns + "value").First().Value 
+                ? testKind.First().Descendants(_xns + "value").First().Value 
                 : "";
             runInfo.Info.Add("TestKind", testKindValue);
 
-            var codebase = children.Descendants(xns + "entry")
+            var codebase = children.Descendants(_xns + "entry")
                 .Where(x => x.Attribute("key").Value.Equals("CodeBase", StringComparison.CurrentCultureIgnoreCase));
             var codebaseValue = codebase != null && codebase.Count() > 0 
-                ? codebase.First().Descendants(xns + "value").First().Value 
+                ? codebase.First().Descendants(_xns + "value").First().Value 
                 : "";
             runInfo.Info.Add("CodeBase", codebaseValue);
 
-            var framework = children.Descendants(xns + "entry")
+            var framework = children.Descendants(_xns + "entry")
                 .Where(x => x.Attribute("key").Value.Equals("Framework", StringComparison.CurrentCultureIgnoreCase));
             var frameworkValue = framework != null && framework.Count() > 0 
-                ? testKind.First().Descendants(xns + "value").First().Value 
+                ? testKind.First().Descendants(_xns + "value").First().Value 
                 : "";
             runInfo.Info.Add("Framework", frameworkValue);
 
-            var version = children.Descendants(xns + "entry")
+            var version = children.Descendants(_xns + "entry")
                 .Where(x => x.Attribute("key").Value.Equals("Version", StringComparison.CurrentCultureIgnoreCase));
             var versionValue = version != null && version.Count() > 0 
-                ? testKind.First().Descendants(xns + "value").First().Value 
+                ? testKind.First().Descendants(_xns + "value").First().Value 
                 : "";
             runInfo.Info.Add("Version", versionValue);
 

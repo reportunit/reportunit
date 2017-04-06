@@ -2,15 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
-
 using ReportUnit.Model;
 using ReportUnit.Utils;
 using ReportUnit.Logging;
@@ -19,21 +11,28 @@ namespace ReportUnit.Parser
 {
     internal class NUnit : IParser
     {
-        private string resultsFile;
+        private string _resultsFile;
 
-        private Logger logger = Logger.GetLogger();
+        private Logger _logger = Logger.GetLogger();
 
         public Report Parse(string resultsFile)
         {
-            this.resultsFile = resultsFile;
+            _resultsFile = resultsFile;
 
-            XDocument doc = XDocument.Load(resultsFile);
+            var doc = XDocument.Load(resultsFile);
 
-            Report report = new Report();
+            if (doc.Root == null)
+            {
+                throw new NullReferenceException();
+            }
 
-            report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
-            report.AssemblyName = doc.Root.Attribute( "name" ) != null ? doc.Root.Attribute("name").Value : null;
-            report.TestRunner = TestRunner.NUnit;
+            var report = new Report
+            {
+                FileName = Path.GetFileNameWithoutExtension(resultsFile),
+                AssemblyName = doc.Root.Attribute("name") != null ? doc.Root.Attribute("name").Value : null,
+                TestRunner = TestRunner.NUnit
+            };
+
 
             // run-info & environment values -> RunInfo
             var runInfo = CreateRunInfo(doc, report);
@@ -93,7 +92,7 @@ namespace ReportUnit.Parser
                 ? testSuiteTypeAssembly.First().Value
                 : "";
 
-            IEnumerable<XElement> suites = doc
+            var suites = doc
                 .Descendants("test-suite")
                 .Where(x => x.Attribute("type").Value.Equals("TestFixture", StringComparison.CurrentCultureIgnoreCase));
             
@@ -136,10 +135,10 @@ namespace ReportUnit.Parser
                     }
                 }
 
-                var output = ts.Element("output")?.Value;
+                var output = ts.Element("output")!=null?ts.Element("output").Value:null;
                 if (!string.IsNullOrWhiteSpace(output))
                 {
-                    testSuite.StatusMessage +=$"\n\nOutput:\n" + output;
+                    testSuite.StatusMessage +="\n\nOutput:\n" + output;
                 }
 
                 // get test suite level categories
@@ -250,15 +249,15 @@ namespace ReportUnit.Parser
                 : new Func<XElement, string, IEnumerable<XElement>>((e, s) => e.Elements(s));
 
             //Grab unique categories
-            HashSet<string> categories = new HashSet<string>();
-            bool hasCategories = parser(elem, "categories").Any();
+            var categories = new HashSet<string>();
+            var hasCategories = parser(elem, "categories").Any();
             if (hasCategories)
             {
-                List<XElement> cats = parser(elem, "categories").Elements("category").ToList();
+                var cats = parser(elem, "categories").Elements("category").ToList();
 
                 cats.ForEach(x =>
                 {
-                    string cat = x.Attribute("name").Value;
+                    var cat = x.Attribute("name").Value;
                     categories.Add(cat);
                 });
             }
@@ -271,11 +270,11 @@ namespace ReportUnit.Parser
             if (doc.Element("environment") == null)
                 return null;
 
-            RunInfo runInfo = new RunInfo();
+            var runInfo = new RunInfo();
             runInfo.TestRunner = report.TestRunner;
 
-            XElement env = doc.Descendants("environment").First();
-            runInfo.Info.Add("Test Results File", resultsFile);
+            var env = doc.Descendants("environment").First();
+            runInfo.Info.Add("Test Results File", _resultsFile);
             if (env.Attribute("nunit-version") != null)
                 runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);
             runInfo.Info.Add("Assembly Name", report.AssemblyName);

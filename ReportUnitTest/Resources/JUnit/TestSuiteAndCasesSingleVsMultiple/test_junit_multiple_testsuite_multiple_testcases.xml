@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="10" failures="0" disabled="0" errors="0" time="0.300" name="AllTestSuite">
+  <testsuite name="TestSuite1" tests="7" failures="0" disabled="0" errors="0" timestamp="2020-01-01T12:00:00" time="40">
+    <testcase name="Test1" status="run" time="10" classname="TestClassNameA" />
+    <testcase name="Test2" status="run" time="20" classname="TestClassNameA" />
+    <testcase name="Test3" status="run" time="30" classname="TestClassNameA" />
+    <testcase name="Test4" status="run" time="40" classname="TestClassNameA" />
+    <testcase name="Test5" status="run" time="50" classname="TestClassNameA" />
+    <testcase name="Test6" status="run" time="60" classname="TestClassNameA" />
+    <testcase name="Test7" status="run" time="0" classname="TestClassNameA" />
+  </testsuite>
+  <testsuite name="TestSuite2" tests="3" failures="0" disabled="0" errors="0" timestamp="2020-01-01T12:05:00" time="10">
+    <testcase name="Test1" status="run" time="10" classname="TestClassNameB" />
+    <testcase name="Test2" status="run" time="20" classname="TestClassNameB" />
+    <testcase name="Test3" status="run" time="30" classname="TestClassNameB" />
+  </testsuite>
+</testsuites>

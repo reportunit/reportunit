@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     internal class Logger
     {
@@ -29,9 +27,9 @@
 
         public string GetLogsAsString()
         {
-            string logs = "";
+            var logs = "";
 
-            foreach (Log log in queue)
+            foreach (var log in queue)
             {
                 logs += log.ToString() + "<br />";
             }

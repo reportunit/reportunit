@@ -1,46 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using ReportUnit.Logging;
-using ReportUnit.Model;
-using ReportUnit.Utils;
 
 namespace ReportUnit.Parser
 {
     internal class ParserFactory
     {
-        private Logger logger = Logger.GetLogger();
+        private readonly Logger _logger = Logger.GetLogger();
 
-        private string filePath;
+        private readonly string _filePath;
 
-        private bool validJunitSchema;
+        private bool _validJunitSchema;
 
         public ParserFactory(string filePath)
         {
-            this.filePath = filePath;
-            this.validJunitSchema = true;
+            _filePath = filePath;
+            _validJunitSchema = true;
         }
 
         public TestRunner GetTestRunnerType()
         {
-            XmlDocument doc = new XmlDocument();
-
-            XmlNamespaceManager nsmgr;
+            var doc = new XmlDocument();
 
             try
             {
-                doc.Load(filePath);
+                doc.Load(_filePath);
 
                 if (doc.DocumentElement == null)
                     return TestRunner.Unknown;
 
-                string fileExtension = Path.GetExtension(filePath).ToLower();
+                var fileExtension = Path.GetExtension(_filePath).ToLower();
 
+                XmlNamespaceManager nsmgr;
                 if (fileExtension.EndsWith("trx"))
                 {
                     // MSTest2010
@@ -49,7 +43,7 @@ namespace ReportUnit.Parser
 
                     // check if its a mstest 2010 xml file 
                     // will need to check the "//TestRun/@xmlns" attribute - value = http://microsoft.com/schemas/VisualStudio/TeamTest/2010
-                    XmlNode testRunNode = doc.SelectSingleNode("ns:TestRun", nsmgr);
+                    var testRunNode = doc.SelectSingleNode("ns:TestRun", nsmgr);
                     if (testRunNode != null && testRunNode.Attributes != null && testRunNode.Attributes["xmlns"] != null &&
                         testRunNode.Attributes["xmlns"].InnerText.Contains("2010"))
                     {
@@ -63,16 +57,16 @@ namespace ReportUnit.Parser
                     nsmgr = new XmlNamespaceManager(doc.NameTable);
                     nsmgr.AddNamespace("ns", "http://www.gallio.org/");
 
-                    XmlNode model = doc.SelectSingleNode("//ns:testModel", nsmgr);
+                    var model = doc.SelectSingleNode("//ns:testModel", nsmgr);
                     if (model != null) return TestRunner.Gallio;
 
 
                     // xUnit - will have <assembly ... test-framework="xUnit.net 2....."/>
-                    XmlNode assemblyNode = doc.SelectSingleNode("//assembly");
+                    var assemblyNode = doc.SelectSingleNode("//assembly");
                     if (assemblyNode != null && assemblyNode.Attributes != null &&
                         assemblyNode.Attributes["test-framework"] != null)
                     {
-                        string testFramework = assemblyNode.Attributes["test-framework"].InnerText.ToLower();
+                        var testFramework = assemblyNode.Attributes["test-framework"].InnerText.ToLower();
 
                         if (testFramework.Contains("xunit"))
                         {
@@ -95,7 +89,7 @@ namespace ReportUnit.Parser
                     // NUnit
                     // NOTE: not all nunit test files (ie when have nunit output format from other test runners) will contain the environment node
                     //            but if it does exist - then it should have the nunit-version attribute
-                    XmlNode envNode = doc.SelectSingleNode("//environment");
+                    var envNode = doc.SelectSingleNode("//environment");
                     if (envNode != null && envNode.Attributes != null && envNode.Attributes["nunit-version"] != null)
                         return TestRunner.NUnit;
 
@@ -106,7 +100,7 @@ namespace ReportUnit.Parser
             }
             catch (Exception ex)
             {
-                logger.Warning($"Error when trying to determine testrunner for file {filePath}: {ex.Message}");
+                _logger.Warning(string.Format("Error when trying to determine testrunner for file {0}: {1}", _filePath, ex.Message));
             }
 
             return TestRunner.Unknown;
@@ -114,19 +108,29 @@ namespace ReportUnit.Parser
 
         private bool ValidateJUnitXsd(XmlDocument doc)
         {
-            XmlSchemaSet schema = new XmlSchemaSet();
-            using (var file = new FileStream(@"Schemas\junit.xsd", FileMode.Open))
+            try
             {
-                schema.Add("", XmlReader.Create(file));
-
-                doc.Schemas.Add(schema);
-                doc.Schemas.Compile();
-                doc.Validate((s, o) =>
+                var assembly = Assembly.GetExecutingAssembly();
+                using (var stream = assembly.GetManifestResourceStream("ReportUnit.Resources.Schemas.JUnit.xsd"))
+                using (var reader = new StreamReader(stream))
                 {
-                    this.validJunitSchema = false;
-                });
+                    var schema = new XmlSchemaSet();
+                
+                    schema.Add("", XmlReader.Create(reader));
 
-                return this.validJunitSchema;
+                    doc.Schemas.Add(schema);
+                    doc.Schemas.Compile();
+                    doc.Validate((s, o) =>
+                    {
+                        _validJunitSchema = false;
+                    });
+
+                    return _validJunitSchema;
+                }                
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

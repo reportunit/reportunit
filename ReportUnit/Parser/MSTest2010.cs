@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
-
 using ReportUnit.Model;
 using ReportUnit.Utils;
 using ReportUnit.Logging;
@@ -25,9 +16,9 @@ namespace ReportUnit.Parser
 
         public Report Parse(string resultsFile)
         {
-            XDocument doc = XDocument.Load(resultsFile);
+            var doc = XDocument.Load(resultsFile);
 
-            Report report = new Report();
+            var report = new Report();
 
             report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
             report.TestRunner = TestRunner.MSTest2010;
@@ -59,7 +50,7 @@ namespace ReportUnit.Parser
                 .Count();
 
             // report duration
-            XElement times = doc.Descendants(xns + "Times").First();
+            var times = doc.Descendants(xns + "Times").First();
             report.StartTime = times.Attribute("start").Value;
             report.EndTime = times.Attribute("finish").Value;
 
@@ -146,7 +137,7 @@ namespace ReportUnit.Parser
         private RunInfo CreateRunInfo(XDocument doc, Report report)
         {
             // run-info & environment values -> RunInfo
-            RunInfo runInfo = new RunInfo();
+            var runInfo = new RunInfo();
 
             runInfo.TestRunner = report.TestRunner;
             runInfo.Info.Add("TestRunner Version", "");
