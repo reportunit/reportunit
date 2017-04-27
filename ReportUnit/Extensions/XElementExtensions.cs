@@ -1,4 +1,6 @@
-﻿namespace ReportUnit.Extensions
+﻿using System;
+
+namespace ReportUnit.Extensions
 {
     using System.Xml.Linq;
 
@@ -23,7 +25,37 @@
         public static string GetNullableAttribute(this XElement element, string attributeName)
         {
             var attr = element.Attribute(attributeName);
-            return attr != null ? attr.Value : string.Empty;
+            return attr?.Value ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Compare an attribute value to an <paramref name="expectedValue"/> and returns true if they are equals (ignoring case)
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="expectedValue"></param>
+        /// <returns></returns>
+        public static bool AttributeEqualsTo(this XElement element, string attributeName, string expectedValue)
+        {
+            var value = element.GetNullableAttribute(attributeName);
+            return value.Equals(expectedValue, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Compare an attribute value to those <paramref name="expectedValues"/> and returns true if one of them is equal (ignoring case)
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="expectedValues"></param>
+        /// <returns></returns>
+        public static bool AttributeEqualsOneOf(this XElement element, string attributeName, params string[] expectedValues)
+        {
+            foreach (var expectedValue in expectedValues)
+            {
+                if (element.AttributeEqualsTo(attributeName, expectedValue))
+                    return true;
+            }
+            return false;
         }
     }
 }

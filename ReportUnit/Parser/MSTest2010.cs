@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using ReportUnit.Extensions;
 using ReportUnit.Model;
 using ReportUnit.Utils;
 
@@ -26,26 +27,18 @@ namespace ReportUnit.Parser
             report.AddRunInfo(runInfo);
 
             // report counts
-            var resultNodes = doc.Descendants(xns + "UnitTestResult");
+            var resultNodes = doc.Descendants(xns + "UnitTestResult").ToList();
             report.Total = resultNodes.Count();
-            report.Passed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Passed")).Count();
-            report.Failed = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("Failed")).Count();
-            report.Inconclusive = resultNodes
-                .Where(x =>
-                    x.Attribute("outcome").Value.Equals("Inconclusive")
-                    || x.Attribute("outcome").Value.Equals("passedButRunAborted")
-                    || x.Attribute("outcome").Value.Equals("disconnected")
-                    || x.Attribute("outcome").Value.Equals("notRunnable")
-                    || x.Attribute("outcome").Value.Equals("warning")
-                    || x.Attribute("outcome").Value.Equals("pending"))
-                .Count();
-            report.Skipped = resultNodes.Where(x => x.Attribute("outcome").Value.Equals("NotExecuted")).Count();
-            report.Errors = resultNodes
-                .Where(x =>
-                    x.Attribute("outcome").Value.Equals("Passed")
-                    || x.Attribute("outcome").Value.Equals("Aborted")
-                    || x.Attribute("outcome").Value.Equals("timeout"))
-                .Count();
+            report.Passed = resultNodes.Count(x => x.AttributeEqualsTo("outcome", "Passed"));
+            report.Failed = resultNodes.Count(x => x.AttributeEqualsTo("outcome", "Failed"));
+            report.Inconclusive = resultNodes.Count(x => x.AttributeEqualsOneOf("outcome", "Inconclusive",
+                                                                                "passedButRunAborted",
+                                                                                "disconnected",
+                                                                                "notRunnable",
+                                                                                "warning",
+                                                                                "pending"));
+            report.Skipped = resultNodes.Count(x => x.AttributeEqualsTo("outcome", "NotExecuted"));
+            report.Errors = resultNodes.Count(x => x.AttributeEqualsOneOf("outcome", "Aborted", "timeout"));
 
             // report duration
             var times = doc.Descendants(xns + "Times").First();
@@ -54,18 +47,18 @@ namespace ReportUnit.Parser
 
             // ToDo: add fixtures + tests
             doc.Descendants(xns + "UnitTestResult").AsParallel().ToList().ForEach(tc =>
-            {
-                var test = new Model.Test();
+                                                                                  {
+                                                                                      var test = new Model.Test();
 
-                test.Name = tc.Attribute("testName").Value;
-                test.Status = StatusExtensions.ToStatus(tc.Attribute("outcome").Value);
+                                                                                      test.Name = tc.Attribute("testName").Value;
+                                                                                      test.Status = tc.GetNullableAttribute("outcome").ToStatus();
 
-                // main a master list of all status
-                // used to build the status filter in the view
-                report.StatusList.Add(test.Status);
-                if (TestHasResult(test))
-                    ParseTestResult(test, tc, doc, report);
-            });
+                                                                                      // main a master list of all status
+                                                                                      // used to build the status filter in the view
+                                                                                      report.StatusList.Add(test.Status);
+                                                                                      if (TestHasResult(test))
+                                                                                          ParseTestResult(test, tc, doc, report);
+                                                                                  });
 
             report.TestSuiteList = report.TestSuiteList.OrderBy(x => x.Name).ToList();
 
@@ -80,14 +73,8 @@ namespace ReportUnit.Parser
         private void ParseTestResult(Test test, XElement tc, XDocument doc, Report report)
         {
             // TestCase Time Info
-            test.StartTime =
-                tc.Attribute("startTime") != null
-                    ? tc.Attribute("startTime").Value
-                    : "";
-            test.EndTime =
-                tc.Attribute("endTime") != null
-                    ? tc.Attribute("endTime").Value
-                    : "";
+            test.StartTime = tc.GetNullableAttribute("startTime");
+            test.EndTime = tc.GetNullableAttribute("endTime");
 
             var timespan = Convert.ToDateTime(test.StartTime) - Convert.ToDateTime(test.EndTime);
             test.Duration = timespan.Milliseconds;
