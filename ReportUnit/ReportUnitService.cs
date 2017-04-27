@@ -22,40 +22,42 @@ namespace ReportUnit
 
         public ReportUnitService() { }
 
-        public void CreateReport(string input, string outputDirectory)
+        public ExitCode CreateReport(string input, string outputDirectory)
         {
-            var attributes = File.GetAttributes(input);
-            IEnumerable<FileInfo> filePathList;
+            // by default, return true for runstatus
+            var runStatus = ExitCode.Success;
+    		var attributes = File.GetAttributes(input);
+		    List<string> filePathList;
 
-            if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
-            {
-                filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
-                    .OrderByDescending(f => f.CreationTime);
-            }
-            else
-            {
-                if (File.Exists(input))
-                {
-                    filePathList = new[] {new FileInfo(input)};
-                }
-                else
-                {
-                    filePathList = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles(input);
-                }
+        	 if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
+        	{
+                filePathList = Directory.GetFiles(input, "*.*", SearchOption.TopDirectoryOnly).ToList();
+	        }
+	        else
+	        {
+	            filePathList = new List<string>();
+	            filePathList.Add(input);
             }
 
             InitializeRazor();
 
-            var compositeTemplate = new CompositeTemplate();
+        	var compositeTemplate = new CompositeTemplate();
+	
+        	foreach (var filePath in filePathList)
+        	{
+            	var testRunner = GetTestRunner(filePath);
 
-            foreach (var filePath in filePathList)
-            {
-                var testRunner = GetTestRunner(filePath.FullName);
-
-                if (!(testRunner.Equals(TestRunner.Unknown)))
-                {
+            	if (!(testRunner.Equals(TestRunner.Unknown)))
+            	{
                     var parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(Ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
-                    var report = parser.Parse(filePath.FullName);
+                    var report = parser.Parse(filePath);
+
+                    if (runStatus == ExitCode.Success)
+                    {
+                        if (report.Failed > 0) runStatus = ExitCode.Failure;
+                        else if (report.Errors > 0) runStatus = ExitCode.Error;
+                        else if (report.Inconclusive > 0) runStatus = ExitCode.Inconclusive;
+                    }
 
                     compositeTemplate.AddReport(report);
                 }
@@ -63,7 +65,7 @@ namespace ReportUnit
             if (compositeTemplate.ReportList == null)
             {
                 Logger.GetLogger().Fatal("No reports added - invalid files?");
-                return;
+                return ExitCode.BadInput;
             }
             if (compositeTemplate.ReportList.Count > 1)
             {
@@ -73,13 +75,17 @@ namespace ReportUnit
                 File.WriteAllText(Path.Combine(outputDirectory, "Index.html"), summary);
             }
 
-            foreach (var report in compositeTemplate.ReportList)
+			foreach (var report in compositeTemplate.ReportList)
             {
                 report.SideNavLinks = compositeTemplate.SideNavLinks;
 
                 var html = Engine.Razor.RunCompile(Templates.TemplateManager.GetFileTemplate(), "report", typeof(Model.Report), report, null);
                 File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }
+
+            Console.WriteLine("Program ExitCode: " + runStatus);
+
+            return runStatus;
         }
 
         private TestRunner GetTestRunner(string inputFile)
