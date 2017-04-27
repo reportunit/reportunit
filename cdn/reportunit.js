@@ -141,11 +141,8 @@ $(document).ready(function() {
 	/* for a single report item, hide sidenav */
 	if ($('.report-item').length <= 1) {
 		$('#slide-out').addClass('hide');
-		
-		pinWidth = '56.5%';
-		
-		$('.pin').css('width', pinWidth);
-		$('.main-wrap, nav').css('padding-left', '20px');
+		$('.main-wrap').css('padding-left', '0');
+        $('.suite-list').addClass('h-spacer-single');
 	}
 
 	var passedPercentage = Math.round(((passed / total) * 100)) + '%';

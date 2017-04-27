@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml.Linq;
 using ReportUnit.Model;
 using ReportUnit.Utils;
-using ReportUnit.Logging;
 
 namespace ReportUnit.Parser
 {
@@ -12,7 +11,6 @@ namespace ReportUnit.Parser
     {
         //private string resultsFile;
         private XNamespace xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
-        private Logger logger = Logger.GetLogger();
 
         public Report Parse(string resultsFile)
         {
@@ -65,58 +63,67 @@ namespace ReportUnit.Parser
                 // main a master list of all status
                 // used to build the status filter in the view
                 report.StatusList.Add(test.Status);
-
-                // TestCase Time Info
-                test.StartTime =
-                    tc.Attribute("startTime") != null
-                        ? tc.Attribute("startTime").Value
-                        : "";
-                test.EndTime =
-                    tc.Attribute("endTime") != null
-                        ? tc.Attribute("endTime").Value
-                        : "";
-
-                var timespan = Convert.ToDateTime(test.StartTime) - Convert.ToDateTime(test.EndTime);
-                test.Duration = timespan.Milliseconds;
-
-                // error and other status messages
-                test.StatusMessage = tc.Element(xns + "Output") != null ? tc.Element(xns + "Output").Value.Trim() : "";
-
-                var unitTestElement = doc.Descendants(xns + "UnitTest").FirstOrDefault(x => x.Attribute("name").Value.Equals(test.Name));
-
-                if (unitTestElement != null)
-                {
-                    
-                    var descriptionElement = unitTestElement.Element(xns + "Description");
-                    if (descriptionElement != null)
-                    {
-                        test.Description = descriptionElement.Value;
-                    }
-
-                    var categories = (from testCategory in unitTestElement.Descendants(xns + "TestCategoryItem")
-                                          select testCategory.Attributes("TestCategory").Select(x => x.Value).FirstOrDefault()).ToList();
-                    
-                    test.CategoryList = categories;
-                    
-                    
-                    if (categories.Any())
-                    {
-                        foreach (var suiteName in categories)
-                        {
-                            AddTestToSuite(report, test, suiteName);
-                        }
-                    }
-                    else
-                    {
-                        var suiteName = unitTestElement.Element(xns + "TestMethod").Attribute("className").Value;
-                        AddTestToSuite(report, test, suiteName);
-                    }
-                }
+                if (TestHasResult(test))
+                    ParseTestResult(test, tc, doc, report);
             });
 
             report.TestSuiteList = report.TestSuiteList.OrderBy(x => x.Name).ToList();
 
             return report;
+        }
+
+        private static bool TestHasResult(Test test)
+        {
+            return test.Status == Status.Passed || test.Status == Status.Failed;
+        }
+
+        private void ParseTestResult(Test test, XElement tc, XDocument doc, Report report)
+        {
+            // TestCase Time Info
+            test.StartTime =
+                tc.Attribute("startTime") != null
+                    ? tc.Attribute("startTime").Value
+                    : "";
+            test.EndTime =
+                tc.Attribute("endTime") != null
+                    ? tc.Attribute("endTime").Value
+                    : "";
+
+            var timespan = Convert.ToDateTime(test.StartTime) - Convert.ToDateTime(test.EndTime);
+            test.Duration = timespan.Milliseconds;
+
+            // error and other status messages
+            test.StatusMessage = tc.Element(xns + "Output") != null ? tc.Element(xns + "Output").Value.Trim() : "";
+
+            var unitTestElement = doc.Descendants(xns + "UnitTest").FirstOrDefault(x => x.Attribute("name").Value.Equals(test.Name));
+
+            if (unitTestElement != null)
+            {
+                var descriptionElement = unitTestElement.Element(xns + "Description");
+                if (descriptionElement != null)
+                {
+                    test.Description = descriptionElement.Value;
+                }
+
+                var categories = (from testCategory in unitTestElement.Descendants(xns + "TestCategoryItem")
+                                  select testCategory.Attributes("TestCategory").Select(x => x.Value).FirstOrDefault()).ToList();
+
+                test.CategoryList = categories;
+
+
+                if (categories.Any())
+                {
+                    foreach (var suiteName in categories)
+                    {
+                        AddTestToSuite(report, test, suiteName);
+                    }
+                }
+                else
+                {
+                    var suiteName = unitTestElement.Element(xns + "TestMethod").Attribute("className").Value;
+                    AddTestToSuite(report, test, suiteName);
+                }
+            }
         }
 
         private static void AddTestToSuite(Report report, Test test, string suiteName)
