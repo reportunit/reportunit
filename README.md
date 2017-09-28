@@ -1,4 +1,5 @@
 [![Build Status][appveyor_status]][appveyor_link]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fekirmayer%2Freportunit.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fekirmayer%2Freportunit?ref=badge_shield)
 
 [appveyor_status]: https://ci.appveyor.com/api/projects/status/q4cmp3mw32e31oy7?branch=master&svg=true
 [appveyor_link]: https://ci.appveyor.com/project/Artum/reportunit
@@ -62,3 +63,7 @@ reportunit "C:\my-folder\result.xml" reportunit "C:\output-folder\report.html"
 #### File
 <img src='http://relevantcodes.com/Tools/ReportUnit/file.png' />
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fekirmayer%2Freportunit.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fekirmayer%2Freportunit?ref=badge_large)

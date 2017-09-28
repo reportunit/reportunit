@@ -22,15 +22,19 @@ namespace ReportUnit
 
         public ReportUnitService() { }
 
-        public void CreateReport(string input, string outputDirectory)
+        public bool CreateReport(string input, string outputDirectory)
         {
             var attributes = File.GetAttributes(input);
             IEnumerable<FileInfo> filePathList;
 
             if ((FileAttributes.Directory & attributes) == FileAttributes.Directory)
             {
-                filePathList = new DirectoryInfo(input).GetFiles("*.xml", SearchOption.AllDirectories)
-                    .OrderByDescending(f => f.CreationTime);
+                filePathList =
+                    "*.trx|*.xml".Split('|')
+                        .SelectMany(
+                            filter =>
+                                new DirectoryInfo(input).GetFiles(filter, searchOption: SearchOption.AllDirectories))
+                        .ToList();            
             }
             else
             {
@@ -63,7 +67,7 @@ namespace ReportUnit
             if (compositeTemplate.ReportList == null)
             {
                 Logger.GetLogger().Fatal("No reports added - invalid files?");
-                return;
+                return false;
             }
             if (compositeTemplate.ReportList.Count > 1)
             {
@@ -80,6 +84,7 @@ namespace ReportUnit
                 var html = Engine.Razor.RunCompile(Templates.TemplateManager.GetFileTemplate(), "report", typeof(Model.Report), report, null);
                 File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }
+            return true;
         }
 
         private TestRunner GetTestRunner(string inputFile)
