@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\ILRepack.2.0.13\build\ILRepack.props" Condition="Exists('..\packages\ILRepack.2.0.13\build\ILRepack.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -49,13 +50,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ILMerge">
-      <HintPath>..\packages\ILMerge.2.14.1208\tools\ILMerge.exe</HintPath>
-    </Reference>
-    <Reference Include="RazorEngine, Version=3.7.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\packages\RazorEngine.3.7.3\lib\net40\RazorEngine.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -67,6 +61,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="RazorEngine">
+      <HintPath>..\packages\RazorEngine.3.9.3\lib\net40\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="ILRepack">
+      <HintPath>..\packages\ILRepack.2.0.13\tools\ILRepack.exe</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\XElementExtensions.cs" />
@@ -132,7 +132,9 @@
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy $(TargetDir)* $(TargetDir)..\ /Y /S</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>ilmerge.exe /out:$(TargetFileName) /ndebug $(TargetFileName) RazorEngine.dll System.Web.Razor.dll
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">ILRepack.exe /out:$(TargetFileName) /ndebug $(TargetFileName) RazorEngine.dll System.Web.Razor.dll
+cp -a $(TargetPath) $(ProjectDir)bin/</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">ILRepack.exe /out:$(TargetFileName) /ndebug $(TargetFileName) RazorEngine.dll System.Web.Razor.dll
 xcopy $(TargetPath) $(ProjectDir)bin\ /Y /S</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
