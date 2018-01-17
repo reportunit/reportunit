@@ -27,6 +27,8 @@ namespace ReportUnit.Model
         /// </summary>
         public double Duration { get; set; }
 
+        public string Attachment { get; set; }
+
         /// <summary>
         /// Categories & features associated with the test
         /// </summary>

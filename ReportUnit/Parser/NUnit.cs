@@ -221,7 +221,12 @@ namespace ReportUnit.Parser
                      ? tc.Element( "output" ).Value.Trim()
                      : "";
 
-                   testSuite.TestList.Add(test);
+                    // add screenshot attachement to the failed testcase
+                    test.Attachment += tc.Element("attachments") != null
+                      ? tc.Element("attachments").Element("attachment").Element("filePath").Value.Trim()
+                      : "";
+
+                    testSuite.TestList.Add(test);
                 });
 
                 testSuite.Status = ReportUtil.GetFixtureStatus(testSuite.TestList);
