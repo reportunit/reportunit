@@ -202,7 +202,7 @@ namespace ReportUnit.Parser
 
                     // error and other status messages
                     test.StatusMessage = 
-                        tc.Element("failure") != null 
+                        tc.Element("failure") != null && tc.Element("failure").Element("message") != null
                             ? tc.Element("failure").Element("message").Value.Trim()
                             : "";
                     test.StatusMessage += 
