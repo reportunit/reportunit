@@ -1,3 +1,11 @@
+### Important
+
+ReportUnit is not maintained and will be replaced by [extentreports-dotnet-cli](https://github.com/extent-framework/extentreports-dotnet-cli).  The new CLI allows integration with the Extent Framework which has a host of existing reporters which are actively maintained along with the framework's report server [Klov](http://klov.herokuapp.com/).
+
+A sample created by the extent cli: [Sample](http://extentreports.com/docs/versions/4/net/files/dotnetcli/index.html).
+
+<hr>
+
 [![Build Status][appveyor_status]][appveyor_link]
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fekirmayer%2Freportunit.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fekirmayer%2Freportunit?ref=badge_shield)
 
