@@ -215,7 +215,14 @@
                                                                     }
                                                                 </td>
                                                                 <td class='test-status @test.Status.ToString().ToLower()'>
-                                                                    <span class='label @test.Status.ToString().ToLower()'>@test.Status.ToString()</span>
+                                                                    @if (!String.IsNullOrEmpty(@test.Attachment)) 
+																	{
+																		<a href=@test.Attachment.ToString()><span>@test.Status.ToString()</span></a>
+																	}
+																	else
+																	{
+																		<span class='label @test.Status.ToString().ToLower()'>@test.Status.ToString()</span>
+																	}
                                                                 </td>
                                                                 @if (Model.TestSuiteList.Count > 0 && Model.TestSuiteList[ix].TestList.Any(x => x.CategoryList.Count > 0))
                                                                 {
