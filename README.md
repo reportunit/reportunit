@@ -60,7 +60,7 @@ reportunit [input-file] [output-file]
 
 ```
 reportunit "C:\my-folder\result.xml"
-reportunit "C:\my-folder\result.xml" reportunit "C:\output-folder\report.html"
+reportunit "C:\my-folder\result.xml" "C:\output-folder\report.html"
 ```
 
 ### Snapshots
